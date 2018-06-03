@@ -1,0 +1,377 @@
+---
+title: "Estimate activity centers from acoustic telemetry data"
+author: "Megan Winton"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Estimate activity centers from acoustic telemetry data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Introduction
+
+This vignette will walk you through the analyses presented by Winton et al. (in prep), who describe the use of spatial point process models to estimate individual centers of activity from passive acoustic telemetry data. The vignette progresses from applying the simplest case, which assumes that detection probabilities/receiver detection ranges remain constant over time, to application of a test-tag integrated model, which incorporates detection data from one or more stationary test transmitters to estimate time-varying detection ranges. The models are fitted in a Bayesian framework using the Stan software (Carpenter et al. 2016); code was modified from that provided in Royle et al. (2014) for fitting spatial point process models to data from camera traps. We prefer the Bayesian approach for COA estimation due to its treatment of uncertainty, but realize the longer computational time required may be prohibitive for some applications. In the near future, we will update to include an option to fit in a maximum likelihood framework, which will reduce run times.
+ 
+
+## Data preparation
+
+The package includes two data sets: 1) hourly detection data from a tagged black sea bass and 2) hourly detections from a stationary test transmitter over the same time period. Two files containing the receiver coordinates and the location of the test tag are also included. We have provided the data in a raw format to illustrate data preparation as well as model fitting. To access the provided data, run:
+
+```{r, echo = T, message = F}
+library(TelemetrySpace)
+rlocs # Receiver locations
+testloc # Test tag location
+head(testdat) # Hourly detection data from the test tag
+head(fishdat) # Hourly detection data from a black sea bass
+```
+
+Prior to doing anything else, we need to specify our 'state space' - the spatial extent of interest. This needs to be large enough to allow for individuals that may have activity centers outside of the receiver array.
+
+```{r, echo = T, message = F}
+# Define state-space of point process - 'buffer' adds a fixed buffer to the outer extent of the recs
+buffer=1
+xlim=c(min(rlocs$east-buffer),max(rlocs$east+buffer))
+ylim=c(min(rlocs$north-buffer),max(rlocs$north+buffer))
+```
+
+Next, calculate the distance between the test tag's location and each receiver. This can be done using the included 'distf' function.
+
+```{r, echo=T, message = F, fig.width=6, fig.height=6}
+# Set up a blank vector for storage
+D<-NULL
+# Loop over each hour
+for( i in 1:nrow(testdat) ){
+  D[i]=distf( testloc[,c('east','north')], testdat[i,c('east','north')] )
+}
+
+testdat$D <- D # Assign to testdat data frame
+
+# Plot to examine variation in detection rate over time
+m1 <- plyr::count(testdat, c('Station','hour','D','east','north'))
+#Round distance for plotting
+m1$dist=round(m1$D*1000)
+#Create label by merging station name and distance
+m1$label=paste(m1$dist,"m","(",m1$Station,")")
+
+#Plot
+library(ggplot2)
+ggplot(data=m1,aes(x=hour,y=freq))+ 
+  geom_bar(stat="identity",fill='#008080')+
+  facet_wrap(~as.factor(label))+
+  theme(text = element_text(size = 16)) +
+  scale_y_continuous(breaks=seq(0,30,10)) +
+  labs(x="Hours since deployment",y="Number of detections")
+```
+
+Tally how many time intervals each receiver was operational for - This allows for individual receivers deployed for different periods and/or receivers that were lost.
+
+```{r, echo=T, message = F}
+# The full analysis takes several hours to run, so we'll subset out 10 hours to illustrate
+fishdat <- fishdat[fishdat$hour < 11,]
+testdat <- testdat[testdat$hour < 11,]
+
+# Create a copy of the receiver locations for tallying
+rs <- rlocs
+# Add column for each time interval to indicate whether receiver was operational or not
+rs[,c(4:( max(fishdat$hour)+3 ) )] <- 1
+  rs <- plyr::rename( rs, replace = c("V4"=1, 
+                                      "V5"=2, 
+                                      "V6"=3, 
+                                      "V7"=4, 
+                                      "V8"=5, 
+                                      "V9"=6, 
+                                      "V10"=7, 
+                                      "V11"=8, 
+                                      "V12"=9, 
+                                      "V13"=10) )
+
+# Create vector of the number of sampling occasions for each receiver 
+tsteps <- apply(rs[,4:ncol(rs)],1,sum)
+tsteps # Will all be the same here because all operational over the entire time span
+```
+
+Since detection records only include non-zero events, we'll need to convert the number of detections to include zeros for all transmitters
+
+```{r, echo=T, message = F}
+## Starting with the test tag data
+testdat$rec <- as.numeric(substr(testdat$Station, 3, 4))
+testdat$count <- 1 # Add a column that indicates each record corresponds to 1 detection
+
+# Aggregate the number of detections for each individual at each receiver in each time step
+test.agg <- aggregate(count ~ Transmitter + rec + east + north + hour, testdat, sum) 
+# Create a numeric identifier for each transmitter
+test.agg$tag <- as.numeric(as.factor(test.agg$Transmitter))
+# Rename hour to time for consistency when plotting below
+test.agg$time <- test.agg$hour
+
+# Specify quantities for indexing
+ntest <- length( unique(test.agg$Transmitter) ) # number of individual tags (here just the one test tag)
+nrec <- nrow(rlocs) # number of receivers
+tsteps <- max(test.agg$hour)
+
+# This chunk saves the total number of encounters of each individual (rows) in each trap (cols) at each sampling occasion (array elements)
+testY=array( NA, dim=c( ntest, nrec, tsteps ) )
+for( t in 1:max(tsteps) ){
+  for ( i in 1:nrow(testY) ){
+    h1 <- test.agg[test.agg$tag==i,]
+      for( j in 1:nrow(rlocs) ){
+    # If there are no detections at that receiver in that time period, set to 0; otherwise set to the number of detections
+    testY[i,j,t]=ifelse(identical(h1[h1$hour==t & h1$rec==j,6], numeric(0)),0, h1[h1$hour==t & h1$rec==j,6])
+    }
+  }  
+}
+
+## Now do the same for each tagged fish
+fishdat$rec <- as.numeric(substr(fishdat$Station, 3, 4))
+fishdat$count <- 1 # Add a column that indicates each record corresponds to 1 detection
+
+# Aggregate the number of detections for each individual at each receiver in each time step
+fish.agg <- aggregate(count ~ Transmitter + rec + east + north + hour, fishdat, sum) 
+# Create a numeric identifier for each transmitter
+fish.agg$tag <- as.numeric(as.factor(fish.agg$Transmitter))
+# Rename hour to time for consistency when plotting below
+fish.agg$time <- fish.agg$hour
+
+# Specify quantities for indexing
+nind <- length( unique(fish.agg$Transmitter) ) # number of individual tags (here just the one test tag)
+
+# This chunk saves the total number of encounters of each individual (rows) in each trap (cols) at each sampling occasion (array elements)
+Y=array( NA, dim=c( nind, nrec, tsteps ) )
+for( t in 1:max(tsteps) ){
+  for ( i in 1:nrow(Y) ){
+    h1 <- fish.agg[fish.agg$tag==i,]
+      for( j in 1:nrow(rlocs) ){
+    # If there are no detections at that receiver in that time period, set to 0; otherwise set to the number of detections
+    Y[i,j,t]=ifelse(identical(h1[h1$hour==t & h1$rec==j,6], numeric(0)),0, h1[h1$hour==t & h1$rec==j,6])
+    }
+  }  
+}
+```
+
+## Fit the standard COA model  
+
+After all of that data processing, we're finally ready to fit our model! We'll start by fitting the model assuming that detection probabilities are the same among all receivers and remain constant over time (This will pretty much never be the case, but best to start simple!). The only other information you'll need to provide is the expected number of transmissions per tag per time interval (ntrans below).
+
+```{r, echo=T, message = F}
+### Format data for model fitting
+fit <- COA_Standard(nind=nind, # number of individuals
+                    nrec=nrec, # number of receivers
+                    ntime=tsteps, # number of time steps
+                    ntrans=30, # number of expected transmissions per tag per time interval
+                    y=Y,   # array of detections 
+                    recX=as.vector(rlocs$east),  # E-W receiver coordinates
+                    recY=as.vector(rlocs$north), # N-S receiver coordinates 
+                    xlim=xlim, # E-W boundary of spatial extent (receiver array + buffer)
+                    ylim=ylim) # N-S boundary of spatial extent (receiver array + buffer)
+```
+
+The function returns a list with four objects:
+
+```{r, echo=T, message = F}
+summary(fit)
+```
+
+The first contains the Stan model object (accessible via fit$Model, which will allow you to use rstan plotting tools and diagnostic plots - see rstan documentation for details).
+
+The second element is a table of parameter estimates and associated quantiles from the posterior distribution. The table also includes the effective sample size and the Rhat statistic (which should be ~1).
+
+```{r, echo=T, message = F}
+fit$Summary
+```
+
+The third returns the time required to run the model (in minutes). Note that Stan will automatically detect and use multiple cores. If the computer used to run this has multiple cores, the time returned will be longer than the actual run time (because it will sum the time for each core). To return the realzied run time, divide fit$Time by the number of cores.
+
+```{r, echo=T, message = F}
+fit$Time
+```
+
+The fourth returns an array of COA estimates, where each matrix corresponds to one individual, the rows correspond to each time step, and the columns include the median posterior estimate of the east-west (x) and north-south (y) coordinates. The 95% credible interval (Bayesian version of a confidence interval) for each coordinate is also provided.
+
+```{r, echo=T, message = F}
+fit$COAs
+```
+
+The last element (fit$All_estimates) contains the estimates from each non-warm-up iteration for all 4 chains. (If you're not familiar with Bayesian lingo and this just seems like statistical jargon, all you need to know is that this is what you'll use to plot the uncertainty cloud around COA estimates and/or the distribution of parameter estimates as presented in the paper.) This includes estimates of all latent parameters for each individual in each time step, so we will need to subset out parameters for plotting.
+
+```{r, echo=T, message = F}
+
+# Extract east-west and north-south coordinates of COAs from each iteration of each chain
+# Note that 'sx' and 'sy' are the variable names used to store the coordinates for each individual (rows) in each time step (columns).
+# We'll store them as a list, where each element corresponds to an individual
+ew <- list(NA)
+ns <- list(NA)
+EN <- list(NA)
+
+for (i in 1:nind){
+  ew[[i]] <- dplyr::select(fit$All_estimates, dplyr::starts_with( paste("sx[",i,",", sep='') ) )
+  ns[[i]] <- dplyr::select(fit$All_estimates, dplyr::starts_with( paste("sy[",i,",", sep='') ) )
+
+  # Merge them into one dataframe
+  EN[[i]]=cbind(data.table::melt(ew[[i]]),data.table::melt(ns[[i]])[,2])
+  EN[[i]]$id=as.numeric(EN[[i]]$variable) # The ID field corresponds to the time step.
+  colnames(EN[[i]])=c('variable','x','y','time')
+}
+# You will get a warning about 'No id variables' - don't worry about it.
+
+## Plot posterior estimates
+# Select individual for plotting
+post <- EN[[1]]
+coa <- as.data.frame(fit$COAs[,,1])
+# Plot in ggplot
+plotCOAs <- ggplot(aes(x=x,y=y),data=post) +
+            geom_hex(alpha=1,bins=100)  +
+            geom_point(aes(x=x,y=y),data=coa,pch=25,cex=1.5,alpha=.8,fill=NA) +
+            facet_wrap(~time,ncol=2) +
+            scale_fill_gradientn(colours=c("white","blue"),name = "Frequency",na.value=NA) +
+            geom_point(aes(x=east,y=north),data=rlocs,cex=1) +
+            geom_point(aes(x=east,y=north),data=fish.agg,pch=21,cex=1.5,fill='#00BFC4') +
+       # Unhash line below to include test tag location  
+            #geom_point(aes(x=east,y=north),data=testloc,cex=1.5,pch=21,fill='#F8766D') +
+            coord_fixed(xlim=c(-1,1),ylim=c(-0.5,1.5)) +
+            scale_x_continuous(breaks = c(-1, 0, 1)) +
+            #scale_y_continuous(breaks = c(-1, 0, 1)) +
+            theme(legend.position="none") +
+            labs(x='East-West (km)',y='North-South (km)')
+```
+
+## Fit a COA model that allows for receiver- and time-specific detection probabilities
+
+Now let's fit a model that allows for variation in detection probabilites. This model is a simple extension of the previous model - it just adds a component that specifies the distance of each test tag from each receiver, and shifts the probability of detection by comparing the number of detections logged at each receiver versus those emitted from the test tag. The only other information you'll need to provide is the expected number of transmissions per tag per time interval.
+
+```{r, echo=T, message = F}
+### Format data for model fitting
+fit_vary <- COA_TimeVarying(nind=nind, # number of individuals
+                            nrec=nrec, # number of receivers
+                            ntime=tsteps, # number of time steps
+                            ntrans=30, # number of expected transmissions per tag per time interval
+                            y=Y,   # array of detections from tagged fish
+                            recX=as.vector(rlocs$east),  # E-W receiver coordinates
+                            recY=as.vector(rlocs$north), # N-S receiver coordinates 
+                            xlim=xlim, # E-W boundary of spatial extent (receiver array + buffer)
+                            ylim=ylim) # N-S boundary of spatial extent (receiver array + buffer)
+
+summary(fit_vary)
+
+fit_vary$Time
+
+# As before, extract east-west and north-south coordinates of COAs from each iteration of each chain
+# Note that 'sx' and 'sy' are the variable names used to store the coordinates for each individual (rows) in each time step (columns).
+# We'll store them as a list, where each element corresponds to an individual
+ew <- list(NA)
+ns <- list(NA)
+EN <- list(NA)
+
+for (i in 1:nind){
+  ew[[i]] <- dplyr::select(fit_vary$All_estimates, dplyr::starts_with( paste("sx[",i,",", sep='') ) )
+  ns[[i]] <- dplyr::select(fit_vary$All_estimates, dplyr::starts_with( paste("sy[",i,",", sep='') ) )
+
+  # Merge them into one dataframe
+  EN[[i]]=cbind(data.table::melt(ew[[i]]),data.table::melt(ns[[i]])[,2])
+  EN[[i]]$id=as.numeric(EN[[i]]$variable) # The ID field corresponds to the time step.
+  colnames(EN[[i]])=c('variable','x','y','time')
+}
+# You will get a warning about 'No id variables' - don't worry about it.
+
+## Plot posterior estimates
+# Select individual for plotting
+post <- EN[[1]]
+coa <- as.data.frame(fit_vary$COAs[,,1])
+# Plot in ggplot
+plotTVary <- ggplot(aes(x=x,y=y),data=post) +
+         geom_hex(alpha=1,bins=100)  +
+         geom_point(aes(x=x,y=y),data=coa,pch=25,cex=1.5,alpha=.8,fill=NA) +
+         facet_wrap(~time,ncol=2) +
+         scale_fill_gradientn(colours=c("white","blue"),name = "Frequency",na.value=NA) +
+         geom_point(aes(x=east,y=north),data=rlocs,cex=1) +
+         geom_point(aes(x=east,y=north),data=fish.agg,pch=21,cex=1.5,fill='#00BFC4') +
+    # Unhash line below to include test tag location  
+         #geom_point(aes(x=east,y=north),data=testloc,cex=1.5,pch=21,fill='#F8766D') +
+         coord_fixed(xlim=c(-1,1),ylim=c(-0.5,1.5)) +
+         scale_x_continuous(breaks = c(-1, 0, 1)) +
+         #scale_y_continuous(breaks = c(-1, 0, 1)) +
+         theme(legend.position="none") +
+         labs(x='East-West (km)',y='North-South (km)')
+```
+
+## Fit a model that uses detections from a moored test tag to inform detection probabilites
+
+Now we'll fit the model we're really interested in - the model that integrates test tag data to inform detection probabilites. This model is a simple extension of the previous model - it just adds a component that specifies the distance of each test tag from each receiver, and shifts the probability of detection by comparing the number of detections logged at each receiver versus those emitted from the test tag. The only other information you'll need to provide is the expected number of transmissions per tag per time interval.
+
+```{r, echo=T, message = F}
+### Format data for model fitting
+## Specify the number of sentinal tags (this step is necessary because of issues that arise with Stan indexing if you have only 1 test tag)
+nsentinal <- 1
+
+fit_tag <- COA_TagInt(nind=nind, # number of individuals
+                      nrec=nrec, # number of receivers
+                      ntime=tsteps, # number of time steps
+                      ntest=nsentinal, # number of test tags
+                      ntrans=30, # number of expected transmissions per tag per time interval
+                      y=Y,   # array of detections from tagged fish
+                      test=testY, # array of detections from test tags
+                      recX=as.vector(rlocs$east),  # E-W receiver coordinates
+                      recY=as.vector(rlocs$north), # N-S receiver coordinates 
+                      xlim=xlim, # E-W boundary of spatial extent (receiver array + buffer)
+                      ylim=ylim, # N-S boundary of spatial extent (receiver array + buffer)
+                      testX=array(testloc$east,dim=c(nsentinal)),
+                      testY=array(testloc$north,dim=c(nsentinal)))
+
+summary(fit_tag)
+
+fit_tag$Time # See the comment about run time when your computer has multiple cores above.
+
+# As before, extract east-west and north-south coordinates of COAs from each iteration of each chain
+# Note that 'sx' and 'sy' are the variable names used to store the coordinates for each individual (rows) in each time step (columns).
+# We'll store them as a list, where each element corresponds to an individual
+ew <- list(NA)
+ns <- list(NA)
+EN <- list(NA)
+
+for (i in 1:nind){
+  ew[[i]] <- dplyr::select(fit_tag$All_estimates, dplyr::starts_with( paste("sx[",i,",", sep='') ) )
+  ns[[i]] <- dplyr::select(fit_tag$All_estimates, dplyr::starts_with( paste("sy[",i,",", sep='') ) )
+
+  # Merge them into one dataframe
+  EN[[i]]=cbind(data.table::melt(ew[[i]]),data.table::melt(ns[[i]])[,2])
+  EN[[i]]$id=as.numeric(EN[[i]]$variable) # The ID field corresponds to the time step.
+  colnames(EN[[i]])=c('variable','x','y','time')
+}
+# You will get a warning about 'No id variables' - don't worry about it.
+
+## Plot posterior estimates
+# Select individual for plotting
+post <- EN[[1]]
+coa <- as.data.frame(fit_tag$COAs[,,1])
+# Plot in ggplot
+plotTagInt <- ggplot(aes(x=x,y=y),data=post) +
+         geom_hex(alpha=1,bins=100)  +
+         geom_point(aes(x=x,y=y),data=coa,pch=25,cex=1.5,alpha=.8,fill=NA) +
+         facet_wrap(~time,ncol=2) +
+         scale_fill_gradientn(colours=c("white","blue"),name = "Frequency",na.value=NA) +
+         geom_point(aes(x=east,y=north),data=rlocs,cex=1) +
+         geom_point(aes(x=east,y=north),data=fish.agg,pch=21,cex=1.5,fill='#00BFC4') +
+    # Unhash line below to plot test tag location
+         #geom_point(aes(x=east,y=north),data=testloc,cex=1.5,pch=21,fill='#F8766D') +
+         coord_fixed(xlim=c(-1,1),ylim=c(-0.5,1.5)) +
+         scale_x_continuous(breaks = c(-1, 0, 1)) +
+         #scale_y_continuous(breaks = c(-1, 0, 1)) +
+         theme(legend.position="none") +
+         labs(x='East-West (km)',y='North-South (km)')
+
+```
+
+## Comparison
+
+Let's plot them all up together to see how they compare.
+
+```{r, echo=T, message = F, fig.width=8, fig.height=8}
+#Plot
+library(ggpubr)
+ggarrange(plotCOAs, plotTVary, plotTagInt, 
+          labels = c("Standard","Time-varying","Tag-integrated"),
+          ncol = 3, nrow = 1,
+          align = "hv", 
+          #widths = c(8,8,8), heights = c(2,2,2),
+          common.legend = F)
+```
