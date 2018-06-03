@@ -2,7 +2,7 @@
 title: "Estimate activity centers from acoustic telemetry data"
 author: "Megan Winton"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: rmarkdown::github_document
 vignette: >
   %\VignetteIndexEntry{Estimate activity centers from acoustic telemetry data}
   %\VignetteEngine{knitr::rmarkdown}
