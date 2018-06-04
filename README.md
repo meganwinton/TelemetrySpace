@@ -11,4 +11,4 @@ if (!require(devtools)) {
 install_github("meganwinton/TelemetrySpace", build_vignettes = FALSE)
 ```
 If you change `build_vignettes` to `TRUE`, installation will take longer. Vignettes are already available in the `vignettes` folder on this page.
-Note that installation will take a few minutes because all Stan models are compiled when it is built.
+Note that installation will take a few minutes because all Stan models are compiled when the package is built.
