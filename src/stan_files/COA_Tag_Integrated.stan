@@ -14,7 +14,7 @@ data {
   real testX[ntest];               // test tag locations east-west
   real testY[ntest];               // test tag locations north-south
 }
-  
+
 // Declare parameters
 parameters {
   // fixed effects
@@ -34,17 +34,17 @@ transformed parameters  {
    real sigma;          // Standard deviation of the distance-decay function - assume constant
    real d[nind,nrec,ntime]; // Array to store distances
    real td[ntest,nrec]; // Matrix of test tag distances
-   
+
   // Specify them
    sigma = sqrt(1/(2*alpha1)); // Derived from coefficient specifying distance-related decay in detection prob.
-  // Test tag distance  
+  // Test tag distance
   for(s in 1:ntest){ // For each test tag
     for(j in 1:nrec){ // And each receiver
       // Calculate Euclidean distance from east test tag to each receiver
       td[s,j] = pow(pow(testX[s]-recX[j],2) + pow(testY[s]-recY[j],2),0.5); //Calc for euclidean distance
     }
   }
-  
+
   // COA distance
    for(t in 1:ntime){ // For each time step
     for(j in 1:nrec){ // And each receiver
@@ -54,11 +54,10 @@ transformed parameters  {
        // Detection probability
           //p0[t,j] = exp( alpha0 + alpha2[t,j] )/( 1+exp( alpha0 + alpha2[t,j] ) );
           p0[t,j] = exp( alpha0[t,j] )/( 1+exp( alpha0[t,j] ) );
-
-     }  
+     }
    }
  }
- 
+
 }
 
 // Model specification
@@ -66,17 +65,17 @@ model {
   // priors
   alpha0[ntime,nrec]~cauchy(0,2.5);
   alpha1~cauchy(0,2.5);
-  
+
   // likelihood
   for (t in 1:ntime){ // For each time step
    for (j in 1:nrec){ // And each receiver
     for (s in 1:ntest){ // And each test tag
       // Data from test tag - distance for each known
       test[s,j,t] ~ binomial(ntrans, p0[t,j]*exp(-alpha1*td[s,j]*td[s,j]));
-    } 
+    }
      for (i in 1:nind){ // And each individual
         // Note observations (y) must be specified as an integer - otherwise will result in an error
-        y[i,j,t] ~ binomial(ntrans, p0[t,j]*exp(-alpha1*d[i,j,t]*d[i,j,t])); 
+        y[i,j,t] ~ binomial(ntrans, p0[t,j]*exp(-alpha1*d[i,j,t]*d[i,j,t]));
     }
    }
   }
