@@ -18,7 +18,7 @@ We realize that many users will have unique situations and may need to modify th
 
 ## Data preparation
 
-The package includes two data sets: 1) 153 hours of detection data from a black sea bass (note that we have previously assigned each detection to the hour of deployment rather than providing the raw time stamp), and 2) hourly detections from a stationary test transmitter over the same time period. Two files containing the receiver coordinates and the location of the test tag are also included. We have provided the data in this format to illustrate data preparation specific to fitting these types of models; however, you will need to aggregate your date/time-stamps to the time period of interest. Receiver and test tag coordinates provided are in the Universal Transverse Mercator (zone 18) projection, which have previously been mean-centered and scaled into kilometers. *This scaling step is highly recommended to reduce run-times. In other words, do it to your dataset prior to starting the code chunks here.*
+The package includes two data sets: 1) 153 hours of detection data from a black sea bass (note that we have assigned time as the number of cumulative hours since the tag was deployed rather than providing the raw time stamp), and 2) hourly detections from a stationary test transmitter over the same time period. Two files containing the receiver coordinates and the location of the test tag are also included. We have provided the data in this format to illustrate data preparation specific to fitting these types of models; however, you will need to aggregate your date/time-stamps to the time period of interest. Receiver and test tag coordinates provided are in the Universal Transverse Mercator (zone 18) projection, which have previously been mean-centered and scaled into kilometers. *This scaling step is highly recommended to reduce run-times. In other words, do it to your dataset prior to starting the code chunks here.*
 To access the provided data, run:
 
 ```{r, echo = T, message = F, warnings = FALSE}
@@ -57,8 +57,8 @@ m1$dist=round(m1$D*1000)
 #Create label by merging station name and distance
 m1$label=paste(m1$dist,"m","(",m1$Station,")")
 
-#Plot
-library(ggplot2)
+#Plot using ggplot
+require(ggplot2)
 ggplot(data=m1,aes(x=hour,y=freq))+ 
   geom_bar(stat="identity",fill='#008080')+
   facet_wrap(~as.factor(label))+
@@ -227,6 +227,7 @@ for (i in 1:nind){
 post <- EN[[1]]
 coa <- as.data.frame(fit$COAs[,,1])
 # Plot in ggplot
+require(hexbin) # Package required to plot uncertainty clouds around COA estimates
 plotCOAs <- ggplot(aes(x=x,y=y),data=post) +
             geom_hex(alpha=1,bins=100)  +
             geom_point(aes(x=x,y=y),data=coa,pch=25,cex=1.5,alpha=.8,fill=NA) +
