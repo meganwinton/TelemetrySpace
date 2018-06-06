@@ -29,7 +29,7 @@ head(testdat) # Hourly detection data from the test tag
 head(fishdat) # Hourly detection data from a black sea bass
 ```
 
-Prior to doing anything else, we need to specify our 'state space' - the spatial extent of interest. This will consist of your receiver array and a 'buffer' area around the array. The buffer needs to be large enough to allow for individuals that may have activity centers outside of the receiver array. There is no general rule of thumb for this, but it should scale with the geographic extent covered by your array. I would suggest selecting a buffer that is large enough to allow you to discriminate between individuals that are detected along the periphery of the array and individuals that are not detected at all - a COA will be estimated for all time steps unless you specify the individual has left the area; time steps with 0 detections will have an estimated COA somewhere outside the detection range of all receivers (note that this could be within the array bounds if your array has non-continuous coverage). If there are many time steps with zeros, you may want to modify your data file to omit time periods with 0 detections or modify the relevant '.stan' code chunk included in the `src/stan_files' folder on your local machine to skip time periods with no detections, which will speed up computing times. As always, it is up to the user to make sure that the results make sense in the context of the species/array of interest.
+Prior to doing anything else, we need to specify our 'state space' - the spatial extent of interest. This will consist of your receiver array and a 'buffer' area around the array. The buffer needs to be large enough to allow for individuals that may have activity centers outside of the receiver array. There is no general rule of thumb for this, but it should scale with the geographic extent covered by your array. I would suggest selecting a buffer that is large enough to allow you to discriminate between individuals that are detected along the periphery of the array and individuals that are not detected at all - a COA will be estimated for all time steps unless you specify the individual has left the area; time steps with 0 detections will have an estimated COA somewhere outside the detection range of all receivers (note that this could be within the array bounds if your array has non-continuous coverage). If there are many time steps with zeros, you may want to modify your data file to omit time periods with 0 detections or modify the relevant `.stan` code chunk included in the `src/stan_files` folder on your local machine to skip time periods with no detections, which will speed up computing times. As always, it is up to the user to make sure that the results make sense in the context of the species/array of interest.
 
 ```{r, echo = T, message = F}
 # Define state-space of point process - 'buffer' adds a fixed buffer to the outer extent of the recs
@@ -94,7 +94,7 @@ tsteps <- apply(rs[,4:ncol(rs)],1,sum)
 tsteps # Will all be the same here because all operational over the entire time span
 ```
 
-Since detection records only include non-zero events (here assuming we'd like to keep time steps with zeros), we'll need to convert the number of detections to include zeros for all transmitters that did not detect the tag during that time period.
+Since detection records only include non-zero events (here assuming we'd like to keep time steps with zeros), we'll need to convert the number of detections to include zeros for all receivers that did not detect the tag during that time period.
 
 ```{r, echo=T, message = F}
 ## Starting with the test tag data
@@ -158,7 +158,7 @@ for( t in 1:max(tsteps) ){
 
 ## Fit the standard COA model  
 
-After all of that data processing, we're finally ready to fit our model! We'll start by fitting the model assuming that detection probabilities are the same among all receivers and remain constant over time (As we all know, this will pretty much never be the case in 'real-life' but best to start simple!). Besides, this model is handy when you don't have test-tag (or other) data available to inform detection probabilities but would like to be able to estimate COAs along the periphery of the array. The only other information you'll need to provide is the expected number of transmissions per tag per time interval (`ntrans` below).
+After all of that data processing, we're finally ready to fit our model! We'll start by fitting the model assuming that detection probabilities are the same among all receivers and remain constant over time (As we all know, this will pretty much never be the case in 'real-life' but best to start simple). Besides, this model is handy when you don't have test-tag (or other) data available to inform detection probabilities but would like to be able to estimate COAs along the periphery of the array. The only other information you'll need to provide is the expected number of transmissions per tag per time interval (`ntrans` below).
 
 ```{r, echo=T, message = F}
 ### Format data for model fitting
@@ -174,7 +174,7 @@ fit <- COA_Standard(nind=nind, # number of individuals
 
 ```
 
-The function will automatically spit out the run-time associated with each of the 4 chains used for fitting (above) and returns a list with four objects:
+The function will automatically spit out the run-time associated with each of the 4 chains used for fitting and returns a list with four objects:
 
 ```{r, echo=T, message = F}
 summary(fit)
@@ -302,9 +302,9 @@ plotTVary <- ggplot(aes(x=x,y=y),data=post) +
          labs(x='East-West (km)',y='North-South (km)')
 ```
 
-## Fit a model that uses detections from a moored test tag to inform detection probabilites
+## Fit a model that uses detections from a moored test tag to inform detection probabilities
 
-Now we'll fit the most exciting model - the model that integrates test tag data to inform detection probabilities. This model is a simple extension of the previous models - it just adds a component that specifies the distance of each test tag from each receiver, and shifts the probability of detection by comparing the number of detections logged at each receiver versus those emitted from the test tag in each time step. In other words, it treats test tags as tagged individuals but with known COA. The only other information you'll need to provide is the expected number of transmissions per tag per time interval (`ntrans`).
+Now we'll fit the most exciting model - the model that integrates test tag data to inform detection probabilities. This model is a simple extension of the previous models - it just adds a component that specifies the distance of each test tag from each receiver, and shifts the probability of detection by comparing the number of detections logged at each receiver versus those emitted from the test tag in each time step. In other words, it treats test tags as tagged individuals but with known COAs. The only other information you'll need to provide is the expected number of transmissions per tag per time interval (`ntrans`).
 
 ```{r, echo=T, message = F}
 ### Format data for model fitting
@@ -371,7 +371,7 @@ plotTagInt <- ggplot(aes(x=x,y=y),data=post) +
 
 ## Comparison
 
-Let's plot them all up together to see how they compare. 
+Now plot them all up together to see how they compare!
 
 ```{r, echo=T, message = F, fig.width=8, fig.height=8}
 #Plot
