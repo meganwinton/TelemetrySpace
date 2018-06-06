@@ -26,7 +26,7 @@ COA_Standard <- function(nind, nrec, ntime, ntrans, y, recX, recY, xlim, ylim) {
   fit_estimates <- as.data.frame(fit_model) # Note this returns parameters and latent states/derived values
   
   # Summary statistics and convergence diagnostics
-  fit_summary <- rstan::summary(fit_model, pars = c("alpha0", "p0","alpha1","sigma") )$summary
+  fit_summary <- rstan::summary(fit_model, pars = c("p0","sigma") )$summary
   #fit_summary <- fit_sum$summary
 
   # How much time did fitting take?

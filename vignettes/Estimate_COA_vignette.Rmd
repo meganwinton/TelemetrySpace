@@ -11,14 +11,17 @@ vignette: >
 
 ## Introduction
 
-This vignette will walk you through the analyses presented by Winton et al. (in prep), who describe the use of spatial point process models to estimate individual centers of activity from passive acoustic telemetry data. The vignette progresses from applying the simplest case, which assumes that detection probabilities/receiver detection ranges remain constant over time, to application of a test-tag integrated model, which incorporates detection data from one or more stationary test transmitters to estimate time-varying detection ranges. The models are fitted in a Bayesian framework using the Stan software (Carpenter et al. 2016); code was modified from that provided in Royle et al. (2014) for fitting spatial point process models to data from camera traps. We prefer the Bayesian approach for COA estimation due to its treatment of uncertainty, but realize the longer computational time required may be prohibitive for some applications. In the near future, we will update to include an option to fit in a maximum likelihood framework, which will reduce run times.
+This vignette will walk you through the analyses presented by Winton, Kneebone, Zemeckis, and Fay (in prep), who describe the use of spatial point process models to estimate individual centers of activity from passive acoustic telemetry data. The vignette progresses from applying the simplest case, which assumes that detection probabilities/receiver detection ranges remain constant over time, to application of a test-tag integrated model, which incorporates detection data from one or more stationary test transmitters to estimate time-varying detection ranges. The models are fitted in a Bayesian framework using the Stan software (Carpenter et al. 2016); code was modified from that provided in Royle et al. (2014) for fitting spatial point process models to data from camera traps. We prefer the Bayesian approach for COA estimation due to its treatment of uncertainty, but realize the longer computational time required may be prohibitive for some applications. In the near future, we will update to include an option to fit in a maximum likelihood framework, which will reduce run times. We'd also like to note that the models described can support varying degrees of complexity - not all applications will require (or have the data to support) the most complex version of the model.
+
+We realize that many users will have unique situations and may need to modify the base code to suit their purposes. Users can copy the `.stan` files contained in the `src/stan_files` folder to their local machine to do so. We will be happy to accommodate user requests (as our schedules allow). Our hope is to make this a collaborative package that will evolve based on the needs of the acoustic telemetry community and continue to improve over time. We have tried to make the instructions outlined in this vignette user-friendly since we are a group of applied biologists with varying degrees of statistical experience. If some of the statistical notation outlined here or in the paper remains unclear, feel free to contact us with questions/for clarification. Most of it is actually very inutitive, and we would like to make sure that comes through in the documentation. This is a new package, so if you find bugs, places where code efficiency could be improved, or instances where the documentation could be made more user-friendly, please let us know! 
  
 
 ## Data preparation
 
-The package includes two data sets: 1) hourly detection data from a tagged black sea bass and 2) hourly detections from a stationary test transmitter over the same time period. Two files containing the receiver coordinates and the location of the test tag are also included. We have provided the data in a raw format to illustrate data preparation as well as model fitting. To access the provided data, run:
+The package includes two data sets: 1) 153 hours of detection data from a black sea bass (note that we have previously assigned each detection to the hour of deployment rather than providing the raw time stamp), and 2) hourly detections from a stationary test transmitter over the same time period. Two files containing the receiver coordinates and the location of the test tag are also included. We have provided the data in this format to illustrate data preparation specific to fitting these types of models; however, you will need to aggregate your date/time-stampes to the time period of interest. Receiver and test tag coordinates provided are in the Universal Transverse Mercator (zone 18) projection, which have previously been mean-centered and scaled into kilometers. *This scaling step is highly recommended to reduce run-times. In other words, do it to your dataset prior to starting the code chunks here.*
+To access the provided data, run:
 
-```{r, echo = T, message = F}
+```{r, echo = T, message = F, warnings = FALSE}
 library(TelemetrySpace)
 rlocs # Receiver locations
 testloc # Test tag location
@@ -26,7 +29,7 @@ head(testdat) # Hourly detection data from the test tag
 head(fishdat) # Hourly detection data from a black sea bass
 ```
 
-Prior to doing anything else, we need to specify our 'state space' - the spatial extent of interest. This needs to be large enough to allow for individuals that may have activity centers outside of the receiver array.
+Prior to doing anything else, we need to specify our 'state space' - the spatial extent of interest. This will consist of your receiver array and a 'buffer' area around the array. The buffer needs to be large enough to allow for individuals that may have activity centers outside of the receiver array. There is no general rule of thumb for this, but it should scale with the geographic extent covered by your array. I would suggest selecting a buffer that is large enough to allow you to discriminate between individuals that are detected along the periphery of the array and individuals that are not detected at all - a COA will be estimated for all time steps unless you specify the individual has left the area; time steps with 0 detections will have an estimated COA somewhere outside the detection range of all receivers (note that this could be within the array bounds if your array has non-continuous coverage). If there are many time steps with zeros, you may want to modify your data file to omit time periods with 0 detections or modify the relevant '.stan' code chunk included in the `src/stan_files' folder on your local machine to skip time periods with no detections, which will speed up computing times. As always, it is up to the user to make sure that the results make sense in the context of the species/array of interest.
 
 ```{r, echo = T, message = F}
 # Define state-space of point process - 'buffer' adds a fixed buffer to the outer extent of the recs
@@ -35,7 +38,7 @@ xlim=c(min(rlocs$east-buffer),max(rlocs$east+buffer))
 ylim=c(min(rlocs$north-buffer),max(rlocs$north+buffer))
 ```
 
-Next, calculate the distance between the test tag's location and each receiver. This can be done using the included 'distf' function.
+Next, we need to prepare our test tag data. First, calculate the distance between the test tag's location and each receiver. This can be done using the included 'distf' function.
 
 ```{r, echo=T, message = F, fig.width=6, fig.height=6}
 # Set up a blank vector for storage
@@ -64,7 +67,7 @@ ggplot(data=m1,aes(x=hour,y=freq))+
   labs(x="Hours since deployment",y="Number of detections")
 ```
 
-Tally how many time intervals each receiver was operational for - This allows for individual receivers deployed for different periods and/or receivers that were lost.
+Tally how many time intervals each receiver was operational for - this allows for individual receivers deployed for different periods and/or receivers that were lost.
 
 ```{r, echo=T, message = F}
 # The full analysis takes several hours to run, so we'll subset out 10 hours to illustrate
@@ -91,7 +94,7 @@ tsteps <- apply(rs[,4:ncol(rs)],1,sum)
 tsteps # Will all be the same here because all operational over the entire time span
 ```
 
-Since detection records only include non-zero events, we'll need to convert the number of detections to include zeros for all transmitters
+Since detection records only include non-zero events (here assuming we'd like to keep time steps with zeros), we'll need to convert the number of detections to include zeros for all transmitters that did not detect the tag during that time period.
 
 ```{r, echo=T, message = F}
 ## Starting with the test tag data
@@ -121,7 +124,11 @@ for( t in 1:max(tsteps) ){
     }
   }  
 }
+```
 
+Now we'll do the same thing for the black sea bass detection data. 
+
+```{r, echo=T, message = F}
 ## Now do the same for each tagged fish
 fishdat$rec <- as.numeric(substr(fishdat$Station, 3, 4))
 fishdat$count <- 1 # Add a column that indicates each record corresponds to 1 detection
@@ -151,7 +158,7 @@ for( t in 1:max(tsteps) ){
 
 ## Fit the standard COA model  
 
-After all of that data processing, we're finally ready to fit our model! We'll start by fitting the model assuming that detection probabilities are the same among all receivers and remain constant over time (This will pretty much never be the case, but best to start simple!). The only other information you'll need to provide is the expected number of transmissions per tag per time interval (ntrans below).
+After all of that data processing, we're finally ready to fit our model! We'll start by fitting the model assuming that detection probabilities are the same among all receivers and remain constant over time (As we all know, this will pretty much never be the case in 'real-life' but best to start simple!). Besides, this model is handy when you don't have test-tag (or other) data available to inform detection probabilities but would like to be able to estimate COAs along the periphery of the array. The only other information you'll need to provide is the expected number of transmissions per tag per time interval (`ntrans` below).
 
 ```{r, echo=T, message = F}
 ### Format data for model fitting
@@ -164,15 +171,16 @@ fit <- COA_Standard(nind=nind, # number of individuals
                     recY=as.vector(rlocs$north), # N-S receiver coordinates 
                     xlim=xlim, # E-W boundary of spatial extent (receiver array + buffer)
                     ylim=ylim) # N-S boundary of spatial extent (receiver array + buffer)
+
 ```
 
-The function returns a list with four objects:
+The function will automatically spit out the run-time associated with each of the 4 chains used for fitting (above) and returns a list with four objects:
 
 ```{r, echo=T, message = F}
 summary(fit)
 ```
 
-The first contains the Stan model object (accessible via fit$Model, which will allow you to use rstan plotting tools and diagnostic plots - see rstan documentation for details).
+The first contains the Stan model object (accessible via `fit$Model`, which will allow you to use `rstan` plotting tools and diagnostic plots - see rstan documentation for details).
 
 The second element is a table of parameter estimates and associated quantiles from the posterior distribution. The table also includes the effective sample size and the Rhat statistic (which should be ~1).
 
@@ -180,7 +188,7 @@ The second element is a table of parameter estimates and associated quantiles fr
 fit$Summary
 ```
 
-The third returns the time required to run the model (in minutes). Note that Stan will automatically detect and use multiple cores. If the computer used to run this has multiple cores, the time returned will be longer than the actual run time (because it will sum the time for each core). To return the realzied run time, divide fit$Time by the number of cores.
+The third returns the time required to run the model (in minutes). Note that Stan will automatically detect and use multiple cores. If the computer used to run this has multiple cores, the time returned will be longer than the actual run time (because it will sum the time for each core). To return the realized run time, divide `fit$Time` by the number of cores.
 
 ```{r, echo=T, message = F}
 fit$Time
@@ -192,7 +200,7 @@ The fourth returns an array of COA estimates, where each matrix corresponds to o
 fit$COAs
 ```
 
-The last element (fit$All_estimates) contains the estimates from each non-warm-up iteration for all 4 chains. (If you're not familiar with Bayesian lingo and this just seems like statistical jargon, all you need to know is that this is what you'll use to plot the uncertainty cloud around COA estimates and/or the distribution of parameter estimates as presented in the paper.) This includes estimates of all latent parameters for each individual in each time step, so we will need to subset out parameters for plotting.
+The last element (`fit$All_estimates`) contains the estimates from each non-warm-up iteration for all 4 chains. (If you're not familiar with Bayesian lingo and this just seems like statistical jargon, all you need to know is that this is what you'll use to plot the uncertainty cloud around COA estimates and/or the distribution of parameter estimates as presented in the paper.) This includes estimates of all latent parameters for each individual in each time step (aka this element contains tons of parameter estimates), so we will need to subset out parameters for plotting.
 
 ```{r, echo=T, message = F}
 
@@ -237,7 +245,7 @@ plotCOAs <- ggplot(aes(x=x,y=y),data=post) +
 
 ## Fit a COA model that allows for receiver- and time-specific detection probabilities
 
-Now let's fit a model that allows for variation in detection probabilites. This model is a simple extension of the previous model - it just adds a component that specifies the distance of each test tag from each receiver, and shifts the probability of detection by comparing the number of detections logged at each receiver versus those emitted from the test tag. The only other information you'll need to provide is the expected number of transmissions per tag per time interval.
+Now let's fit a model that allows for variation in detection probabilites. This model is a simple extension of the previous model - it just allows the detection probability to vary between time steps and receivers. The only other information you'll need to provide is the expected number of transmissions per tag per time interval (`ntrans`).
 
 ```{r, echo=T, message = F}
 ### Format data for model fitting
@@ -296,7 +304,7 @@ plotTVary <- ggplot(aes(x=x,y=y),data=post) +
 
 ## Fit a model that uses detections from a moored test tag to inform detection probabilites
 
-Now we'll fit the model we're really interested in - the model that integrates test tag data to inform detection probabilites. This model is a simple extension of the previous model - it just adds a component that specifies the distance of each test tag from each receiver, and shifts the probability of detection by comparing the number of detections logged at each receiver versus those emitted from the test tag. The only other information you'll need to provide is the expected number of transmissions per tag per time interval.
+Now we'll fit the most exciting model - the model that integrates test tag data to inform detection probabilites. This model is a simple extension of the previous models - it just adds a component that specifies the distance of each test tag from each receiver, and shifts the probability of detection by comparing the number of detections logged at each receiver versus those emitted from the test tag in each time step. In other words, it treats test tags as tagged individuals but with known COA. The only other information you'll need to provide is the expected number of transmissions per tag per time interval (`ntrans`).
 
 ```{r, echo=T, message = F}
 ### Format data for model fitting
@@ -363,7 +371,7 @@ plotTagInt <- ggplot(aes(x=x,y=y),data=post) +
 
 ## Comparison
 
-Let's plot them all up together to see how they compare.
+Let's plot them all up together to see how they compare. 
 
 ```{r, echo=T, message = F, fig.width=8, fig.height=8}
 #Plot

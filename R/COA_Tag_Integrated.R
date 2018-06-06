@@ -31,7 +31,7 @@ COA_TagInt <- function(nind, nrec, ntime, ntest, ntrans, y, test, recX, recY, xl
   fit_estimates <- as.data.frame(fit_model) # Note this returns parameters and latent states/derived values
   
   # Summary statistics and convergence diagnostics
-  fit_summary <- rstan::summary(fit_model, pars = c("alpha0","alpha1","sigma","p0") )$summary
+  fit_summary <- rstan::summary(fit_model, pars = c("p0","sigma") )$summary
   #fit_summary <- fit_sum$summary
 
   # How much time did fitting take (in minutes)?
