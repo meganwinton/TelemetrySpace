@@ -48,10 +48,10 @@ for( i in 1:nrow(testdat) ){
   D[i]=distf( testloc[,c('east','north')], testdat[i,c('east','north')] )
 }
 
-testdat$D <- D # Assign to testdat data frame
+testdat$D <- unlist(D) # Assign to testdat data frame
 
 # Plot to examine variation in detection rate over time
-m1 <- plyr::count(testdat, c('Station','hour','D','east','north'))
+m1 <- dplyr::count(testdat, Station, hour, D, east, north)
 #Round distance for plotting
 m1$dist=round(m1$D*1000)
 #Create label by merging station name and distance
@@ -59,7 +59,7 @@ m1$label=paste(m1$dist,"m","(",m1$Station,")")
 
 #Plot using ggplot
 require(ggplot2)
-ggplot(data=m1,aes(x=hour,y=freq))+ 
+ggplot(data=m1,aes(x=hour,y=n))+ 
   geom_bar(stat="identity",fill='#008080')+
   facet_wrap(~as.factor(label))+
   theme(text = element_text(size = 16)) +
@@ -78,16 +78,16 @@ testdat <- testdat[testdat$hour < 11,]
 rs <- rlocs
 # Add column for each time interval to indicate whether receiver was operational or not
 rs[,c(4:( max(fishdat$hour)+3 ) )] <- 1
-  rs <- plyr::rename( rs, replace = c("V4"=1, 
-                                      "V5"=2, 
-                                      "V6"=3, 
-                                      "V7"=4, 
-                                      "V8"=5, 
-                                      "V9"=6, 
-                                      "V10"=7, 
-                                      "V11"=8, 
-                                      "V12"=9, 
-                                      "V13"=10) )
+  rs <- dplyr::rename( rs, `1`="...4", 
+                            `2`="...5", 
+                            `3`="...6", 
+                            `4`="...7", 
+                            `5`="...8", 
+                            `6`="...9", 
+                            `7`="...10", 
+                            `8`="...11", 
+                            `9`="...12", 
+                            `10`="...13")
 
 # Create vector of the number of sampling occasions for each receiver 
 tsteps <- apply(rs[,4:ncol(rs)],1,sum)
@@ -216,7 +216,8 @@ for (i in 1:nind){
   ns[[i]] <- dplyr::select(fit$All_estimates, dplyr::starts_with( paste("sy[",i,",", sep='') ) )
 
   # Merge them into one dataframe
-  EN[[i]]=cbind(data.table::melt(ew[[i]]),data.table::melt(ns[[i]])[,2])
+  EN[[i]]=cbind(data.table::melt(data.table::data.table(ew[[i]])),
+    data.table::melt(data.table::data.table(ns[[i]]))[,2])
   EN[[i]]$id=as.numeric(EN[[i]]$variable) # The ID field corresponds to the time step.
   colnames(EN[[i]])=c('variable','x','y','time')
 }
@@ -250,15 +251,16 @@ Now let's fit a model that allows for variation in detection probabilities. This
 
 ```{r, echo=T, message = F}
 ### Format data for model fitting
-fit_vary <- COA_TimeVarying(nind=nind, # number of individuals
-                            nrec=nrec, # number of receivers
-                            ntime=tsteps, # number of time steps
-                            ntrans=30, # number of expected transmissions per tag per time interval
-                            y=Y,   # array of detections from tagged fish
-                            recX=as.vector(rlocs$east),  # E-W receiver coordinates
-                            recY=as.vector(rlocs$north), # N-S receiver coordinates 
-                            xlim=xlim, # E-W boundary of spatial extent (receiver array + buffer)
-                            ylim=ylim) # N-S boundary of spatial extent (receiver array + buffer)
+fit_vary <- COA_TimeVarying(
+  nind=nind, # number of individuals
+  nrec=nrec, # number of receivers
+  ntime=tsteps, # number of time steps
+  ntrans=30, # number of expected transmissions per tag per time interval
+  y=Y,   # array of detections from tagged fish
+  recX=as.vector(rlocs$east),  # E-W receiver coordinates
+  recY=as.vector(rlocs$north), # N-S receiver coordinates 
+  xlim=xlim, # E-W boundary of spatial extent (receiver array + buffer)
+  ylim=ylim) # N-S boundary of spatial extent (receiver array + buffer)
 
 summary(fit_vary)
 
@@ -276,7 +278,8 @@ for (i in 1:nind){
   ns[[i]] <- dplyr::select(fit_vary$All_estimates, dplyr::starts_with( paste("sy[",i,",", sep='') ) )
 
   # Merge them into one dataframe
-  EN[[i]]=cbind(data.table::melt(ew[[i]]),data.table::melt(ns[[i]])[,2])
+  EN[[i]]=cbind(data.table::melt(data.table::data.table(ew[[i]])),
+      data.table::melt(data.table::data.table(ns[[i]]))[,2])
   EN[[i]]$id=as.numeric(EN[[i]]$variable) # The ID field corresponds to the time step.
   colnames(EN[[i]])=c('variable','x','y','time')
 }
@@ -342,7 +345,8 @@ for (i in 1:nind){
   ns[[i]] <- dplyr::select(fit_tag$All_estimates, dplyr::starts_with( paste("sy[",i,",", sep='') ) )
 
   # Merge them into one dataframe
-  EN[[i]]=cbind(data.table::melt(ew[[i]]),data.table::melt(ns[[i]])[,2])
+  EN[[i]]=cbind(data.table::melt(data.table::data.table(ew[[i]])),
+      data.table::melt(data.table::data.table(ns[[i]]))[,2])
   EN[[i]]$id=as.numeric(EN[[i]]$variable) # The ID field corresponds to the time step.
   colnames(EN[[i]])=c('variable','x','y','time')
 }
