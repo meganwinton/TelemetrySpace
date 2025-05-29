@@ -11,3 +11,7 @@ Spatial point process and random field models for electronic tagging data
 \references{
 Stan Development Team (2017). RStan: the R interface to Stan. R package version 2.16.2. http://mc-stan.org
 }
+\author{
+\strong{Maintainer}: Megan Winton \email{megan.winton@gmail.com}
+
+}

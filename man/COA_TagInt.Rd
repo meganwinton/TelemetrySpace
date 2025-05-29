@@ -4,8 +4,21 @@
 \alias{COA_TagInt}
 \title{Fits a test-tag integrated Bayesian Spatial Point Process model to estimate individual centers of activity from acoustic telemetry data using Stan}
 \usage{
-COA_TagInt(nind, nrec, ntime, ntest, ntrans, y, test, recX, recY, xlim, ylim,
-  testX, testY)
+COA_TagInt(
+  nind,
+  nrec,
+  ntime,
+  ntest,
+  ntrans,
+  y,
+  test,
+  recX,
+  recY,
+  xlim,
+  ylim,
+  testX,
+  testY
+)
 }
 \arguments{
 \item{nind}{Number of tagged individuals}

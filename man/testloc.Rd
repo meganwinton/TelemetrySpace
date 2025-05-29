@@ -4,7 +4,9 @@
 \name{testloc}
 \alias{testloc}
 \title{Location of a stationary test transmitter placed in the black sea bass array}
-\format{A data frame with two variables: \code{east} East-West coordinate, \code{north} North-South coordinate.}
+\format{
+A data frame with two variables: \code{east} East-West coordinate, \code{north} North-South coordinate.
+}
 \usage{
 testloc
 }

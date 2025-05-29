@@ -4,8 +4,10 @@
 \name{rlocs}
 \alias{rlocs}
 \title{Receiver locations from a black sea bass array}
-\format{A data frame with three variables: \code{Station} Receiver ID, \code{east} East-West coordinate,
-  \code{north} North-South coordinate.}
+\format{
+A data frame with three variables: \code{Station} Receiver ID, \code{east} East-West coordinate,
+  \code{north} North-South coordinate.
+}
 \usage{
 rlocs
 }
