@@ -1,7 +1,7 @@
 ---
 title: "Estimate activity centers from acoustic telemetry data"
 author: "Megan Winton"
-date: "`r Sys.Date()`"
+date: "2018-06-06, updated 2025-06-02"
 output: rmarkdown::github_document
 vignette: >
   %\VignetteIndexEntry{Estimate activity centers from acoustic telemetry data}
@@ -21,17 +21,76 @@ We realize that many users will have unique situations and may need to modify th
 The package includes two data sets: 1) 153 hours of detection data from a black sea bass (note that we have assigned time as the number of cumulative hours since the tag was deployed rather than providing the raw date/time stamp), and 2) hourly detections from a stationary test transmitter over the same time period. Two files containing the receiver coordinates and the location of the test tag are also included. We have provided the data in this format to illustrate data preparation specific to fitting these types of models; however, you will need to aggregate your date/time stamps to the time period of interest. Receiver and test tag coordinates provided are in the Universal Transverse Mercator (zone 18) projection, which have previously been mean-centered and scaled into kilometers. *This scaling step is highly recommended to reduce run-times. In other words, do it to your dataset prior to starting the code chunks here.*
 To access the provided data, run:
 
-```{r, echo = T, message = F, warnings = FALSE}
+
+``` r
 library(TelemetrySpace)
 rlocs # Receiver locations
+```
+
+```
+## # A tibble: 30 × 3
+##    Station   east  north
+##    <chr>    <dbl>  <dbl>
+##  1 SB1     -1.33  1.61  
+##  2 SB2     -0.579 1.91  
+##  3 SB3      0.219 2.00  
+##  4 SB4      1.00  1.81  
+##  5 SB5     -1.69  0.896 
+##  6 SB6     -0.879 0.950 
+##  7 SB7     -0.231 1.20  
+##  8 SB8      0.464 1.21  
+##  9 SB9      1.28  1.04  
+## 10 SB10    -1.77  0.0952
+## # ℹ 20 more rows
+```
+
+``` r
 testloc # Test tag location
+```
+
+```
+## # A tibble: 1 × 2
+##     east north
+##    <dbl> <dbl>
+## 1 -0.329 0.713
+```
+
+``` r
 head(testdat) # Hourly detection data from the test tag
+```
+
+```
+## # A tibble: 6 × 5
+##   Station Transmitter   east north  hour
+##   <chr>         <dbl>  <dbl> <dbl> <dbl>
+## 1 SB12           3447 -0.326 0.513     1
+## 2 SB13           3447  0.125 0.575     1
+## 3 SB7            3447 -0.231 1.20      1
+## 4 SB6            3447 -0.879 0.950     1
+## 5 SB13           3447  0.125 0.575     1
+## 6 SB6            3447 -0.879 0.950     1
+```
+
+``` r
 head(fishdat) # Hourly detection data from a black sea bass
+```
+
+```
+## # A tibble: 6 × 5
+##   Station Transmitter   east north  hour
+##   <chr>         <dbl>  <dbl> <dbl> <dbl>
+## 1 SB15           3425  0.190 0.209     1
+## 2 SB14           3425 -0.261 0.159     1
+## 3 SB15           3425  0.190 0.209     1
+## 4 SB14           3425 -0.261 0.159     1
+## 5 SB12           3425 -0.326 0.513     1
+## 6 SB14           3425 -0.261 0.159     1
 ```
 
 Prior to doing anything else, we need to specify our 'state space' - the spatial extent of interest. This will consist of your receiver array and a 'buffer' area around the array. The buffer needs to be large enough to allow for individuals that may have activity centers outside of the receiver array. There is no general rule of thumb for this, but it should scale with the geographic extent covered by your array. I would suggest selecting a buffer that is large enough to allow you to discriminate between individuals that are detected along the periphery of the array and individuals that are not detected at all - a COA will be estimated for all time steps unless you specify the individual has left the area; time steps with 0 detections will have an estimated COA somewhere outside the detection range of all receivers (note that this could be within the array bounds if your array has non-continuous coverage). If there are many time steps with zeros, you may want to modify your data file to omit time periods with 0 detections or modify the relevant `.stan` code chunk included in the `src/stan_files` folder on your local machine to skip time periods with no detections, which will speed up computing times. As always, it is up to the user to make sure that the results make sense in the context of the species/array of interest.
 
-```{r, echo = T, message = F}
+
+``` r
 # Define state-space of point process - 'buffer' adds a fixed buffer to the outer extent of the recs
 buffer=1
 xlim=c(min(rlocs$east-buffer),max(rlocs$east+buffer))
@@ -40,7 +99,8 @@ ylim=c(min(rlocs$north-buffer),max(rlocs$north+buffer))
 
 Next, we need to prepare our test tag data. First, calculate the distance between the test tag's location and each receiver. This can be done using the included 'distf' function.
 
-```{r, echo=T, message = F, fig.width=6, fig.height=6}
+
+``` r
 # Set up a blank vector for storage
 D<-NULL
 # Loop over each hour
@@ -67,9 +127,12 @@ ggplot(data=m1,aes(x=hour,y=n))+
   labs(x="Hours since deployment",y="Number of detections")
 ```
 
+![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png)
+
 Tally how many time intervals each receiver was operational for - this allows for individual receivers deployed for different periods and/or receivers that were lost.
 
-```{r, echo=T, message = F}
+
+``` r
 # The full analysis takes several hours to run, so we'll subset out 10 hours to illustrate
 fishdat <- fishdat[fishdat$hour < 11,]
 testdat <- testdat[testdat$hour < 11,]
@@ -94,9 +157,15 @@ tsteps <- apply(rs[,4:ncol(rs)],1,sum)
 tsteps # Will all be the same here because all operational over the entire time span
 ```
 
+```
+##  [1] 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10
+## [25] 10 10 10 10 10 10
+```
+
 Since detection records only include non-zero events (here assuming we'd like to keep time steps with zeros), we'll need to convert the number of detections to include zeros for all receivers that did not detect the tag during that time period.
 
-```{r, echo=T, message = F}
+
+``` r
 ## Starting with the test tag data
 testdat$rec <- as.numeric(substr(testdat$Station, 3, 4))
 testdat$count <- 1 # Add a column that indicates each record corresponds to 1 detection
@@ -128,7 +197,8 @@ for( t in 1:max(tsteps) ){
 
 Now we'll do the same thing for the black sea bass detection data. 
 
-```{r, echo=T, message = F}
+
+``` r
 ## Now do the same for each tagged fish
 fishdat$rec <- as.numeric(substr(fishdat$Station, 3, 4))
 fishdat$count <- 1 # Add a column that indicates each record corresponds to 1 detection
@@ -160,7 +230,8 @@ for( t in 1:max(tsteps) ){
 
 After all of that data processing, we're finally ready to fit our model! We'll start by fitting the model assuming that detection probabilities are the same among all receivers and remain constant over time (As we all know, this will pretty much never be the case in 'real-life' but best to start simple). Besides, this model is handy when you don't have test-tag (or other) data available to inform detection probabilities but would like to be able to estimate COAs along the periphery of the array. The only other information you'll need to provide is the expected number of transmissions per tag per time interval (`ntrans` below).
 
-```{r, echo=T, message = F}
+
+``` r
 ### Format data for model fitting
 fit <- COA_Standard(nind=nind, # number of individuals
                     nrec=nrec, # number of receivers
@@ -171,39 +242,88 @@ fit <- COA_Standard(nind=nind, # number of individuals
                     recY=as.vector(rlocs$north), # N-S receiver coordinates 
                     xlim=xlim, # E-W boundary of spatial extent (receiver array + buffer)
                     ylim=ylim) # N-S boundary of spatial extent (receiver array + buffer)
+```
 
+```
+##         warmup sample
+## chain:1  9.318  9.413
+## chain:2  8.993  9.111
+## chain:3  9.250  9.139
+## chain:4  9.069  9.335
 ```
 
 The function will automatically spit out the run-time associated with each of the 4 chains used for fitting and returns a list with four objects:
 
-```{r, echo=T, message = F}
+
+``` r
 summary(fit)
+```
+
+```
+##               Length Class      Mode   
+## Model           1    stanfit    S4     
+## Summary        20    -none-     numeric
+## Time            1    -none-     numeric
+## COAs           70    -none-     numeric
+## All_estimates 325    data.frame list
 ```
 
 The first contains the Stan model object (accessible via `fit$Model`, which will allow you to use `rstan` plotting tools and diagnostic plots - see rstan documentation for details).
 
 The second element is a table of parameter estimates and associated quantiles from the posterior distribution. The table also includes the effective sample size and the Rhat statistic (which should be ~1).
 
-```{r, echo=T, message = F}
+
+``` r
 fit$Summary
+```
+
+```
+##            mean      se_mean         sd      2.5%       25%       50%
+## p0    0.2816098 0.0001813604 0.02616856 0.2336129 0.2636594 0.2802601
+## sigma 0.2847648 0.0001125419 0.01490953 0.2557583 0.2747175 0.2847425
+##             75%     97.5%    n_eff      Rhat
+## p0    0.2983083 0.3370475 20819.71 0.9999236
+## sigma 0.2946502 0.3144734 17550.90 0.9999243
 ```
 
 The third returns the time required to run the model (in minutes). Note that Stan will automatically detect and use multiple cores. If the computer used to run this has multiple cores, the time returned will be longer than the actual run time (because it will sum the time for each core). To return the realized run time, divide `fit$Time` by the number of cores.
 
-```{r, echo=T, message = F}
+
+``` r
 fit$Time
+```
+
+```
+## [1] 1.227133
 ```
 
 The fourth returns an array of COA estimates, where each matrix corresponds to one individual, the rows correspond to each time step, and the columns include the median posterior estimate of the east-west (x) and north-south (y) coordinates. The 95% credible interval (Bayesian version of a confidence interval) for each coordinate is also provided.
 
-```{r, echo=T, message = F}
+
+``` r
 fit$COAs
+```
+
+```
+## , , 1
+## 
+##       time           x         y    x.lower     x.upper   y.lower   y.upper
+##  [1,]    1 -0.04562983 0.2927974 -0.1460015  0.05380061 0.1860443 0.4024706
+##  [2,]    2 -0.02279693 0.3594920 -0.1451067  0.10048378 0.2192032 0.5019756
+##  [3,]    3 -0.09918170 0.3838710 -0.2564443  0.05066752 0.1944144 0.5679439
+##  [4,]    4 -0.12362013 0.2827371 -0.2824332  0.02496207 0.1108066 0.4705820
+##  [5,]    5 -0.16982891 0.3257759 -0.3318031 -0.01874709 0.1481573 0.5117793
+##  [6,]    6 -0.12782389 0.7020318 -0.4759313  0.18857239 0.1091342 0.8871488
+##  [7,]    7 -0.04974917 0.3670782 -0.1653764  0.06577540 0.2345002 0.4985898
+##  [8,]    8 -0.15533665 0.4043992 -0.2818052 -0.03394364 0.2680841 0.5396112
+##  [9,]    9 -0.05027276 0.3346342 -0.2171070  0.11475301 0.1273728 0.5483445
+## [10,]   10 -0.10047669 0.3149532 -0.2957016  0.08186775 0.0829769 0.5677180
 ```
 
 The last element (`fit$All_estimates`) contains the estimates from each non-warm-up iteration for all 4 chains. (If you're not familiar with Bayesian lingo and this just seems like statistical jargon, all you need to know is that this is what you'll use to plot the uncertainty cloud around COA estimates and/or the distribution of parameter estimates as presented in the paper.) This includes estimates of all latent parameters for each individual in each time step (aka this element contains tons of parameter estimates), so we will need to subset out parameters for plotting.
 
-```{r, echo=T, message = F}
 
+``` r
 # Extract east-west and north-south coordinates of COAs from each iteration of each chain
 # Note that 'sx' and 'sy' are the variable names used to store the coordinates for each individual (rows) in each time step (columns).
 # We'll store them as a list, where each element corresponds to an individual
@@ -221,6 +341,25 @@ for (i in 1:nind){
   EN[[i]]$id=as.numeric(EN[[i]]$variable) # The ID field corresponds to the time step.
   colnames(EN[[i]])=c('variable','x','y','time')
 }
+```
+
+```
+## Warning in melt.data.table(data.table::data.table(ew[[i]])): id.vars and
+## measure.vars are internally guessed when both are 'NULL'. All
+## non-numeric/integer/logical type columns are considered id.vars, which in
+## this case are columns []. Consider providing at least one of 'id' or
+## 'measure' vars in future.
+```
+
+```
+## Warning in melt.data.table(data.table::data.table(ns[[i]])): id.vars and
+## measure.vars are internally guessed when both are 'NULL'. All
+## non-numeric/integer/logical type columns are considered id.vars, which in
+## this case are columns []. Consider providing at least one of 'id' or
+## 'measure' vars in future.
+```
+
+``` r
 # You will get a warning about 'No id variables' - don't worry about it.
 
 ## Plot posterior estimates
@@ -249,7 +388,8 @@ plotCOAs <- ggplot(aes(x=x,y=y),data=post) +
 
 Now let's fit a model that allows for variation in detection probabilities. This model is a simple extension of the previous model - it just allows the detection probability to vary between time steps and receivers. The only other information you'll need to provide is the expected number of transmissions per tag per time interval (`ntrans`).
 
-```{r, echo=T, message = F}
+
+``` r
 ### Format data for model fitting
 fit_vary <- COA_TimeVarying(
   nind=nind, # number of individuals
@@ -261,11 +401,39 @@ fit_vary <- COA_TimeVarying(
   recY=as.vector(rlocs$north), # N-S receiver coordinates 
   xlim=xlim, # E-W boundary of spatial extent (receiver array + buffer)
   ylim=ylim) # N-S boundary of spatial extent (receiver array + buffer)
+```
 
+```
+##          warmup  sample
+## chain:1 146.410 111.174
+## chain:2 148.655 111.860
+## chain:3 144.489 110.866
+## chain:4 146.529 197.711
+```
+
+``` r
 summary(fit_vary)
+```
 
+```
+##                Length Class      Mode   
+## Model             1   stanfit    S4     
+## Summary        3010   -none-     numeric
+## Time              1   -none-     numeric
+## COAs             70   -none-     numeric
+## DetectionProbs  300   -none-     numeric
+## All_estimates   923   data.frame list
+```
+
+``` r
 fit_vary$Time
+```
 
+```
+## [1] 18.62823
+```
+
+``` r
 # As before, extract east-west and north-south coordinates of COAs from each iteration of each chain
 # Note that 'sx' and 'sy' are the variable names used to store the coordinates for each individual (rows) in each time step (columns).
 # We'll store them as a list, where each element corresponds to an individual
@@ -283,6 +451,25 @@ for (i in 1:nind){
   EN[[i]]$id=as.numeric(EN[[i]]$variable) # The ID field corresponds to the time step.
   colnames(EN[[i]])=c('variable','x','y','time')
 }
+```
+
+```
+## Warning in melt.data.table(data.table::data.table(ew[[i]])): id.vars and
+## measure.vars are internally guessed when both are 'NULL'. All
+## non-numeric/integer/logical type columns are considered id.vars, which in
+## this case are columns []. Consider providing at least one of 'id' or
+## 'measure' vars in future.
+```
+
+```
+## Warning in melt.data.table(data.table::data.table(ns[[i]])): id.vars and
+## measure.vars are internally guessed when both are 'NULL'. All
+## non-numeric/integer/logical type columns are considered id.vars, which in
+## this case are columns []. Consider providing at least one of 'id' or
+## 'measure' vars in future.
+```
+
+``` r
 # You will get a warning about 'No id variables' - don't worry about it.
 
 ## Plot posterior estimates
@@ -310,7 +497,8 @@ plotTVary <- ggplot(aes(x=x,y=y),data=post) +
 
 Now we'll fit the most exciting model - the model that integrates test tag data to inform detection probabilities. This model is a simple extension of the previous models - it just adds a component that specifies the distance of each test tag from each receiver, and shifts the probability of detection by comparing the number of detections logged at each receiver versus those emitted from the test tag in each time step. In other words, it treats test tags as tagged individuals but with known COAs. The only other information you'll need to provide is the expected number of transmissions per tag per time interval (`ntrans`).
 
-```{r, echo=T, message = F}
+
+``` r
 ### Format data for model fitting
 ## Specify the number of sentinal tags (this step is necessary because of issues that arise with Stan indexing if you have only 1 test tag)
 nsentinal <- 1
@@ -328,11 +516,39 @@ fit_tag <- COA_TagInt(nind=nind, # number of individuals
                       ylim=ylim, # N-S boundary of spatial extent (receiver array + buffer)
                       testX=array(testloc$east,dim=c(nsentinal)),
                       testY=array(testloc$north,dim=c(nsentinal)))
+```
 
+```
+##          warmup sample
+## chain:1  96.375 71.560
+## chain:2 112.096 68.269
+## chain:3 105.782 71.092
+## chain:4  97.608 70.662
+```
+
+``` r
 summary(fit_tag)
+```
 
+```
+##                Length Class      Mode   
+## Model             1   stanfit    S4     
+## Summary        3010   -none-     numeric
+## Time              1   -none-     numeric
+## COAs             70   -none-     numeric
+## DetectionProbs  300   -none-     numeric
+## All_estimates   953   data.frame list
+```
+
+``` r
 fit_tag$Time # See the comment about run time when your computer has multiple cores above.
+```
 
+```
+## [1] 11.5574
+```
+
+``` r
 # As before, extract east-west and north-south coordinates of COAs from each iteration of each chain
 # Note that 'sx' and 'sy' are the variable names used to store the coordinates for each individual (rows) in each time step (columns).
 # We'll store them as a list, where each element corresponds to an individual
@@ -350,6 +566,25 @@ for (i in 1:nind){
   EN[[i]]$id=as.numeric(EN[[i]]$variable) # The ID field corresponds to the time step.
   colnames(EN[[i]])=c('variable','x','y','time')
 }
+```
+
+```
+## Warning in melt.data.table(data.table::data.table(ew[[i]])): id.vars and
+## measure.vars are internally guessed when both are 'NULL'. All
+## non-numeric/integer/logical type columns are considered id.vars, which in
+## this case are columns []. Consider providing at least one of 'id' or
+## 'measure' vars in future.
+```
+
+```
+## Warning in melt.data.table(data.table::data.table(ns[[i]])): id.vars and
+## measure.vars are internally guessed when both are 'NULL'. All
+## non-numeric/integer/logical type columns are considered id.vars, which in
+## this case are columns []. Consider providing at least one of 'id' or
+## 'measure' vars in future.
+```
+
+``` r
 # You will get a warning about 'No id variables' - don't worry about it.
 
 ## Plot posterior estimates
@@ -371,14 +606,14 @@ plotTagInt <- ggplot(aes(x=x,y=y),data=post) +
          #scale_y_continuous(breaks = c(-1, 0, 1)) +
          theme(legend.position="none") +
          labs(x='East-West (km)',y='North-South (km)')
-
 ```
 
 ## Comparison
 
 Now plot them all up together to see how they compare!
 
-```{r, echo=T, message = F, fig.width=8, fig.height=8}
+
+``` r
 #Plot
 library(ggpubr)
 ggarrange(plotCOAs, plotTVary, plotTagInt, 
@@ -388,3 +623,5 @@ ggarrange(plotCOAs, plotTVary, plotTagInt,
           #widths = c(8,8,8), heights = c(2,2,2),
           common.legend = F)
 ```
+
+![plot of chunk unnamed-chunk-15](figure/unnamed-chunk-15-1.png)

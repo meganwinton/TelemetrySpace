@@ -1,3 +1,4 @@
 ^TelemetrySpace\.Rproj$
 ^\.Rproj\.user$
-^\.travis\.yml$
+^vignettes/precompile\.R$
+^vignettes/_Estimate_COA_vignette\.Rmd$
