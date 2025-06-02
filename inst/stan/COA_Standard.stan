@@ -28,7 +28,8 @@ transformed parameters  {
    real sigma;      // Standard deviation of the distance-decay function
    array[nind, nrec, ntime] real d;  // Array to store distances distances
 
-   p0 = exp(alpha0)/(1+exp(alpha0)); // Inverse logit of alpha0 - constrains probability b/tw 0 and 1
+   p0 = inv_logit(alpha0); // Inverse logit of alpha0 - constrains probability b/tw 0 and 1
+
    sigma = sqrt(1/(2*alpha1));       // Derived from coefficient specifying distance-related decay in detection prob.
 
    for (t in 1:ntime){ // For each time step
