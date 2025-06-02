@@ -8,7 +8,7 @@ data {
   array[nrec] real recX;                // trap locations in east-west direction
   array[nrec] real recY;              // trap locations in north-south direction
   array[2] real xlim;                    // area bounds east-west
-  array[2] real ylim;;                    // area boundes north-south
+  array[2] real ylim;                    // area boundes north-south
 }
 
 // Declare parameters
