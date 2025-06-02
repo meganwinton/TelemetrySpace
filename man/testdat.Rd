@@ -4,8 +4,10 @@
 \name{testdat}
 \alias{testdat}
 \title{Stationary test transmitter data}
-\format{A data frame with five variables: \code{Station} Receiver ID, \code{Transmitter} Transmitter ID, 
-   \code{east} East-West coordinate, \code{north} North-South coordinate, \code{hour} Hour of monitoring.}
+\format{
+A data frame with five variables: \code{Station} Receiver ID, \code{Transmitter} Transmitter ID, 
+   \code{east} East-West coordinate, \code{north} North-South coordinate, \code{hour} Hour of monitoring.
+}
 \usage{
 testdat
 }
