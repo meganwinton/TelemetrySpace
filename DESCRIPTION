@@ -7,7 +7,7 @@ Authors@R: c(
   comment = c(ORCID = "0000-0003-2628-7022")),
   person("Michael", "O'Brien", email = "mike@obrien.page", role = "cre",
   comment = c(ORCID = "0000-0003-1420-6395")),
-  person("Benjamin L.", "Hlina", email = "benjamin.hlina@gmail.com", role = "cre",
+  person("Benjamin L.", "Hlina", email = "benjamin.hlina@gmail.com", role = "ctb",
   comment = c(ORCID = "0000-0002-4178-4900")))
 License: GPL (>=3)
 Encoding: UTF-8
