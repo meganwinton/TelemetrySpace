@@ -19,8 +19,6 @@
 #' @return COA_Standard returns an object of class `stanfit` returned by `rstan::sampling`. See the `rstan` package documentation for details.
 #' @return This function returns a list containing the following components: 1) a summary of the detection function parameters; 2) the time required for model fitting; 3) the estimated COAs for each individual in each time step and 95 percent credible interval; and 4) a dataframe containing values for each parameter and latent parameter from chain iterations. These can be used to plot posterior distributions and the credible interval around each estimated COA.
 #' @seealso [rstan::sampling()]
-#' @import rstan
-#' @import stats
 #'
 #'
 #' @export
@@ -66,7 +64,7 @@ COA_Standard <- function(nind, nrec, ntime, ntrans, y,
     ew <- dplyr::select(
       fit_estimates,
       dplyr::starts_with(
-        paste("sx[",i,",", sep='')
+        paste("sx[", i, ",", sep = '')
       )
     )
 
@@ -77,12 +75,12 @@ COA_Standard <- function(nind, nrec, ntime, ntrans, y,
       )
     )
 
-    coas[, 2, i] <- apply(ew, 2, stats::median)
-    coas[, 3, i] <- apply(ns, 2, stats::median)
-    coas[, 4, i] <- apply(ew, 2, stats::quantile, probs = 0.025)
-    coas[, 5, i] <- apply(ew, 2, stats::quantile, probs = 0.975)
-    coas[, 6, i] <- apply(ns, 2, stats::quantile, probs = 0.025)
-    coas[, 7, i] <- apply(ns, 2, stats::quantile, probs = 0.975)
+    coas[, 2, i] <- apply(ew, 2, median)
+    coas[, 3, i] <- apply(ns, 2, median)
+    coas[, 4, i] <- apply(ew, 2, quantile, probs = 0.025)
+    coas[, 5, i] <- apply(ew, 2, quantile, probs = 0.975)
+    coas[, 6, i] <- apply(ns, 2, quantile, probs = 0.025)
+    coas[, 7, i] <- apply(ns, 2, quantile, probs = 0.975)
   }
 
   # convert coas to data.frame or tibble or data table - either one works for
