@@ -29,10 +29,10 @@ using namespace stan::math;
 stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 47> locations_array__ =
   {" (found before start of program)",
-  " (in 'COA_Standard', line 16, column 2 to column 40)",
-  " (in 'COA_Standard', line 17, column 2 to column 28)",
-  " (in 'COA_Standard', line 19, column 2 to column 66)",
-  " (in 'COA_Standard', line 20, column 2 to column 66)",
+  " (in 'COA_Standard', line 16, column 2 to column 37)",
+  " (in 'COA_Standard', line 17, column 2 to column 25)",
+  " (in 'COA_Standard', line 19, column 2 to column 63)",
+  " (in 'COA_Standard', line 20, column 2 to column 63)",
   " (in 'COA_Standard', line 24, column 3 to column 11)",
   " (in 'COA_Standard', line 25, column 3 to column 14)",
   " (in 'COA_Standard', line 26, column 3 to column 35)",
@@ -47,21 +47,21 @@ static constexpr std::array<const char*, 47> locations_array__ =
   " (in 'COA_Standard', line 29, column 3 to line 39, column 3)",
   " (in 'COA_Standard', line 43, column 2 to column 26)",
   " (in 'COA_Standard', line 44, column 2 to column 26)",
-  " (in 'COA_Standard', line 50, column 4 to column 79)",
+  " (in 'COA_Standard', line 50, column 4 to column 74)",
   " (in 'COA_Standard', line 48, column 21 to line 51, column 5)",
   " (in 'COA_Standard', line 48, column 4 to line 51, column 5)",
   " (in 'COA_Standard', line 47, column 20 to line 52, column 4)",
   " (in 'COA_Standard', line 47, column 3 to line 52, column 4)",
   " (in 'COA_Standard', line 46, column 20 to line 53, column 3)",
   " (in 'COA_Standard', line 46, column 2 to line 53, column 3)",
-  " (in 'COA_Standard', line 3, column 2 to column 25)",
-  " (in 'COA_Standard', line 4, column 2 to column 25)",
-  " (in 'COA_Standard', line 5, column 2 to column 26)",
-  " (in 'COA_Standard', line 6, column 2 to column 27)",
+  " (in 'COA_Standard', line 3, column 2 to column 22)",
+  " (in 'COA_Standard', line 4, column 2 to column 22)",
+  " (in 'COA_Standard', line 5, column 2 to column 23)",
+  " (in 'COA_Standard', line 6, column 2 to column 24)",
   " (in 'COA_Standard', line 7, column 8 to column 12)",
   " (in 'COA_Standard', line 7, column 14 to column 18)",
   " (in 'COA_Standard', line 7, column 20 to column 25)",
-  " (in 'COA_Standard', line 7, column 2 to column 47)",
+  " (in 'COA_Standard', line 7, column 2 to column 45)",
   " (in 'COA_Standard', line 8, column 8 to column 12)",
   " (in 'COA_Standard', line 8, column 2 to column 24)",
   " (in 'COA_Standard', line 9, column 8 to column 12)",
@@ -327,15 +327,12 @@ public:
                                  stan::model::index_uni(i),
                                  stan::model::index_uni(j),
                                  stan::model::index_uni(t)), ntrans, (p0 *
-                               stan::math::exp(((-(alpha1) *
-                                 stan::model::rvalue(d, "d",
-                                   stan::model::index_uni(i),
-                                   stan::model::index_uni(j),
-                                   stan::model::index_uni(t))) *
-                                 stan::model::rvalue(d, "d",
-                                   stan::model::index_uni(i),
-                                   stan::model::index_uni(j),
-                                   stan::model::index_uni(t)))))));
+                               stan::math::exp((-(alpha1) *
+                                 stan::math::square(
+                                   stan::model::rvalue(d, "d",
+                                     stan::model::index_uni(i),
+                                     stan::model::index_uni(j),
+                                     stan::model::index_uni(t))))))));
             }
           }
         }
@@ -444,15 +441,12 @@ public:
                                  stan::model::index_uni(i),
                                  stan::model::index_uni(j),
                                  stan::model::index_uni(t)), ntrans, (p0 *
-                               stan::math::exp(((-(alpha1) *
-                                 stan::model::rvalue(d, "d",
-                                   stan::model::index_uni(i),
-                                   stan::model::index_uni(j),
-                                   stan::model::index_uni(t))) *
-                                 stan::model::rvalue(d, "d",
-                                   stan::model::index_uni(i),
-                                   stan::model::index_uni(j),
-                                   stan::model::index_uni(t)))))));
+                               stan::math::exp((-(alpha1) *
+                                 stan::math::square(
+                                   stan::model::rvalue(d, "d",
+                                     stan::model::index_uni(i),
+                                     stan::model::index_uni(j),
+                                     stan::model::index_uni(t))))))));
             }
           }
         }
