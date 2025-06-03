@@ -79,6 +79,10 @@ COA_TagInt <- function(nind, nrec, ntime,
     coas[,6,i] <- apply(ns,2,quantile,probs=0.025)
     coas[,7,i] <- apply(ns,2,quantile,probs=0.975)
   }
+
+  # convert coas to data.frame or tibble or data table - either one works for
+  # me mike
+  coas <- as.data.frame(coas[ , , 1])
   # Extract time-varying detection probability estimates
   d_probs <- array(NA, dim = c(nrec, ntime))
   p0_est <- NULL
