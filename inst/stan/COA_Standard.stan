@@ -30,7 +30,9 @@ transformed parameters  {
 
    p0 = inv_logit(alpha0); // Inverse logit of alpha0 - constrains probability b/tw 0 and 1
 
-   sigma = sqrt(1 / (2 * alpha1)); // Derived from coefficient specifying distance-related decay in detection prob.
+   sigma = sqrt(1 / (2 * alpha1)); // Derived from coefficient specifying
+   // distance-related decay in detection prob. - this is 1 / 2 * sigma^2 = a1
+   // solved to equal sigma - this then is used in the full model
 
    for (t in 1:ntime){ // For each time step
     for (i in 1:nind) { // And each individual
