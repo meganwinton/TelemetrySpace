@@ -4,7 +4,7 @@ data {
   int<lower = 0> nrec;               // number of receivers
   int<lower = 0> ntime;              // number of time steps
   int<lower = 0> ntrans;             // number of trials/expected number of transmissions per time step
-  array[nind, nrec, ntime] int <lower = 0> y; // number of detections for each individual at each receiver in each time step
+  array[nind, nrec, ntime] int<lower = 0> y; // number of detections for each individual at each receiver in each time step
   array[nrec] real recX;                // receiver locations in east-west direction
   array[nrec] real recY;              // receiver locations in north-south direction
   array[2] real xlim;                    // area bounds east-west
