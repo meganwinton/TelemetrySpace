@@ -2,6 +2,7 @@
 # to confirm if the model consistently works as it should
 #
 # library(TelemetrySpace)
+# library(testthat)
 rlocs # Receiver locations
 testloc # Test tag location
 
@@ -114,13 +115,22 @@ fit <- COA_Standard(nind=nind, # number of individuals
                     recX=as.vector(rlocs$east),  # E-W receiver coordinates
                     recY=as.vector(rlocs$north), # N-S receiver coordinates
                     xlim=xlim, # E-W boundary of spatial extent (receiver array + buffer)
-                    ylim=ylim) # N-S boundary of spatial extent (receiver array + buffer)
+                    ylim=ylim,
+                    chains = 2,
+                    warmup = 1000,
+                    iter = 2000,
+                    control = list(adapt_delta = 0.95)
+                    ) # N-S boundary of spatial extent (receiver array + buffer)
+
+
+# rstan::traceplot(fit$Model, pars = c("alpha0", "alpha1",
+#                                      "sigma", "lp__"))
 
 
 test_that("test COA_standard model results to make sure its consisitent", {
 
-  mean_p0 <- fit$Summary[1]
-  expected_mean_p0 <- 0.2818616
+    mean_p0 <- fit$summary[1]
+  expected_mean_p0 <- 0.2818
   expect_equal(mean_p0, expected_mean_p0, tolerance = 0.005)
 })
 
