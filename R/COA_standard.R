@@ -20,15 +20,21 @@
 #' @return This function returns a list containing the following components: 1) a summary of the detection function parameters; 2) the time required for model fitting; 3) the estimated COAs for each individual in each time step and 95 percent credible interval; and 4) a dataframe containing values for each parameter and latent parameter from chain iterations. These can be used to plot posterior distributions and the credible interval around each estimated COA.
 #' @seealso [rstan::sampling()]
 #' @export
+COA_Standard <- function(nind, nrec, ntime, ntrans, y,
+                         recX, recY, xlim, ylim, ...) {
+
   rstan::rstan_options(auto_write = TRUE)
   options(mc.cores = parallel::detectCores())
-  standata <- list(nind = nind, nrec = nrec, ntime = ntime, ntrans = ntrans, y = y, recX = recX, recY = recY, xlim = xlim, ylim = ylim)
-  fit_model <- rstan::sampling(stanmodels$COA_Standard, data = standata,
-                               iter=10000, control = list(adapt_delta = 0.95))
-  
-  # Save chains after discarding warmup 
+
+  standata <- list(nind = nind, nrec = nrec,
+                   ntime = ntime, ntrans = ntrans, y = y,
+                   recX = recX, recY = recY, xlim = xlim, ylim = ylim)
+
+  fit_model <- rstan::sampling(stanmodels$COA_Standard, data = standata, ...)
+
+  # Save chains after discarding warmup
   fit_estimates <- as.data.frame(fit_model) # Note this returns parameters and latent states/derived values
-  
+
   # Summary statistics and convergence diagnostics
   fit_summary <- rstan::summary(fit_model, pars = c("p0","sigma") )$summary
   #fit_summary <- fit_sum$summary
