@@ -29,76 +29,76 @@ using namespace stan::math;
 stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 71> locations_array__ =
   {" (found before start of program)",
-  " (in 'COA_Tag_Integrated', line 21, column 2 to column 52)",
-  " (in 'COA_Tag_Integrated', line 22, column 2 to column 23)",
-  " (in 'COA_Tag_Integrated', line 24, column 2 to column 59)",
-  " (in 'COA_Tag_Integrated', line 25, column 2 to column 58)",
-  " (in 'COA_Tag_Integrated', line 30, column 3 to column 29)",
-  " (in 'COA_Tag_Integrated', line 31, column 3 to column 14)",
-  " (in 'COA_Tag_Integrated', line 32, column 3 to column 35)",
-  " (in 'COA_Tag_Integrated', line 33, column 3 to column 29)",
-  " (in 'COA_Tag_Integrated', line 35, column 3 to column 30)",
-  " (in 'COA_Tag_Integrated', line 40, column 6 to column 75)",
-  " (in 'COA_Tag_Integrated', line 38, column 20 to line 41, column 5)",
-  " (in 'COA_Tag_Integrated', line 38, column 4 to line 41, column 5)",
-  " (in 'COA_Tag_Integrated', line 37, column 19 to line 42, column 3)",
-  " (in 'COA_Tag_Integrated', line 37, column 2 to line 42, column 3)",
-  " (in 'COA_Tag_Integrated', line 48, column 10 to column 78)",
-  " (in 'COA_Tag_Integrated', line 51, column 10 to column 64)",
-  " (in 'COA_Tag_Integrated', line 46, column 23 to line 52, column 6)",
-  " (in 'COA_Tag_Integrated', line 46, column 6 to line 52, column 6)",
-  " (in 'COA_Tag_Integrated', line 45, column 20 to line 53, column 4)",
-  " (in 'COA_Tag_Integrated', line 45, column 4 to line 53, column 4)",
-  " (in 'COA_Tag_Integrated', line 44, column 20 to line 54, column 2)",
-  " (in 'COA_Tag_Integrated', line 44, column 3 to line 54, column 2)",
-  " (in 'COA_Tag_Integrated', line 59, column 2 to column 35)",
-  " (in 'COA_Tag_Integrated', line 60, column 2 to column 23)",
-  " (in 'COA_Tag_Integrated', line 66, column 6 to column 75)",
-  " (in 'COA_Tag_Integrated', line 64, column 22 to line 67, column 5)",
-  " (in 'COA_Tag_Integrated', line 64, column 4 to line 67, column 5)",
-  " (in 'COA_Tag_Integrated', line 70, column 8 to column 76)",
-  " (in 'COA_Tag_Integrated', line 68, column 22 to line 71, column 5)",
-  " (in 'COA_Tag_Integrated', line 68, column 5 to line 71, column 5)",
-  " (in 'COA_Tag_Integrated', line 63, column 20 to line 72, column 4)",
-  " (in 'COA_Tag_Integrated', line 63, column 3 to line 72, column 4)",
-  " (in 'COA_Tag_Integrated', line 62, column 20 to line 73, column 3)",
-  " (in 'COA_Tag_Integrated', line 62, column 2 to line 73, column 3)",
-  " (in 'COA_Tag_Integrated', line 3, column 2 to column 20)",
-  " (in 'COA_Tag_Integrated', line 4, column 2 to column 20)",
-  " (in 'COA_Tag_Integrated', line 5, column 2 to column 21)",
-  " (in 'COA_Tag_Integrated', line 6, column 2 to column 21)",
-  " (in 'COA_Tag_Integrated', line 7, column 2 to column 22)",
-  " (in 'COA_Tag_Integrated', line 8, column 8 to column 12)",
-  " (in 'COA_Tag_Integrated', line 8, column 14 to column 18)",
-  " (in 'COA_Tag_Integrated', line 8, column 20 to column 25)",
-  " (in 'COA_Tag_Integrated', line 8, column 2 to column 42)",
-  " (in 'COA_Tag_Integrated', line 9, column 8 to column 13)",
-  " (in 'COA_Tag_Integrated', line 9, column 15 to column 19)",
-  " (in 'COA_Tag_Integrated', line 9, column 21 to column 26)",
-  " (in 'COA_Tag_Integrated', line 9, column 2 to column 46)",
-  " (in 'COA_Tag_Integrated', line 10, column 8 to column 12)",
-  " (in 'COA_Tag_Integrated', line 10, column 2 to column 24)",
-  " (in 'COA_Tag_Integrated', line 11, column 8 to column 12)",
-  " (in 'COA_Tag_Integrated', line 11, column 2 to column 24)",
-  " (in 'COA_Tag_Integrated', line 12, column 2 to column 21)",
-  " (in 'COA_Tag_Integrated', line 13, column 2 to column 21)",
-  " (in 'COA_Tag_Integrated', line 14, column 8 to column 13)",
-  " (in 'COA_Tag_Integrated', line 14, column 2 to column 26)",
-  " (in 'COA_Tag_Integrated', line 15, column 8 to column 13)",
-  " (in 'COA_Tag_Integrated', line 15, column 2 to column 26)",
-  " (in 'COA_Tag_Integrated', line 21, column 8 to column 13)",
-  " (in 'COA_Tag_Integrated', line 21, column 15 to column 19)",
-  " (in 'COA_Tag_Integrated', line 24, column 8 to column 12)",
-  " (in 'COA_Tag_Integrated', line 24, column 14 to column 19)",
-  " (in 'COA_Tag_Integrated', line 25, column 8 to column 12)",
-  " (in 'COA_Tag_Integrated', line 25, column 13 to column 18)",
-  " (in 'COA_Tag_Integrated', line 30, column 9 to column 14)",
-  " (in 'COA_Tag_Integrated', line 30, column 15 to column 19)",
-  " (in 'COA_Tag_Integrated', line 32, column 9 to column 13)",
-  " (in 'COA_Tag_Integrated', line 32, column 15 to column 19)",
-  " (in 'COA_Tag_Integrated', line 32, column 21 to column 26)",
-  " (in 'COA_Tag_Integrated', line 33, column 9 to column 14)",
-  " (in 'COA_Tag_Integrated', line 33, column 15 to column 19)"};
+  " (in 'COA_Tag_Integrated', line 25, column 2 to column 56)",
+  " (in 'COA_Tag_Integrated', line 26, column 2 to column 25)",
+  " (in 'COA_Tag_Integrated', line 28, column 2 to column 63)",
+  " (in 'COA_Tag_Integrated', line 30, column 2 to column 63)",
+  " (in 'COA_Tag_Integrated', line 36, column 3 to column 30)",
+  " (in 'COA_Tag_Integrated', line 38, column 3 to column 14)",
+  " (in 'COA_Tag_Integrated', line 40, column 3 to column 35)",
+  " (in 'COA_Tag_Integrated', line 42, column 3 to column 30)",
+  " (in 'COA_Tag_Integrated', line 45, column 3 to column 34)",
+  " (in 'COA_Tag_Integrated', line 51, column 6 to column 79)",
+  " (in 'COA_Tag_Integrated', line 49, column 20 to line 53, column 5)",
+  " (in 'COA_Tag_Integrated', line 49, column 4 to line 53, column 5)",
+  " (in 'COA_Tag_Integrated', line 48, column 19 to line 54, column 3)",
+  " (in 'COA_Tag_Integrated', line 48, column 2 to line 54, column 3)",
+  " (in 'COA_Tag_Integrated', line 60, column 10 to column 85)",
+  " (in 'COA_Tag_Integrated', line 63, column 10 to column 65)",
+  " (in 'COA_Tag_Integrated', line 58, column 23 to line 64, column 6)",
+  " (in 'COA_Tag_Integrated', line 58, column 6 to line 64, column 6)",
+  " (in 'COA_Tag_Integrated', line 57, column 20 to line 65, column 4)",
+  " (in 'COA_Tag_Integrated', line 57, column 4 to line 65, column 4)",
+  " (in 'COA_Tag_Integrated', line 56, column 20 to line 66, column 2)",
+  " (in 'COA_Tag_Integrated', line 56, column 3 to line 66, column 2)",
+  " (in 'COA_Tag_Integrated', line 71, column 2 to column 39)",
+  " (in 'COA_Tag_Integrated', line 72, column 2 to column 26)",
+  " (in 'COA_Tag_Integrated', line 78, column 6 to column 83)",
+  " (in 'COA_Tag_Integrated', line 76, column 22 to line 79, column 5)",
+  " (in 'COA_Tag_Integrated', line 76, column 4 to line 79, column 5)",
+  " (in 'COA_Tag_Integrated', line 82, column 8 to column 84)",
+  " (in 'COA_Tag_Integrated', line 80, column 22 to line 83, column 5)",
+  " (in 'COA_Tag_Integrated', line 80, column 5 to line 83, column 5)",
+  " (in 'COA_Tag_Integrated', line 75, column 20 to line 84, column 4)",
+  " (in 'COA_Tag_Integrated', line 75, column 3 to line 84, column 4)",
+  " (in 'COA_Tag_Integrated', line 74, column 20 to line 85, column 3)",
+  " (in 'COA_Tag_Integrated', line 74, column 2 to line 85, column 3)",
+  " (in 'COA_Tag_Integrated', line 3, column 2 to column 22)",
+  " (in 'COA_Tag_Integrated', line 4, column 2 to column 22)",
+  " (in 'COA_Tag_Integrated', line 5, column 2 to column 23)",
+  " (in 'COA_Tag_Integrated', line 6, column 2 to column 23)",
+  " (in 'COA_Tag_Integrated', line 7, column 2 to column 24)",
+  " (in 'COA_Tag_Integrated', line 9, column 8 to column 12)",
+  " (in 'COA_Tag_Integrated', line 9, column 14 to column 18)",
+  " (in 'COA_Tag_Integrated', line 9, column 20 to column 25)",
+  " (in 'COA_Tag_Integrated', line 9, column 2 to column 44)",
+  " (in 'COA_Tag_Integrated', line 11, column 8 to column 13)",
+  " (in 'COA_Tag_Integrated', line 11, column 15 to column 19)",
+  " (in 'COA_Tag_Integrated', line 11, column 21 to column 26)",
+  " (in 'COA_Tag_Integrated', line 11, column 2 to column 48)",
+  " (in 'COA_Tag_Integrated', line 13, column 8 to column 12)",
+  " (in 'COA_Tag_Integrated', line 13, column 2 to column 24)",
+  " (in 'COA_Tag_Integrated', line 14, column 8 to column 12)",
+  " (in 'COA_Tag_Integrated', line 14, column 2 to column 24)",
+  " (in 'COA_Tag_Integrated', line 15, column 2 to column 21)",
+  " (in 'COA_Tag_Integrated', line 16, column 2 to column 21)",
+  " (in 'COA_Tag_Integrated', line 17, column 8 to column 13)",
+  " (in 'COA_Tag_Integrated', line 17, column 2 to column 26)",
+  " (in 'COA_Tag_Integrated', line 18, column 8 to column 13)",
+  " (in 'COA_Tag_Integrated', line 18, column 2 to column 26)",
+  " (in 'COA_Tag_Integrated', line 25, column 8 to column 13)",
+  " (in 'COA_Tag_Integrated', line 25, column 15 to column 19)",
+  " (in 'COA_Tag_Integrated', line 28, column 8 to column 12)",
+  " (in 'COA_Tag_Integrated', line 28, column 14 to column 19)",
+  " (in 'COA_Tag_Integrated', line 30, column 8 to column 12)",
+  " (in 'COA_Tag_Integrated', line 30, column 14 to column 19)",
+  " (in 'COA_Tag_Integrated', line 36, column 9 to column 14)",
+  " (in 'COA_Tag_Integrated', line 36, column 16 to column 20)",
+  " (in 'COA_Tag_Integrated', line 40, column 9 to column 13)",
+  " (in 'COA_Tag_Integrated', line 40, column 15 to column 19)",
+  " (in 'COA_Tag_Integrated', line 40, column 21 to column 26)",
+  " (in 'COA_Tag_Integrated', line 42, column 9 to column 14)",
+  " (in 'COA_Tag_Integrated', line 42, column 16 to column 20)"};
 #include <stan_meta_header.hpp>
 class model_COA_Tag_Integrated final : public model_base_crtp<model_COA_Tag_Integrated> {
 private:
@@ -395,18 +395,18 @@ public:
         for (int j = 1; j <= nrec; ++j) {
           current_statement__ = 10;
           stan::model::assign(td,
-            stan::math::pow(
-              (stan::math::pow(
+            stan::math::sqrt(
+              (stan::math::square(
                  (stan::model::rvalue(testX, "testX",
                     stan::model::index_uni(s)) -
-                 stan::model::rvalue(recX, "recX", stan::model::index_uni(j))),
-                 2) +
-              stan::math::pow(
+                 stan::model::rvalue(recX, "recX", stan::model::index_uni(j))))
+              +
+              stan::math::square(
                 (stan::model::rvalue(testY, "testY",
                    stan::model::index_uni(s)) -
-                stan::model::rvalue(recY, "recY", stan::model::index_uni(j))),
-                2)), 0.5), "assigning variable td",
-            stan::model::index_uni(s), stan::model::index_uni(j));
+                stan::model::rvalue(recY, "recY", stan::model::index_uni(j)))))),
+            "assigning variable td", stan::model::index_uni(s),
+            stan::model::index_uni(j));
         }
       }
       current_statement__ = 22;
@@ -417,19 +417,18 @@ public:
           for (int i = 1; i <= nind; ++i) {
             current_statement__ = 15;
             stan::model::assign(d,
-              stan::math::pow(
-                (stan::math::pow(
+              stan::math::sqrt(
+                (stan::math::square(
                    (stan::model::rvalue(sx, "sx", stan::model::index_uni(i),
                       stan::model::index_uni(t)) -
                    stan::model::rvalue(recX, "recX",
-                     stan::model::index_uni(j))), 2) +
-                stan::math::pow(
+                     stan::model::index_uni(j)))) +
+                stan::math::square(
                   (stan::model::rvalue(sy, "sy", stan::model::index_uni(i),
                      stan::model::index_uni(t)) -
-                  stan::model::rvalue(recY, "recY", stan::model::index_uni(j))),
-                  2)), 0.5), "assigning variable d",
-              stan::model::index_uni(i), stan::model::index_uni(j),
-              stan::model::index_uni(t));
+                  stan::model::rvalue(recY, "recY", stan::model::index_uni(j)))))),
+              "assigning variable d", stan::model::index_uni(i),
+              stan::model::index_uni(j), stan::model::index_uni(t));
             current_statement__ = 16;
             stan::model::assign(p0,
               (stan::math::exp(
@@ -467,13 +466,11 @@ public:
                                (stan::model::rvalue(p0, "p0",
                                   stan::model::index_uni(t),
                                   stan::model::index_uni(j)) *
-                               stan::math::exp(((-(alpha1) *
-                                 stan::model::rvalue(td, "td",
-                                   stan::model::index_uni(s),
-                                   stan::model::index_uni(j))) *
-                                 stan::model::rvalue(td, "td",
-                                   stan::model::index_uni(s),
-                                   stan::model::index_uni(j)))))));
+                               stan::math::exp((-(alpha1) *
+                                 stan::math::square(
+                                   stan::model::rvalue(td, "td",
+                                     stan::model::index_uni(s),
+                                     stan::model::index_uni(j))))))));
             }
             current_statement__ = 30;
             for (int i = 1; i <= nind; ++i) {
@@ -486,15 +483,12 @@ public:
                                (stan::model::rvalue(p0, "p0",
                                   stan::model::index_uni(t),
                                   stan::model::index_uni(j)) *
-                               stan::math::exp(((-(alpha1) *
-                                 stan::model::rvalue(d, "d",
-                                   stan::model::index_uni(i),
-                                   stan::model::index_uni(j),
-                                   stan::model::index_uni(t))) *
-                                 stan::model::rvalue(d, "d",
-                                   stan::model::index_uni(i),
-                                   stan::model::index_uni(j),
-                                   stan::model::index_uni(t)))))));
+                               stan::math::exp((-(alpha1) *
+                                 stan::math::square(
+                                   stan::model::rvalue(d, "d",
+                                     stan::model::index_uni(i),
+                                     stan::model::index_uni(j),
+                                     stan::model::index_uni(t))))))));
             }
           }
         }
@@ -573,18 +567,18 @@ public:
         for (int j = 1; j <= nrec; ++j) {
           current_statement__ = 10;
           stan::model::assign(td,
-            stan::math::pow(
-              (stan::math::pow(
+            stan::math::sqrt(
+              (stan::math::square(
                  (stan::model::rvalue(testX, "testX",
                     stan::model::index_uni(s)) -
-                 stan::model::rvalue(recX, "recX", stan::model::index_uni(j))),
-                 2) +
-              stan::math::pow(
+                 stan::model::rvalue(recX, "recX", stan::model::index_uni(j))))
+              +
+              stan::math::square(
                 (stan::model::rvalue(testY, "testY",
                    stan::model::index_uni(s)) -
-                stan::model::rvalue(recY, "recY", stan::model::index_uni(j))),
-                2)), 0.5), "assigning variable td",
-            stan::model::index_uni(s), stan::model::index_uni(j));
+                stan::model::rvalue(recY, "recY", stan::model::index_uni(j)))))),
+            "assigning variable td", stan::model::index_uni(s),
+            stan::model::index_uni(j));
         }
       }
       current_statement__ = 22;
@@ -595,19 +589,18 @@ public:
           for (int i = 1; i <= nind; ++i) {
             current_statement__ = 15;
             stan::model::assign(d,
-              stan::math::pow(
-                (stan::math::pow(
+              stan::math::sqrt(
+                (stan::math::square(
                    (stan::model::rvalue(sx, "sx", stan::model::index_uni(i),
                       stan::model::index_uni(t)) -
                    stan::model::rvalue(recX, "recX",
-                     stan::model::index_uni(j))), 2) +
-                stan::math::pow(
+                     stan::model::index_uni(j)))) +
+                stan::math::square(
                   (stan::model::rvalue(sy, "sy", stan::model::index_uni(i),
                      stan::model::index_uni(t)) -
-                  stan::model::rvalue(recY, "recY", stan::model::index_uni(j))),
-                  2)), 0.5), "assigning variable d",
-              stan::model::index_uni(i), stan::model::index_uni(j),
-              stan::model::index_uni(t));
+                  stan::model::rvalue(recY, "recY", stan::model::index_uni(j)))))),
+              "assigning variable d", stan::model::index_uni(i),
+              stan::model::index_uni(j), stan::model::index_uni(t));
             current_statement__ = 16;
             stan::model::assign(p0,
               (stan::math::exp(
@@ -645,13 +638,11 @@ public:
                                (stan::model::rvalue(p0, "p0",
                                   stan::model::index_uni(t),
                                   stan::model::index_uni(j)) *
-                               stan::math::exp(((-(alpha1) *
-                                 stan::model::rvalue(td, "td",
-                                   stan::model::index_uni(s),
-                                   stan::model::index_uni(j))) *
-                                 stan::model::rvalue(td, "td",
-                                   stan::model::index_uni(s),
-                                   stan::model::index_uni(j)))))));
+                               stan::math::exp((-(alpha1) *
+                                 stan::math::square(
+                                   stan::model::rvalue(td, "td",
+                                     stan::model::index_uni(s),
+                                     stan::model::index_uni(j))))))));
             }
             current_statement__ = 30;
             for (int i = 1; i <= nind; ++i) {
@@ -664,15 +655,12 @@ public:
                                (stan::model::rvalue(p0, "p0",
                                   stan::model::index_uni(t),
                                   stan::model::index_uni(j)) *
-                               stan::math::exp(((-(alpha1) *
-                                 stan::model::rvalue(d, "d",
-                                   stan::model::index_uni(i),
-                                   stan::model::index_uni(j),
-                                   stan::model::index_uni(t))) *
-                                 stan::model::rvalue(d, "d",
-                                   stan::model::index_uni(i),
-                                   stan::model::index_uni(j),
-                                   stan::model::index_uni(t)))))));
+                               stan::math::exp((-(alpha1) *
+                                 stan::math::square(
+                                   stan::model::rvalue(d, "d",
+                                     stan::model::index_uni(i),
+                                     stan::model::index_uni(j),
+                                     stan::model::index_uni(t))))))));
             }
           }
         }
@@ -787,18 +775,18 @@ public:
         for (int j = 1; j <= nrec; ++j) {
           current_statement__ = 10;
           stan::model::assign(td,
-            stan::math::pow(
-              (stan::math::pow(
+            stan::math::sqrt(
+              (stan::math::square(
                  (stan::model::rvalue(testX, "testX",
                     stan::model::index_uni(s)) -
-                 stan::model::rvalue(recX, "recX", stan::model::index_uni(j))),
-                 2) +
-              stan::math::pow(
+                 stan::model::rvalue(recX, "recX", stan::model::index_uni(j))))
+              +
+              stan::math::square(
                 (stan::model::rvalue(testY, "testY",
                    stan::model::index_uni(s)) -
-                stan::model::rvalue(recY, "recY", stan::model::index_uni(j))),
-                2)), 0.5), "assigning variable td",
-            stan::model::index_uni(s), stan::model::index_uni(j));
+                stan::model::rvalue(recY, "recY", stan::model::index_uni(j)))))),
+            "assigning variable td", stan::model::index_uni(s),
+            stan::model::index_uni(j));
         }
       }
       current_statement__ = 22;
@@ -809,19 +797,18 @@ public:
           for (int i = 1; i <= nind; ++i) {
             current_statement__ = 15;
             stan::model::assign(d,
-              stan::math::pow(
-                (stan::math::pow(
+              stan::math::sqrt(
+                (stan::math::square(
                    (stan::model::rvalue(sx, "sx", stan::model::index_uni(i),
                       stan::model::index_uni(t)) -
                    stan::model::rvalue(recX, "recX",
-                     stan::model::index_uni(j))), 2) +
-                stan::math::pow(
+                     stan::model::index_uni(j)))) +
+                stan::math::square(
                   (stan::model::rvalue(sy, "sy", stan::model::index_uni(i),
                      stan::model::index_uni(t)) -
-                  stan::model::rvalue(recY, "recY", stan::model::index_uni(j))),
-                  2)), 0.5), "assigning variable d",
-              stan::model::index_uni(i), stan::model::index_uni(j),
-              stan::model::index_uni(t));
+                  stan::model::rvalue(recY, "recY", stan::model::index_uni(j)))))),
+              "assigning variable d", stan::model::index_uni(i),
+              stan::model::index_uni(j), stan::model::index_uni(t));
             current_statement__ = 16;
             stan::model::assign(p0,
               (stan::math::exp(
