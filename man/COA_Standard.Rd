@@ -25,12 +25,12 @@ COA_Standard(nind, nrec, ntime, ntrans, y, recX, recY, xlim, ylim, ...)
 
 \item{ylim}{North-south boundaries of spatial extent (receiver array + buffer)}
 
-\item{...}{Additional arguments passed to `sampling` from `rstan`.
-This can include setting `chains`, `iter`, `warmup`, and `control`. Please see
-`rstan::sampling` for more info.}
+\item{...}{Additional arguments passed to \code{sampling} from \code{rstan}.
+This can include setting \code{chains}, \code{iter}, \code{warmup}, and \code{control}. Please see
+\code{rstan::sampling} for more info.}
 }
 \value{
-COA_Standard returns an object of class `stanfit` returned by `rstan::sampling`. See the `rstan` package documentation for details.
+COA_Standard returns an object of class \code{stanfit} returned by \code{rstan::sampling}. See the \code{rstan} package documentation for details.
 
 This function returns a list containing the following components: 1) a summary of the detection function parameters; 2) the time required for model fitting; 3) the estimated COAs for each individual in each time step and 95 percent credible interval; and 4) a dataframe containing values for each parameter and latent parameter from chain iterations. These can be used to plot posterior distributions and the credible interval around each estimated COA.
 }
@@ -38,5 +38,5 @@ This function returns a list containing the following components: 1) a summary o
 Fits a Bayesian Spatial Point Process model to estimate individual centers of activity from acoustic telemetry data using Stan
 }
 \seealso{
-[rstan::sampling()]
+\code{\link[rstan:stanmodel-method-sampling]{rstan::sampling()}}
 }
