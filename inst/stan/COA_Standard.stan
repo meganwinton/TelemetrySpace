@@ -1,10 +1,10 @@
 // Declare data
 data {
-  int < lower = 0 > nind;               // number of individuals
-  int < lower = 0 > nrec;               // number of receivers
-  int < lower = 0 > ntime;              // number of time steps
-  int < lower = 0 > ntrans;             // number of trials/expected number of transmissions per time step
-  array[nind, nrec, ntime] int < lower = 0 > y; // number of detections for each individual at each receiver in each time step
+  int<lower = 0> nind;               // number of individuals
+  int<lower = 0> nrec;               // number of receivers
+  int<lower = 0> ntime;              // number of time steps
+  int<lower = 0> ntrans;             // number of trials/expected number of transmissions per time step
+  array[nind, nrec, ntime] int <lower = 0> y; // number of detections for each individual at each receiver in each time step
   array[nrec] real recX;                // receiver locations in east-west direction
   array[nrec] real recY;              // receiver locations in north-south direction
   array[2] real xlim;                    // area bounds east-west
@@ -14,12 +14,12 @@ data {
 // Declare parameters
 parameters {
   // fixed effects
-  real < lower = -7, upper = 7 > alpha0;  // detection probability intercept on the logit scale - bounds are to ensure only searching reasonable parameter space
-  real < lower = 0 > alpha1;  // coef. for decline in detection probability with distance
+  real<lower = -7, upper = 7> alpha0;  // detection probability intercept on the logit scale - bounds are to ensure only searching reasonable parameter space
+  real<lower = 0> alpha1;  // coef. for decline in detection probability with distance
 
   // latent variables
-  array[nind, ntime] real < lower = xlim[1], upper = xlim[2] > sx;  // E-W center of activity coordinate - bounds reflect spatial extent
-  array[nind, ntime] real < lower = ylim[1], upper = ylim[2] > sy;  // N-S center of activity coordinate - bounds reflect spatial extent
+  array[nind, ntime] real<lower = xlim[1], upper = xlim[2]> sx;  // E-W center of activity coordinate - bounds reflect spatial extent
+  array[nind, ntime] real<lower = ylim[1], upper = ylim[2]> sy;  // N-S center of activity coordinate - bounds reflect spatial extent
 }
 
 // Declare derived/transformed parameters
