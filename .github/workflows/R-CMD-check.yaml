@@ -1,12 +1,15 @@
 on:
-  push:
   workflow_dispatch:
+  push:
+    branches: master
+  pull_request:
+    branches: master
+
+name: R-CMD-check
 
 concurrency:
   group: rcmdcheck-${{ github.ref }}
   cancel-in-progress: true
-
-name: R-CMD-check
 
 jobs:
   R-CMD-check:
@@ -20,7 +23,9 @@ jobs:
         config:
           - {os: macos-latest,   r: 'release'}
           - {os: windows-latest, r: 'release'}
+          - {os: ubuntu-latest,   r: 'devel', http-user-agent: 'release'}
           - {os: ubuntu-latest,   r: 'release'}
+          - {os: ubuntu-latest,   r: 'oldrel-1'}
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -39,8 +44,9 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::devtools
+          extra-packages: any::rcmdcheck
           needs: check
 
-      - run: |
-          Rscript -e "devtools::install()"
+      - uses: r-lib/actions/check-r-package@v2
+        with:
+          upload-snapshots: true
