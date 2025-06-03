@@ -55,7 +55,7 @@ model {
    for (i in 1:nind){ // And each individual
     for (j in 1:nrec){ // And each receiver
     // Note observations (y) must be specified as an integer - otherwise will result in an error
-    y[i, j, t] ~ binomial(ntrans, p0 * exp(-alpha1 * d[i, j, t] * d[i, j, t]));
+    y[i, j, t] ~ binomial(ntrans, p0 * exp(-alpha1 * square(d[i, j, t])));
     }
    }
   }
