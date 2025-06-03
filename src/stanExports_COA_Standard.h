@@ -38,22 +38,22 @@ static constexpr std::array<const char*, 47> locations_array__ =
   " (in 'COA_Standard', line 26, column 3 to column 35)",
   " (in 'COA_Standard', line 27, column 3 to column 26)",
   " (in 'COA_Standard', line 28, column 3 to column 34)",
-  " (in 'COA_Standard', line 33, column 6 to column 85)",
-  " (in 'COA_Standard', line 31, column 23 to line 34, column 5)",
-  " (in 'COA_Standard', line 31, column 6 to line 34, column 5)",
-  " (in 'COA_Standard', line 30, column 22 to line 35, column 4)",
-  " (in 'COA_Standard', line 30, column 4 to line 35, column 4)",
-  " (in 'COA_Standard', line 29, column 21 to line 36, column 3)",
-  " (in 'COA_Standard', line 29, column 3 to line 36, column 3)",
-  " (in 'COA_Standard', line 40, column 2 to column 26)",
-  " (in 'COA_Standard', line 41, column 2 to column 26)",
-  " (in 'COA_Standard', line 47, column 4 to column 79)",
-  " (in 'COA_Standard', line 45, column 21 to line 48, column 5)",
-  " (in 'COA_Standard', line 45, column 4 to line 48, column 5)",
-  " (in 'COA_Standard', line 44, column 20 to line 49, column 4)",
-  " (in 'COA_Standard', line 44, column 3 to line 49, column 4)",
-  " (in 'COA_Standard', line 43, column 20 to line 50, column 3)",
-  " (in 'COA_Standard', line 43, column 2 to line 50, column 3)",
+  " (in 'COA_Standard', line 33, column 6 to line 36, column 10)",
+  " (in 'COA_Standard', line 31, column 23 to line 37, column 5)",
+  " (in 'COA_Standard', line 31, column 6 to line 37, column 5)",
+  " (in 'COA_Standard', line 30, column 22 to line 38, column 4)",
+  " (in 'COA_Standard', line 30, column 4 to line 38, column 4)",
+  " (in 'COA_Standard', line 29, column 21 to line 39, column 3)",
+  " (in 'COA_Standard', line 29, column 3 to line 39, column 3)",
+  " (in 'COA_Standard', line 43, column 2 to column 26)",
+  " (in 'COA_Standard', line 44, column 2 to column 26)",
+  " (in 'COA_Standard', line 50, column 4 to column 79)",
+  " (in 'COA_Standard', line 48, column 21 to line 51, column 5)",
+  " (in 'COA_Standard', line 48, column 4 to line 51, column 5)",
+  " (in 'COA_Standard', line 47, column 20 to line 52, column 4)",
+  " (in 'COA_Standard', line 47, column 3 to line 52, column 4)",
+  " (in 'COA_Standard', line 46, column 20 to line 53, column 3)",
+  " (in 'COA_Standard', line 46, column 2 to line 53, column 3)",
   " (in 'COA_Standard', line 3, column 2 to column 25)",
   " (in 'COA_Standard', line 4, column 2 to column 25)",
   " (in 'COA_Standard', line 5, column 2 to column 26)",
@@ -295,19 +295,18 @@ public:
           for (int j = 1; j <= nrec; ++j) {
             current_statement__ = 10;
             stan::model::assign(d,
-              stan::math::pow(
-                (stan::math::pow(
+              stan::math::sqrt(
+                (stan::math::square(
                    (stan::model::rvalue(sx, "sx", stan::model::index_uni(i),
                       stan::model::index_uni(t)) -
                    stan::model::rvalue(recX, "recX",
-                     stan::model::index_uni(j))), 2) +
-                stan::math::pow(
+                     stan::model::index_uni(j)))) +
+                stan::math::square(
                   (stan::model::rvalue(sy, "sy", stan::model::index_uni(i),
                      stan::model::index_uni(t)) -
-                  stan::model::rvalue(recY, "recY", stan::model::index_uni(j))),
-                  2)), 0.5), "assigning variable d",
-              stan::model::index_uni(i), stan::model::index_uni(j),
-              stan::model::index_uni(t));
+                  stan::model::rvalue(recY, "recY", stan::model::index_uni(j)))))),
+              "assigning variable d", stan::model::index_uni(i),
+              stan::model::index_uni(j), stan::model::index_uni(t));
           }
         }
       }
@@ -413,19 +412,18 @@ public:
           for (int j = 1; j <= nrec; ++j) {
             current_statement__ = 10;
             stan::model::assign(d,
-              stan::math::pow(
-                (stan::math::pow(
+              stan::math::sqrt(
+                (stan::math::square(
                    (stan::model::rvalue(sx, "sx", stan::model::index_uni(i),
                       stan::model::index_uni(t)) -
                    stan::model::rvalue(recX, "recX",
-                     stan::model::index_uni(j))), 2) +
-                stan::math::pow(
+                     stan::model::index_uni(j)))) +
+                stan::math::square(
                   (stan::model::rvalue(sy, "sy", stan::model::index_uni(i),
                      stan::model::index_uni(t)) -
-                  stan::model::rvalue(recY, "recY", stan::model::index_uni(j))),
-                  2)), 0.5), "assigning variable d",
-              stan::model::index_uni(i), stan::model::index_uni(j),
-              stan::model::index_uni(t));
+                  stan::model::rvalue(recY, "recY", stan::model::index_uni(j)))))),
+              "assigning variable d", stan::model::index_uni(i),
+              stan::model::index_uni(j), stan::model::index_uni(t));
           }
         }
       }
@@ -562,19 +560,18 @@ public:
           for (int j = 1; j <= nrec; ++j) {
             current_statement__ = 10;
             stan::model::assign(d,
-              stan::math::pow(
-                (stan::math::pow(
+              stan::math::sqrt(
+                (stan::math::square(
                    (stan::model::rvalue(sx, "sx", stan::model::index_uni(i),
                       stan::model::index_uni(t)) -
                    stan::model::rvalue(recX, "recX",
-                     stan::model::index_uni(j))), 2) +
-                stan::math::pow(
+                     stan::model::index_uni(j)))) +
+                stan::math::square(
                   (stan::model::rvalue(sy, "sy", stan::model::index_uni(i),
                      stan::model::index_uni(t)) -
-                  stan::model::rvalue(recY, "recY", stan::model::index_uni(j))),
-                  2)), 0.5), "assigning variable d",
-              stan::model::index_uni(i), stan::model::index_uni(j),
-              stan::model::index_uni(t));
+                  stan::model::rvalue(recY, "recY", stan::model::index_uni(j)))))),
+              "assigning variable d", stan::model::index_uni(i),
+              stan::model::index_uni(j), stan::model::index_uni(t));
           }
         }
       }
