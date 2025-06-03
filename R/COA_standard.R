@@ -21,10 +21,10 @@ COA_Standard <- function(nind, nrec, ntime, ntrans, y, recX, recY, xlim, ylim) {
   standata <- list(nind = nind, nrec = nrec, ntime = ntime, ntrans = ntrans, y = y, recX = recX, recY = recY, xlim = xlim, ylim = ylim)
   fit_model <- rstan::sampling(stanmodels$COA_Standard, data = standata,
                                iter=10000, control = list(adapt_delta = 0.95))
-  
-  # Save chains after discarding warmup 
+
+  # Save chains after discarding warmup
   fit_estimates <- as.data.frame(fit_model) # Note this returns parameters and latent states/derived values
-  
+
   # Summary statistics and convergence diagnostics
   fit_summary <- rstan::summary(fit_model, pars = c("p0","sigma") )$summary
   #fit_summary <- fit_sum$summary
@@ -37,19 +37,19 @@ COA_Standard <- function(nind, nrec, ntime, ntrans, y, recX, recY, xlim, ylim) {
   dimnames(coas)[[2]] <- c('time','x','y','x.lower','x.upper','y.lower','y.upper')
   ew <- NULL
   ns <- NULL
-  
+
   for (i in 1:nind){
     coas[,1,i] <- seq(1, ntime, 1)
     ew <- dplyr::select(fit_estimates, dplyr::starts_with( paste("sx[",i,",", sep='') ) )
     ns <- dplyr::select(fit_estimates, dplyr::starts_with( paste("sy[",i,",", sep='') ) )
-    coas[,2,i] <- apply(ew, 2, median)
-    coas[,3,i] <- apply(ns, 2, median)
-    coas[,4,i] <- apply(ew,2,quantile,probs=0.025) 
-    coas[,5,i] <- apply(ew,2,quantile,probs=0.975) 
-    coas[,6,i] <- apply(ns,2,quantile,probs=0.025) 
-    coas[,7,i] <- apply(ns,2,quantile,probs=0.975) 
+    coas[,2,i] <- apply(ew, 2, stats::median)
+    coas[,3,i] <- apply(ns, 2, stats::median)
+    coas[,4,i] <- apply(ew,2,stats::quantile,probs=0.025)
+    coas[,5,i] <- apply(ew,2,stats::quantile,probs=0.975)
+    coas[,6,i] <- apply(ns,2,stats::quantile,probs=0.025)
+    coas[,7,i] <- apply(ns,2,stats::quantile,probs=0.975)
   }
-  
+
   # Report results
   ModelResults <- list(fit_model,fit_summary, fit_time, coas, fit_estimates)
   names(ModelResults) <- c('Model','Summary','Time','COAs','All_estimates')
