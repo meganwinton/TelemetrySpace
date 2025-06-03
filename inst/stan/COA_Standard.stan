@@ -36,7 +36,10 @@ transformed parameters  {
     for (i in 1:nind) { // And each individual
       for (j in 1:nrec){ // And each receiver
       // Calculate the Euclidean distance from each COA to each receiver in each time step
-      d[i, j, t] = pow(pow(sx[i, t] - recX[j], 2) + pow(sy[i, t] - recY[j], 2), 0.5);
+      d[i, j, t] = sqrt(
+        square(sx[i, t] - recX[j]) +
+        square(sy[i, t] - recY[j])
+        );
     }
    }
   }
