@@ -47,12 +47,14 @@ transformed parameters  {
    // Matrix of test tag distances
 
   // Specify them
-   sigma = sqrt(1/(2*alpha1)); // Derived from coefficient specifying distance-related decay in detection prob.
+   sigma = sqrt(1 / (2 * alpha1));
+   // Derived from coefficient specifying distance-related decay in detection prob.
   // Test tag distance
   for(s in 1:ntest){ // For each test tag
     for(j in 1:nrec){ // And each receiver
       // Calculate Euclidean distance from east test tag to each receiver
-      td[s,j] = pow(pow(testX[s]-recX[j],2) + pow(testY[s]-recY[j],2),0.5); //Calc for euclidean distance
+      td[s, j] = sqrt(square(testX[s] - recX[j]) + square(testY[s] - recY[j]));
+      //Calc for euclidean distance
     }
   }
 
@@ -61,10 +63,10 @@ transformed parameters  {
     for(j in 1:nrec){ // And each receiver
       for(i in 1:nind) { // And each individual
         // Calculate the Euclidean distance from each COA to each receiver in each time step
-          d[i,j,t] = pow(pow(sx[i,t]-recX[j],2) + pow(sy[i,t]-recY[j],2),0.5);
+          d[i, j, t] = sqrt(square(sx[i, t] - recX[j]) + square(sy[i, t] - recY[j]));
        // Detection probability
           //p0[t,j] = exp( alpha0 + alpha2[t,j] )/( 1+exp( alpha0 + alpha2[t,j] ) );
-          p0[t,j] = exp( alpha0[t,j] )/( 1+exp( alpha0[t,j] ) );
+          p0[t, j] = exp(alpha0[t, j]) / (1 + exp(alpha0[t, j]));
      }
    }
  }
@@ -74,19 +76,19 @@ transformed parameters  {
 // Model specification
 model {
   // priors
-  alpha0[ntime,nrec]~cauchy(0,2.5);
-  alpha1~cauchy(0,2.5);
+  alpha0[ntime, nrec] ~ cauchy(0, 2.5);
+  alpha1 ~ cauchy(0, 2.5);
 
   // likelihood
   for (t in 1:ntime){ // For each time step
    for (j in 1:nrec){ // And each receiver
     for (s in 1:ntest){ // And each test tag
       // Data from test tag - distance for each known
-      test[s,j,t] ~ binomial(ntrans, p0[t,j]*exp(-alpha1*td[s,j]*td[s,j]));
+      test[s, j, t] ~ binomial(ntrans, p0[t, j] * exp(-alpha1 * square(td[s, j])));
     }
      for (i in 1:nind){ // And each individual
-        // Note observations (y) must be specified as an integer - otherwise will result in an error
-        y[i,j,t] ~ binomial(ntrans, p0[t,j]*exp(-alpha1*d[i,j,t]*d[i,j,t]));
+     // Note observations (y) must be specified as an integer - otherwise will result in an error
+        y[i, j, t] ~ binomial(ntrans, p0[t, j] * exp(-alpha1 * square(d[i, j, t])));
     }
    }
   }
