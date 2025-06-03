@@ -17,7 +17,8 @@ COA_TagInt(
   xlim,
   ylim,
   testX,
-  testY
+  testY,
+  ...
 )
 }
 \arguments{
@@ -46,12 +47,20 @@ COA_TagInt(
 \item{testX}{Test tag coordinates in the east-west direction (should be projected and scaled for computational efficiency)}
 
 \item{testY}{Test tag coordinates in the north-south direction (should be projected and scaled for computational efficiency)}
+
+\item{...}{Additional arguments passed to \code{sampling} from \code{rstan}.
+This can include setting \code{chains}, \code{iter}, \code{warmup}, and \code{control}. Please see
+\code{rstan::sampling} for more info.}
 }
 \value{
-COA_TagInt_Bayes returns an object of class `stanfit` returned by `rstan::sampling`. See the 'rstan' package documentation for details.
+COA_TagInt_Bayes returns an object of class \code{stanfit} returned by \code{rstan::sampling}. See the 'rstan' package documentation for details.
 
 This function returns a list containing the following components: 1) a summary of the detection function parameters; 2) the time required for model fitting; 3) time-varying detection probabilites for each receiver; 4) the estimated COAs for each individual in each time step and 95 percent credible interval; and 5) a dataframe containing values for each parameter and latent parameter from chain iterations. These can be used to plot posterior distributions and the credible interval around each estimated COA.
 }
 \description{
 Fits a test-tag integrated Bayesian Spatial Point Process model to estimate individual centers of activity from acoustic telemetry data using Stan
+}
+\seealso{
+\code{\link[rstan:stanmodel-method-sampling]{rstan::sampling()}}
+@export
 }
