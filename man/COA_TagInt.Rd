@@ -62,5 +62,4 @@ Fits a test-tag integrated Bayesian Spatial Point Process model to estimate indi
 }
 \seealso{
 \code{\link[rstan:stanmodel-method-sampling]{rstan::sampling()}}
-@export
 }
