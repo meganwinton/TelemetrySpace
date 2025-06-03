@@ -2,7 +2,13 @@ Package: TelemetrySpace
 Version: 2.0.0.9000
 Title: Spatial point process and random field models for electronic tagging data
 Description: A collection of tools to fit spatial models to several types of telemetry data. Models are provided to account for the detection process when estimating individual centers of activity from acoustic telemetry data and to incorporate data from stationary test transmitters when available. Bayesian versions of models are fitted using Stan (http://mc-stan.org/). Maximum likelihood versions are fitted using Template Model Builder (https://kaskr.github.io/adcomp/index.html).
-Authors@R: person("Megan", "Winton", , "megan.winton@gmail.com", c("aut", "cre"))
+Authors@R: c(
+  person("Megan", "Winton", email = "megan.winton@gmail.com", role = "aut",
+  comment = c(ORCID = "0000-0003-2628-7022"))
+  person("Michael", "O'Brien", email = "mike@obrien.page", role = "cre",
+  comment = c(ORCID = "0000-0003-1420-6395"))
+  person("Benjamin L.", "Hlina", email = "benjamin.hlina@gmail.com", role = "cre",
+  comment = c(ORCID = "0000-0002-4178-4900")))
 License: GPL (>=3)
 Encoding: UTF-8
 LazyData: true
