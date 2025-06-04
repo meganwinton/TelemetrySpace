@@ -66,7 +66,7 @@ transformed parameters  {
           d[i, j, t] = sqrt(square(sx[i, t] - recX[j]) + square(sy[i, t] - recY[j]));
        // Detection probability
           //p0[t,j] = exp( alpha0 + alpha2[t,j] )/( 1+exp( alpha0 + alpha2[t,j] ) );
-          p0[t, j] = exp(alpha0[t, j]) / (1 + exp(alpha0[t, j]));
+          p0[t, j] = inv_logit(alpha0[t, j]);
      }
    }
  }
