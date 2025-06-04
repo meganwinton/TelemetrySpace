@@ -44,7 +44,7 @@ static constexpr std::array<const char*, 71> locations_array__ =
   " (in 'COA_Tag_Integrated', line 48, column 19 to line 54, column 3)",
   " (in 'COA_Tag_Integrated', line 48, column 2 to line 54, column 3)",
   " (in 'COA_Tag_Integrated', line 60, column 10 to column 85)",
-  " (in 'COA_Tag_Integrated', line 63, column 10 to column 65)",
+  " (in 'COA_Tag_Integrated', line 63, column 10 to column 45)",
   " (in 'COA_Tag_Integrated', line 58, column 23 to line 64, column 6)",
   " (in 'COA_Tag_Integrated', line 58, column 6 to line 64, column 6)",
   " (in 'COA_Tag_Integrated', line 57, column 20 to line 65, column 4)",
@@ -431,13 +431,9 @@ public:
               stan::model::index_uni(j), stan::model::index_uni(t));
             current_statement__ = 16;
             stan::model::assign(p0,
-              (stan::math::exp(
-                 stan::model::rvalue(alpha0, "alpha0",
-                   stan::model::index_uni(t), stan::model::index_uni(j))) /
-              (1 +
-              stan::math::exp(
+              stan::math::inv_logit(
                 stan::model::rvalue(alpha0, "alpha0",
-                  stan::model::index_uni(t), stan::model::index_uni(j))))),
+                  stan::model::index_uni(t), stan::model::index_uni(j))),
               "assigning variable p0", stan::model::index_uni(t),
               stan::model::index_uni(j));
           }
@@ -603,13 +599,9 @@ public:
               stan::model::index_uni(j), stan::model::index_uni(t));
             current_statement__ = 16;
             stan::model::assign(p0,
-              (stan::math::exp(
-                 stan::model::rvalue(alpha0, "alpha0",
-                   stan::model::index_uni(t), stan::model::index_uni(j))) /
-              (1 +
-              stan::math::exp(
+              stan::math::inv_logit(
                 stan::model::rvalue(alpha0, "alpha0",
-                  stan::model::index_uni(t), stan::model::index_uni(j))))),
+                  stan::model::index_uni(t), stan::model::index_uni(j))),
               "assigning variable p0", stan::model::index_uni(t),
               stan::model::index_uni(j));
           }
@@ -811,13 +803,9 @@ public:
               stan::model::index_uni(j), stan::model::index_uni(t));
             current_statement__ = 16;
             stan::model::assign(p0,
-              (stan::math::exp(
-                 stan::model::rvalue(alpha0, "alpha0",
-                   stan::model::index_uni(t), stan::model::index_uni(j))) /
-              (1 +
-              stan::math::exp(
+              stan::math::inv_logit(
                 stan::model::rvalue(alpha0, "alpha0",
-                  stan::model::index_uni(t), stan::model::index_uni(j))))),
+                  stan::model::index_uni(t), stan::model::index_uni(j))),
               "assigning variable p0", stan::model::index_uni(t),
               stan::model::index_uni(j));
           }
