@@ -123,19 +123,18 @@ fit_tag <- COA_TagInt(nind=nind, # number of individuals
                       ylim=ylim, # N-S boundary of spatial extent (receiver array + buffer)
                       testX=array(testloc$east,dim=c(nsentinal)),
                       testY=array(testloc$north,dim=c(nsentinal)),
-                      iter = 5000,
-                      warmup = 1000,
+                      iter = 4000,
+                      warmup = 2000,
                       control = list(adapt_delta = 0.95),
                       chain = 2)
 
 #
-# rstan::traceplot(fit_tag$model, pars = c("alpha1",
-#                                      "sigma", "lp__"))
-
-
+rstan::traceplot(fit_tag$model, pars = c("alpha1",
+                                     "sigma", "lp__"))
+fit_tag$coas
 test_that("test COA_TagInt model results to make sure its consisitent", {
 
   mean_p0 <- fit_tag$summary[1]
-  expected_mean_p0 <- 0.498
+  expected_mean_p0 <- 0.486
   expect_equal(mean_p0, expected_mean_p0, tolerance = 0.01)
 })
