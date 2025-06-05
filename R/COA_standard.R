@@ -22,21 +22,32 @@
 #'
 #'
 #' @export
-COA_Standard <- function(nind, nrec, ntime, ntrans, y,
-                         recX, recY, xlim, ylim, ...) {
-
+COA_Standard <- function(
+  nind,
+  nrec,
+  ntime,
+  ntrans,
+  y,
+  recX,
+  recY,
+  xlim,
+  ylim,
+  ...
+) {
   rstan::rstan_options(auto_write = TRUE)
   options(mc.cores = parallel::detectCores())
 
-  standata <- list(nind = nind,
-                   nrec = nrec,
-                   ntime = ntime,
-                   ntrans = ntrans,
-                   y = y,
-                   recX = recX,
-                   recY = recY,
-                   xlim = xlim,
-                   ylim = ylim)
+  standata <- list(
+    nind = nind,
+    nrec = nrec,
+    ntime = ntime,
+    ntrans = ntrans,
+    y = y,
+    recX = recX,
+    recY = recY,
+    xlim = xlim,
+    ylim = ylim
+  )
 
   fit_model <- rstan::sampling(stanmodels$COA_Standard, data = standata, ...)
 
@@ -45,7 +56,7 @@ COA_Standard <- function(nind, nrec, ntime, ntrans, y,
   # Note this returns parameters and latent states/derived values
 
   # Summary statistics and convergence diagnostics
-  fit_summary <- rstan::summary(fit_model, pars = c("p0","sigma"))$summary
+  fit_summary <- rstan::summary(fit_model, pars = c("p0", "sigma"))$summary
   #fit_summary <- fit_sum$summary
 
   # How much time did fitting take?
@@ -53,33 +64,39 @@ COA_Standard <- function(nind, nrec, ntime, ntrans, y,
 
   # Extract COA estimates
   coas <- array(NA, dim = c(ntime, 7, nind))
-  dimnames(coas)[[2]] <- c('time','x','y',
-                           'x_lower','x_upper',
-                           'y_lower','y_upper')
+  dimnames(coas)[[2]] <- c(
+    'time',
+    'x',
+    'y',
+    'x_lower',
+    'x_upper',
+    'y_lower',
+    'y_upper'
+  )
   ew <- NULL
   ns <- NULL
 
-  for (i in 1:nind){
-
-    coas[,1,i] <- seq(1, ntime, 1)
-    ew <- dplyr::select(fit_estimates, dplyr::starts_with( paste("sx[",i,",", sep='') ) )
-    ns <- dplyr::select(fit_estimates, dplyr::starts_with( paste("sy[",i,",", sep='') ) )
-    coas[,2,i] <- apply(ew, 2, stats::median)
-    coas[,3,i] <- apply(ns, 2, stats::median)
-    coas[,4,i] <- apply(ew,2,stats::quantile,probs=0.025)
-    coas[,5,i] <- apply(ew,2,stats::quantile,probs=0.975)
-    coas[,6,i] <- apply(ns,2,stats::quantile,probs=0.025)
-    coas[,7,i] <- apply(ns,2,stats::quantile,probs=0.975)
+  for (i in 1:nind) {
+    coas[, 1, i] <- seq(1, ntime, 1)
+    ew <- dplyr::select(
+      fit_estimates,
+      dplyr::starts_with(paste("sx[", i, ",", sep = ''))
+    )
+    ns <- dplyr::select(
+      fit_estimates,
+      dplyr::starts_with(paste("sy[", i, ",", sep = ''))
+    )
+    coas[, 2, i] <- apply(ew, 2, stats::median)
+    coas[, 3, i] <- apply(ns, 2, stats::median)
+    coas[, 4, i] <- apply(ew, 2, stats::quantile, probs = 0.025)
+    coas[, 5, i] <- apply(ew, 2, stats::quantile, probs = 0.975)
+    coas[, 6, i] <- apply(ns, 2, stats::quantile, probs = 0.025)
+    coas[, 7, i] <- apply(ns, 2, stats::quantile, probs = 0.975)
   }
-  
-  coas <- as.data.frame(coas[ , , 1])
+
+  coas <- as.data.frame(coas[,, 1])
   # Report results
   model_results <- list(fit_model, fit_summary, fit_time, coas, fit_estimates)
-  names(model_results) <- c('model',
-                           'summary',
-                           'time',
-                           'coas',
-                           'all_estimates')
+  names(model_results) <- c('model', 'summary', 'time', 'coas', 'all_estimates')
   return(model_results)
 }
-

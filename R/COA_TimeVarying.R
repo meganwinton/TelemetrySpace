@@ -21,26 +21,34 @@
 #'
 #' @export
 #'
-COA_TimeVarying <- function(nind, nrec, ntime, ntrans,
-                            y, recX, recY, xlim, ylim,
-                            ...) {
-
+COA_TimeVarying <- function(
+  nind,
+  nrec,
+  ntime,
+  ntrans,
+  y,
+  recX,
+  recY,
+  xlim,
+  ylim,
+  ...
+) {
   rstan::rstan_options(auto_write = TRUE)
   options(mc.cores = parallel::detectCores())
 
-  standata <- list(nind = nind,
-                   nrec = nrec,
-                   ntime = ntime,
-                   ntrans = ntrans,
-                   y = y,
-                   recX = recX,
-                   recY = recY,
-                   xlim = xlim,
-                   ylim = ylim)
+  standata <- list(
+    nind = nind,
+    nrec = nrec,
+    ntime = ntime,
+    ntrans = ntrans,
+    y = y,
+    recX = recX,
+    recY = recY,
+    xlim = xlim,
+    ylim = ylim
+  )
 
-  fit_model <- rstan::sampling(stanmodels$COA_TimeVarying,
-                               data = standata,
-                               ...)
+  fit_model <- rstan::sampling(stanmodels$COA_TimeVarying, data = standata, ...)
 
   # Save chains after discarding warmup
   fit_estimates <- as.data.frame(fit_model) # Note this returns parameters and latent states/derived values
@@ -53,42 +61,67 @@ COA_TimeVarying <- function(nind, nrec, ntime, ntrans,
   fit_time <- sum(print(rstan::get_elapsed_time(fit_model))) / 60
 
   # Extract COA estimates
-  coas <- array(NA, dim=c(ntime, 7, nind))
-  dimnames(coas)[[2]] <- c('time', 'x', 'y', 'x_lower',
-                           'x_upper','y_lower','y_upper')
+  coas <- array(NA, dim = c(ntime, 7, nind))
+  dimnames(coas)[[2]] <- c(
+    'time',
+    'x',
+    'y',
+    'x_lower',
+    'x_upper',
+    'y_lower',
+    'y_upper'
+  )
   ew <- NULL
   ns <- NULL
 
   for (i in 1:nind) {
     coas[, 1, i] <- seq(1, ntime, 1)
-    ew <- dplyr::select(fit_estimates, dplyr::starts_with(paste("sx[", i, ",",
-                                                                sep = '')))
-    ns <- dplyr::select(fit_estimates, dplyr::starts_with(paste("sy[", i, ",",
-                                                                sep = '')))
-    coas[, 2, i] <- apply(ew, 2, median)
-    coas[, 3, i] <- apply(ns, 2, median)
-    coas[, 4, i] <- apply(ew, 2, quantile, probs = 0.025)
-    coas[, 5, i] <- apply(ew, 2, quantile, probs = 0.975)
-    coas[, 6, i] <- apply(ns, 2, quantile, probs = 0.025)
-    coas[, 7, i] <- apply(ns, 2, quantile, probs = 0.975)
+    ew <- dplyr::select(
+      fit_estimates,
+      dplyr::starts_with(paste("sx[", i, ",", sep = ''))
+    )
+    ns <- dplyr::select(
+      fit_estimates,
+      dplyr::starts_with(paste("sy[", i, ",", sep = ''))
+    )
+    coas[, 2, i] <- apply(ew, 2, stats::median)
+    coas[, 3, i] <- apply(ns, 2, stats::median)
+    coas[, 4, i] <- apply(ew, 2, stats::quantile, probs = 0.025)
+    coas[, 5, i] <- apply(ew, 2, stats::quantile, probs = 0.975)
+    coas[, 6, i] <- apply(ns, 2, stats::quantile, probs = 0.025)
+    coas[, 7, i] <- apply(ns, 2, stats::quantile, probs = 0.975)
   }
-  coas <- as.data.frame(coas[ , , 1])
+  coas <- as.data.frame(coas[,, 1])
   # Extract time-varying detection probability estimates
-  d_probs <- array(NA, dim=c(nrec, ntime))
+  d_probs <- array(NA, dim = c(nrec, ntime))
   p0est <- NULL
 
-  for (i in 1:ntime){
-      p0est <- dplyr::select(fit_estimates,
-                             dplyr::starts_with(paste("p0[", i, ",", sep = '')))
-    for (j in 1:nrec){
-      d_probs[j, i] <- median(p0est[, j])
+  for (i in 1:ntime) {
+    p0est <- dplyr::select(
+      fit_estimates,
+      dplyr::starts_with(paste("p0[", i, ",", sep = ''))
+    )
+    for (j in 1:nrec) {
+      d_probs[j, i] <- stats::median(p0est[, j])
     }
   }
 
   # Report results
-  model_results <- list(fit_model, fit_summary, fit_time, coas, d_probs, fit_estimates)
-  names(model_results) <- c('model','summary','time',
-                           'coas','detection_probs','all_estimates')
+  model_results <- list(
+    fit_model,
+    fit_summary,
+    fit_time,
+    coas,
+    d_probs,
+    fit_estimates
+  )
+  names(model_results) <- c(
+    'model',
+    'summary',
+    'time',
+    'coas',
+    'detection_probs',
+    'all_estimates'
+  )
   return(model_results)
 }
-
