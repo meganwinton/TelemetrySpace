@@ -51,15 +51,15 @@ transformed parameters  {
 // Model specification
 model {
   // priors
-  alpha0[ntime,nrec]~cauchy(0,2.5);
-  alpha1~cauchy(0,2.5);
+  alpha0[ntime, nrec] ~ cauchy(0, 2.5);
+  alpha1 ~ cauchy(0, 2.5);
 
   // likelihood
   for (t in 1:ntime){ // For each time step
    for (j in 1:nrec){ // And each receiver
      for (i in 1:nind){ // And each individual
         // Note observations (y) must be specified as an integer - otherwise will result in an error
-        y[i,j,t] ~ binomial(ntrans, p0[t,j]*exp(-alpha1*d[i,j,t]*d[i,j,t]));
+        y[i, j, t] ~ binomial(ntrans, p0[t, j] * exp(-alpha1 * square(d[i, j, t])));
     }
    }
   }
