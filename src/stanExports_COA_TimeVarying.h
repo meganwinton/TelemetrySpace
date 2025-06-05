@@ -29,39 +29,39 @@ using namespace stan::math;
 stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 51> locations_array__ =
   {" (found before start of program)",
-  " (in 'COA_TimeVarying', line 16, column 2 to column 52)",
-  " (in 'COA_TimeVarying', line 17, column 2 to column 23)",
-  " (in 'COA_TimeVarying', line 19, column 2 to column 59)",
-  " (in 'COA_TimeVarying', line 20, column 2 to column 59)",
-  " (in 'COA_TimeVarying', line 25, column 3 to column 30)",
-  " (in 'COA_TimeVarying', line 26, column 3 to column 14)",
-  " (in 'COA_TimeVarying', line 27, column 3 to column 35)",
-  " (in 'COA_TimeVarying', line 29, column 3 to column 30)",
-  " (in 'COA_TimeVarying', line 35, column 10 to column 78)",
-  " (in 'COA_TimeVarying', line 37, column 10 to column 64)",
-  " (in 'COA_TimeVarying', line 33, column 23 to line 38, column 6)",
-  " (in 'COA_TimeVarying', line 33, column 6 to line 38, column 6)",
-  " (in 'COA_TimeVarying', line 32, column 20 to line 39, column 4)",
-  " (in 'COA_TimeVarying', line 32, column 4 to line 39, column 4)",
-  " (in 'COA_TimeVarying', line 31, column 20 to line 40, column 2)",
-  " (in 'COA_TimeVarying', line 31, column 3 to line 40, column 2)",
-  " (in 'COA_TimeVarying', line 45, column 2 to column 35)",
-  " (in 'COA_TimeVarying', line 46, column 2 to column 23)",
-  " (in 'COA_TimeVarying', line 52, column 8 to column 76)",
-  " (in 'COA_TimeVarying', line 50, column 22 to line 53, column 5)",
-  " (in 'COA_TimeVarying', line 50, column 5 to line 53, column 5)",
-  " (in 'COA_TimeVarying', line 49, column 20 to line 54, column 4)",
-  " (in 'COA_TimeVarying', line 49, column 3 to line 54, column 4)",
-  " (in 'COA_TimeVarying', line 48, column 20 to line 55, column 3)",
-  " (in 'COA_TimeVarying', line 48, column 2 to line 55, column 3)",
-  " (in 'COA_TimeVarying', line 3, column 2 to column 20)",
-  " (in 'COA_TimeVarying', line 4, column 2 to column 20)",
-  " (in 'COA_TimeVarying', line 5, column 2 to column 21)",
-  " (in 'COA_TimeVarying', line 6, column 2 to column 22)",
+  " (in 'COA_TimeVarying', line 16, column 2 to column 56)",
+  " (in 'COA_TimeVarying', line 17, column 2 to column 25)",
+  " (in 'COA_TimeVarying', line 19, column 2 to column 63)",
+  " (in 'COA_TimeVarying', line 21, column 2 to column 63)",
+  " (in 'COA_TimeVarying', line 27, column 3 to column 30)",
+  " (in 'COA_TimeVarying', line 28, column 3 to column 14)",
+  " (in 'COA_TimeVarying', line 29, column 3 to column 35)",
+  " (in 'COA_TimeVarying', line 31, column 3 to column 34)",
+  " (in 'COA_TimeVarying', line 38, column 10 to column 85)",
+  " (in 'COA_TimeVarying', line 40, column 10 to column 45)",
+  " (in 'COA_TimeVarying', line 36, column 23 to line 41, column 6)",
+  " (in 'COA_TimeVarying', line 36, column 6 to line 41, column 6)",
+  " (in 'COA_TimeVarying', line 35, column 20 to line 42, column 4)",
+  " (in 'COA_TimeVarying', line 35, column 4 to line 42, column 4)",
+  " (in 'COA_TimeVarying', line 34, column 20 to line 43, column 2)",
+  " (in 'COA_TimeVarying', line 34, column 3 to line 43, column 2)",
+  " (in 'COA_TimeVarying', line 48, column 2 to column 39)",
+  " (in 'COA_TimeVarying', line 49, column 2 to column 26)",
+  " (in 'COA_TimeVarying', line 55, column 8 to column 84)",
+  " (in 'COA_TimeVarying', line 53, column 22 to line 56, column 5)",
+  " (in 'COA_TimeVarying', line 53, column 5 to line 56, column 5)",
+  " (in 'COA_TimeVarying', line 52, column 20 to line 57, column 4)",
+  " (in 'COA_TimeVarying', line 52, column 3 to line 57, column 4)",
+  " (in 'COA_TimeVarying', line 51, column 20 to line 58, column 3)",
+  " (in 'COA_TimeVarying', line 51, column 2 to line 58, column 3)",
+  " (in 'COA_TimeVarying', line 3, column 2 to column 22)",
+  " (in 'COA_TimeVarying', line 4, column 2 to column 22)",
+  " (in 'COA_TimeVarying', line 5, column 2 to column 23)",
+  " (in 'COA_TimeVarying', line 6, column 2 to column 24)",
   " (in 'COA_TimeVarying', line 7, column 8 to column 12)",
   " (in 'COA_TimeVarying', line 7, column 14 to column 18)",
   " (in 'COA_TimeVarying', line 7, column 20 to column 25)",
-  " (in 'COA_TimeVarying', line 7, column 2 to column 42)",
+  " (in 'COA_TimeVarying', line 7, column 2 to column 44)",
   " (in 'COA_TimeVarying', line 8, column 8 to column 12)",
   " (in 'COA_TimeVarying', line 8, column 2 to column 24)",
   " (in 'COA_TimeVarying', line 9, column 8 to column 12)",
@@ -72,13 +72,13 @@ static constexpr std::array<const char*, 51> locations_array__ =
   " (in 'COA_TimeVarying', line 16, column 15 to column 19)",
   " (in 'COA_TimeVarying', line 19, column 8 to column 12)",
   " (in 'COA_TimeVarying', line 19, column 14 to column 19)",
-  " (in 'COA_TimeVarying', line 20, column 8 to column 12)",
-  " (in 'COA_TimeVarying', line 20, column 14 to column 19)",
-  " (in 'COA_TimeVarying', line 25, column 9 to column 14)",
-  " (in 'COA_TimeVarying', line 25, column 16 to column 20)",
-  " (in 'COA_TimeVarying', line 27, column 9 to column 13)",
-  " (in 'COA_TimeVarying', line 27, column 15 to column 19)",
-  " (in 'COA_TimeVarying', line 27, column 21 to column 26)"};
+  " (in 'COA_TimeVarying', line 21, column 8 to column 12)",
+  " (in 'COA_TimeVarying', line 21, column 14 to column 19)",
+  " (in 'COA_TimeVarying', line 27, column 9 to column 14)",
+  " (in 'COA_TimeVarying', line 27, column 16 to column 20)",
+  " (in 'COA_TimeVarying', line 29, column 9 to column 13)",
+  " (in 'COA_TimeVarying', line 29, column 15 to column 19)",
+  " (in 'COA_TimeVarying', line 29, column 21 to column 26)"};
 #include <stan_meta_header.hpp>
 class model_COA_TimeVarying final : public model_base_crtp<model_COA_TimeVarying> {
 private:
@@ -308,28 +308,23 @@ public:
           for (int i = 1; i <= nind; ++i) {
             current_statement__ = 9;
             stan::model::assign(d,
-              stan::math::pow(
-                (stan::math::pow(
+              stan::math::sqrt(
+                (stan::math::square(
                    (stan::model::rvalue(sx, "sx", stan::model::index_uni(i),
                       stan::model::index_uni(t)) -
                    stan::model::rvalue(recX, "recX",
-                     stan::model::index_uni(j))), 2) +
-                stan::math::pow(
+                     stan::model::index_uni(j)))) +
+                stan::math::square(
                   (stan::model::rvalue(sy, "sy", stan::model::index_uni(i),
                      stan::model::index_uni(t)) -
-                  stan::model::rvalue(recY, "recY", stan::model::index_uni(j))),
-                  2)), 0.5), "assigning variable d",
-              stan::model::index_uni(i), stan::model::index_uni(j),
-              stan::model::index_uni(t));
+                  stan::model::rvalue(recY, "recY", stan::model::index_uni(j)))))),
+              "assigning variable d", stan::model::index_uni(i),
+              stan::model::index_uni(j), stan::model::index_uni(t));
             current_statement__ = 10;
             stan::model::assign(p0,
-              (stan::math::exp(
-                 stan::model::rvalue(alpha0, "alpha0",
-                   stan::model::index_uni(t), stan::model::index_uni(j))) /
-              (1 +
-              stan::math::exp(
+              stan::math::inv_logit(
                 stan::model::rvalue(alpha0, "alpha0",
-                  stan::model::index_uni(t), stan::model::index_uni(j))))),
+                  stan::model::index_uni(t), stan::model::index_uni(j))),
               "assigning variable p0", stan::model::index_uni(t),
               stan::model::index_uni(j));
           }
@@ -358,15 +353,12 @@ public:
                                (stan::model::rvalue(p0, "p0",
                                   stan::model::index_uni(t),
                                   stan::model::index_uni(j)) *
-                               stan::math::exp(((-(alpha1) *
-                                 stan::model::rvalue(d, "d",
-                                   stan::model::index_uni(i),
-                                   stan::model::index_uni(j),
-                                   stan::model::index_uni(t))) *
-                                 stan::model::rvalue(d, "d",
-                                   stan::model::index_uni(i),
-                                   stan::model::index_uni(j),
-                                   stan::model::index_uni(t)))))));
+                               stan::math::exp((-(alpha1) *
+                                 stan::math::square(
+                                   stan::model::rvalue(d, "d",
+                                     stan::model::index_uni(i),
+                                     stan::model::index_uni(j),
+                                     stan::model::index_uni(t))))))));
             }
           }
         }
@@ -444,28 +436,23 @@ public:
           for (int i = 1; i <= nind; ++i) {
             current_statement__ = 9;
             stan::model::assign(d,
-              stan::math::pow(
-                (stan::math::pow(
+              stan::math::sqrt(
+                (stan::math::square(
                    (stan::model::rvalue(sx, "sx", stan::model::index_uni(i),
                       stan::model::index_uni(t)) -
                    stan::model::rvalue(recX, "recX",
-                     stan::model::index_uni(j))), 2) +
-                stan::math::pow(
+                     stan::model::index_uni(j)))) +
+                stan::math::square(
                   (stan::model::rvalue(sy, "sy", stan::model::index_uni(i),
                      stan::model::index_uni(t)) -
-                  stan::model::rvalue(recY, "recY", stan::model::index_uni(j))),
-                  2)), 0.5), "assigning variable d",
-              stan::model::index_uni(i), stan::model::index_uni(j),
-              stan::model::index_uni(t));
+                  stan::model::rvalue(recY, "recY", stan::model::index_uni(j)))))),
+              "assigning variable d", stan::model::index_uni(i),
+              stan::model::index_uni(j), stan::model::index_uni(t));
             current_statement__ = 10;
             stan::model::assign(p0,
-              (stan::math::exp(
-                 stan::model::rvalue(alpha0, "alpha0",
-                   stan::model::index_uni(t), stan::model::index_uni(j))) /
-              (1 +
-              stan::math::exp(
+              stan::math::inv_logit(
                 stan::model::rvalue(alpha0, "alpha0",
-                  stan::model::index_uni(t), stan::model::index_uni(j))))),
+                  stan::model::index_uni(t), stan::model::index_uni(j))),
               "assigning variable p0", stan::model::index_uni(t),
               stan::model::index_uni(j));
           }
@@ -494,15 +481,12 @@ public:
                                (stan::model::rvalue(p0, "p0",
                                   stan::model::index_uni(t),
                                   stan::model::index_uni(j)) *
-                               stan::math::exp(((-(alpha1) *
-                                 stan::model::rvalue(d, "d",
-                                   stan::model::index_uni(i),
-                                   stan::model::index_uni(j),
-                                   stan::model::index_uni(t))) *
-                                 stan::model::rvalue(d, "d",
-                                   stan::model::index_uni(i),
-                                   stan::model::index_uni(j),
-                                   stan::model::index_uni(t)))))));
+                               stan::math::exp((-(alpha1) *
+                                 stan::math::square(
+                                   stan::model::rvalue(d, "d",
+                                     stan::model::index_uni(i),
+                                     stan::model::index_uni(j),
+                                     stan::model::index_uni(t))))))));
             }
           }
         }
@@ -616,28 +600,23 @@ public:
           for (int i = 1; i <= nind; ++i) {
             current_statement__ = 9;
             stan::model::assign(d,
-              stan::math::pow(
-                (stan::math::pow(
+              stan::math::sqrt(
+                (stan::math::square(
                    (stan::model::rvalue(sx, "sx", stan::model::index_uni(i),
                       stan::model::index_uni(t)) -
                    stan::model::rvalue(recX, "recX",
-                     stan::model::index_uni(j))), 2) +
-                stan::math::pow(
+                     stan::model::index_uni(j)))) +
+                stan::math::square(
                   (stan::model::rvalue(sy, "sy", stan::model::index_uni(i),
                      stan::model::index_uni(t)) -
-                  stan::model::rvalue(recY, "recY", stan::model::index_uni(j))),
-                  2)), 0.5), "assigning variable d",
-              stan::model::index_uni(i), stan::model::index_uni(j),
-              stan::model::index_uni(t));
+                  stan::model::rvalue(recY, "recY", stan::model::index_uni(j)))))),
+              "assigning variable d", stan::model::index_uni(i),
+              stan::model::index_uni(j), stan::model::index_uni(t));
             current_statement__ = 10;
             stan::model::assign(p0,
-              (stan::math::exp(
-                 stan::model::rvalue(alpha0, "alpha0",
-                   stan::model::index_uni(t), stan::model::index_uni(j))) /
-              (1 +
-              stan::math::exp(
+              stan::math::inv_logit(
                 stan::model::rvalue(alpha0, "alpha0",
-                  stan::model::index_uni(t), stan::model::index_uni(j))))),
+                  stan::model::index_uni(t), stan::model::index_uni(j))),
               "assigning variable p0", stan::model::index_uni(t),
               stan::model::index_uni(j));
           }
