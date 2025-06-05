@@ -39,7 +39,7 @@ transformed parameters  {
     for(j in 1:nrec){ // And each receiver
       for(i in 1:nind) { // And each individual
         // Calculate the Euclidean distance from each COA to each receiver in each time step
-          d[i,j,t] = pow(pow(sx[i,t]-recX[j],2) + pow(sy[i,t]-recY[j],2),0.5);
+          d[i, j, t] = sqrt(square(sx[i, t] - recX[j]) + square(sy[i, t] - recY[j]));
        // Detection probability
           p0[t,j] = exp( alpha0[t,j] )/( 1+exp( alpha0[t,j] ) );
      }
