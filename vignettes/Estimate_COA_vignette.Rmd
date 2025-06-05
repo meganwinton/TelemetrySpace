@@ -127,7 +127,7 @@ ggplot(data=m1,aes(x=hour,y=n))+
   labs(x="Hours since deployment",y="Number of detections")
 ```
 
-![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png)
+![plot of chunk unnamed-chunk-3](figures/unnamed-chunk-3-1.png)
 
 Tally how many time intervals each receiver was operational for - this allows for individual receivers deployed for different periods and/or receivers that were lost.
 
@@ -624,4 +624,4 @@ ggarrange(plotCOAs, plotTVary, plotTagInt,
           common.legend = F)
 ```
 
-![plot of chunk unnamed-chunk-15](figure/unnamed-chunk-15-1.png)
+![plot of chunk unnamed-chunk-15](figures/unnamed-chunk-15-1.png)

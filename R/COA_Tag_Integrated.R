@@ -72,16 +72,14 @@ COA_TagInt <- function(nind, nrec, ntime,
     coas[,1,i] <- seq(1, ntime, 1)
     ew <- dplyr::select(fit_estimates, dplyr::starts_with( paste("sx[",i,",", sep='') ) )
     ns <- dplyr::select(fit_estimates, dplyr::starts_with( paste("sy[",i,",", sep='') ) )
-    coas[,2,i] <- apply(ew, 2, median)
-    coas[,3,i] <- apply(ns, 2, median)
-    coas[,4,i] <- apply(ew,2,quantile,probs=0.025)
-    coas[,5,i] <- apply(ew,2,quantile,probs=0.975)
-    coas[,6,i] <- apply(ns,2,quantile,probs=0.025)
-    coas[,7,i] <- apply(ns,2,quantile,probs=0.975)
+    coas[,2,i] <- apply(ew, 2, stats::median)
+    coas[,3,i] <- apply(ns, 2, stats::median)
+    coas[,4,i] <- apply(ew, 2, stats::quantile, probs=0.025)
+    coas[,5,i] <- apply(ew, 2, stats::quantile, probs=0.975)
+    coas[,6,i] <- apply(ns, 2, stats::quantile, probs=0.025)
+    coas[,7,i] <- apply(ns, 2, stats::quantile, probs=0.975)
   }
-
-  # convert coas to data.frame or tibble or data table - either one works for
-  # me mike
+  
   coas <- as.data.frame(coas[ , , 1])
   # Extract time-varying detection probability estimates
   d_probs <- array(NA, dim = c(nrec, ntime))
