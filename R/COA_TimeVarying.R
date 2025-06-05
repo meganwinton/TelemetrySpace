@@ -72,7 +72,7 @@ COA_TimeVarying <- function(nind, nrec, ntime, ntrans,
     coas[, 6, i] <- apply(ns, 2, quantile, probs = 0.025)
     coas[, 7, i] <- apply(ns, 2, quantile, probs = 0.975)
   }
-
+  coas <- as.data.frame(coas[ , , 1])
   # Extract time-varying detection probability estimates
   d_probs <- array(NA, dim=c(nrec, ntime))
   p0est <- NULL
