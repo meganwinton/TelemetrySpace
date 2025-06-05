@@ -2,6 +2,9 @@
 
 The `TelemetrySpace` package implements the model described in [Winton et al. 2018](https://doi.org/10.1111/2041-210X.13080), *A spatial point process model to estimate individual centres of activity from passive acoustic telemetry data*.
 
+[![R-CMD-check](https://github.com/meganwinton/TelemetrySpace/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/meganwinton/TelemetrySpace/actions/workflows/R-CMD-check.yaml)
+[![TelemetrySpace status badge](https://ocean-tracking-network.r-universe.dev/TelemetrySpace/badges/version)](https://ocean-tracking-network.r-universe.dev/TelemetrySpace)
+
 ## Note
 
 As of June 2025, `TelemetrySpace` is undergoing rapid development to bring the package up to date with current tooling. You should be able to install and use `TelemetrySpace` to recreate analyses in Winton et al. 2018 by following instructions below, but the package should not be considered stable at this time.
