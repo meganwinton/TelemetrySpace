@@ -10,18 +10,20 @@ Authors@R: c(
   person("Benjamin L.", "Hlina", email = "benjamin.hlina@gmail.com", role = "ctb",
   comment = c(ORCID = "0000-0002-4178-4900")))
 License: GPL (>=3)
-Encoding: UTF-8
-LazyData: true
-ByteCompile: true
 Depends:
     R (>= 3.4.0),
     Rcpp (>= 0.12.17)
 Imports: 
+    dplyr,
     methods,
     RcppParallel (>= 5.0.1),
     rstan (>= 2.18.1),
     rstantools (>= 2.4.0),
     stats
+Suggests: 
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0)
 LinkingTo: 
     BH (>= 1.66.0-1),
     Rcpp (>= 0.12.17),
@@ -29,11 +31,13 @@ LinkingTo:
     RcppParallel (>= 5.0.1),
     rstan (>= 2.18.1),
     StanHeaders (>= 2.18.0)
-Suggests: 
-    knitr,
-    rmarkdown
+Encoding: UTF-8
+LazyData: true
+ByteCompile: true
 SystemRequirements: GNU make
 NeedsCompilation: yes
+Biarch: true
+Config/testthat/edition: 3
 RoxygenNote: 7.3.2
 VignetteBuilder: knitr
-Biarch: true
+Roxygen: list(markdown = TRUE)

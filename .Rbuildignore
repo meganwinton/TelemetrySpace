@@ -2,5 +2,5 @@
 ^\.Rproj\.user$
 ^vignettes/precompile\.R$
 ^vignettes/_Estimate_COA_vignette\.Rmd$
-^LICENSE$
+^LICENSE\.md$
 ^\.github$
