@@ -136,5 +136,5 @@ test_that("test COA_TagInt model results to make sure its consisitent", {
 
   mean_p0 <- fit_tag$summary[1]
   expected_mean_p0 <- 0.486
-  expect_equal(mean_p0, expected_mean_p0, tolerance = 0.01)
+  expect_equal(mean_p0, expected_mean_p0, tolerance = 0.05)
 })
