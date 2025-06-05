@@ -1,14 +1,18 @@
 # TelemetrySpace: Fit spatial point process and geostatistical mixed effects models to electronic tagging data
-## Installation
-The `TelemetrySpace` package uses Stan [http://mc-stan.org/] for model fitting.  
 
-To install from GitHub, you will need to install the `rstan` package and C++ toolchain by following the instructions at [https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started]. *Pay close attention to the installation instructions provided at the link - there are several steps to rstan installation.* Once `rstan` is successfully installed, restart R and install `TelemetrySpace` from GitHub by executing the following in R:
+The `TelemetrySpace` package implements the model described in [Winton et al. 2018](https://doi.org/10.1111/2041-210X.13080), *A spatial point process model to estimate individual centres of activity from passive acoustic telemetry data*.
+
+## Note
+
+As of June 2025, `TelemetrySpace` is undergoing rapid development to bring the package up to date with current tooling. You should be able to install and use `TelemetrySpace` to recreate analyses in Winton et al. 2018 by following instructions below, but the package should not be considered stable at this time.
+
+
+## Installation
+
+We suggest installing via the Ocean Tracking Network's R-universe:
+
 ```
-if (!require(devtools)) {
-  install.packages("devtools")
-  library(devtools)
-}
-install_github("meganwinton/TelemetrySpace", build_vignettes = FALSE)
+install.packages('TelemetrySpace', repos = c('https://ocean-tracking-network.r-universe.dev', getOption("repos"))
 ```
-If you change `build_vignettes` to `TRUE`, installation will take longer. Vignettes are already available in the `vignettes` folder on this page.
-Note that installation will take *several minutes* because all Stan models are compiled when the package is built. Patience!
+
+The `TelemetrySpace` package uses [Stan](http://mc-stan.org/) for model fitting. If you would like to use more-up-to-date versions of Stan or [RStan](https://mc-stan.org/rstan/) dependencies, please follow the instructions at https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started.
