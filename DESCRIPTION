@@ -21,9 +21,13 @@ Imports:
     rstantools (>= 2.4.0),
     stats
 Suggests: 
+    ggplot2,
+    ggpubr,
+    hexbin,
     knitr,
     rmarkdown,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    tidyr
 LinkingTo: 
     BH (>= 1.66.0-1),
     Rcpp (>= 0.12.17),
