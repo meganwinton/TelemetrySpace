@@ -6,7 +6,7 @@
 \title{Receiver locations from a black sea bass array}
 \format{
 A data frame with three variables: \code{Station} Receiver ID, \code{east} East-West coordinate,
-  \code{north} North-South coordinate.
+\code{north} North-South coordinate.
 }
 \usage{
 rlocs
