@@ -36,10 +36,10 @@ COA_Standard <- function(
 ) {
 
   if (!is.numeric(nind) || !is.vector(nind) ||  length(nind) != 1) {
-    cli::cli_abort("'nind' must be a numeric vector that has a lenght of 1.")
+    cli::cli_abort("'nind' must be a numeric vector that has a length of 1.")
   }
   if (!is.numeric(nrec) || !is.vector(nrec) ||  length(nind) != 1) {
-    cli::cli_abort("'nrec' must be a numeric vector that has a lenght of 1.")
+    cli::cli_abort("'nrec' must be a numeric vector that has a length of 1.")
   }
   if (!is.numeric(ntime) || !is.vector(ntime)) {
     cli::cli_abort("'ntime' must be a numeric vector.")
