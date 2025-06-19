@@ -18,7 +18,7 @@ test_that("test nind of model errors", {
       iter = 2000,
       control = list(adapt_delta = 0.95)
     ),
-    regexp = "'nind' must be a numeric vector that has a lenght of 1."
+    regexp = "'nind' must be a numeric vector that has a length of 1."
   )
 
   expect_error(
@@ -37,7 +37,7 @@ test_that("test nind of model errors", {
       iter = 2000,
       control = list(adapt_delta = 0.95)
     ),
-    regexp = "'nind' must be a numeric vector that has a lenght of 1."
+    regexp = "'nind' must be a numeric vector that has a length of 1."
   )
 }
 )
@@ -60,7 +60,7 @@ test_that("test nrec of model errors", {
       iter = 2000,
       control = list(adapt_delta = 0.95)
     ),
-    regexp = "'nrec' must be a numeric vector that has a lenght of 1."
+    regexp = "'nrec' must be a numeric vector that has a length of 1."
   )
 
   expect_error(
@@ -79,7 +79,7 @@ test_that("test nrec of model errors", {
       iter = 2000,
       control = list(adapt_delta = 0.95)
     ),
-    regexp = "'nrec' must be a numeric vector that has a lenght of 1."
+    regexp = "'nrec' must be a numeric vector that has a length of 1."
   )
 }
 )
