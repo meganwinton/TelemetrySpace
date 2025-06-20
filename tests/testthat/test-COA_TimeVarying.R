@@ -137,8 +137,8 @@ fit_vary <- COA_TimeVarying(
   recY = as.vector(rlocs$north), # N-S receiver coordinates
   xlim = xlim, # E-W boundary of spatial extent (receiver array + buffer)
   ylim = ylim,
-  iter = 2000,
-  warmup = 1000,
+  iter = 3000,
+  warmup = 2000,
   chain = 2,
   control = list(adapt_delta = 0.95)
 )
