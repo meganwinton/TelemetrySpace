@@ -291,6 +291,50 @@ test_that("test xlim to see if errors", {
 }
 
 )
+
+# ---- check ylim-----
+test_that("test ylim to see if errors", {
+
+  expect_error(
+    COA_Standard(
+      nind = model_param_ex$nind,  # number of individuals
+      nrec = model_param_ex$nrec, # number of receivers
+      ntime = model_param_ex$tsteps, # number of time steps
+      ntrans = model_param_ex$ntrans,
+      # number of expected transmissions per tag per time interval
+      y = Y, # array of detections
+      recX = rlocs$east, # E-W receiver coordinates
+      recY = rlocs$north, # N-S receiver coordinates
+      xlim = example_extent$xlim, # E-W boundary of spatial extent (receiver array + buffer)
+      ylim = c(1), # N-S boundary of spatial extent (receiver array + buffer)
+      chains = 2,
+      warmup = 1000,
+      iter = 2000,
+      control = list(adapt_delta = 0.95)
+    ),
+    regexp = "'ylim' must be a numeric vector that has a length of 2."
+  )
+  expect_error(
+    COA_Standard(
+      nind = model_param_ex$nind,  # number of individuals
+      nrec = model_param_ex$nrec, # number of receivers
+      ntime = model_param_ex$tsteps, # number of time steps
+      ntrans = model_param_ex$ntrans,
+      # number of expected transmissions per tag per time interval
+      y = Y, # array of detections
+      recX = rlocs$east, # E-W receiver coordinates
+      recY = rlocs$north, # N-S receiver coordinates
+      xlim = example_extent$ylim, # E-W boundary of spatial extent (receiver array + buffer)
+      ylim = "1", # N-S boundary of spatial extent (receiver array + buffer)
+      chains = 2,
+      warmup = 1000,
+      iter = 2000,
+      control = list(adapt_delta = 0.95)
+    ),
+    regexp = "'ylim' must be a numeric vector that has a length of 2."
+  )
+
+}
 )
 
 # ---- run model and check of it works ----
