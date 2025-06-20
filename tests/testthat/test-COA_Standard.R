@@ -1,6 +1,7 @@
 
-# ---- test each argument if it errors apprproatly -----
-test_that("test nind of model errors", {
+# ---- test each argument if it errors appropriately -----
+# ---- Check if nind errors -----
+test_that("test nind if it errors", {
 
   expect_error(
     COA_Standard(
@@ -42,7 +43,7 @@ test_that("test nind of model errors", {
 }
 )
 # ---- check nrec -----
-test_that("test nrec of model errors", {
+test_that("test nrec to see if it errors", {
 
   expect_error(
     COA_Standard(
@@ -197,13 +198,7 @@ test_that("test y to see if errors", {
 
 
 
-
-
-
-
-
-
-# ----- run model and chekc of it works ----
+# ---- run model and check of it works ----
 fit <- COA_Standard(
   nind = model_param_ex$nind, # number of individuals
   nrec = model_param_ex$nrec, # number of receivers
@@ -220,14 +215,15 @@ fit <- COA_Standard(
   control = list(adapt_delta = 0.95)
 )
 
-
 # rstan::traceplot(fit$model, pars = c("alpha0", "alpha1",
 #                                      "sigma", "lp__"))
+
 
 test_that("test COA_standard model results to make sure its consisitent", {
   mean_p0 <- fit$summary[1]
   expected_mean_p0 <- 0.2818
   expect_equal(mean_p0, expected_mean_p0, tolerance = 0.05)
+
 })
 
 
