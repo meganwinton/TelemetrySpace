@@ -42,10 +42,10 @@ COA_Standard <- function(
     cli::cli_abort("'nrec' must be a numeric vector that has a length of 1.")
   }
   if (!is.numeric(ntime) || !is.vector(ntime)) {
-    cli::cli_abort("'ntime' must be a numeric vector.")
+    cli::cli_abort("'ntime' must be a numeric vector that has a length of 1.")
   }
   if (!is.numeric(ntrans) || !is.vector(ntrans)) {
-    cli::cli_abort("'ntrans' must be a numeric vector.")
+    cli::cli_abort("'ntrans' must be a numeric vector that has a length of 1.")
   }
   if (!is.array(y) || length(dim(y)) != 3) {
     cli::cli_abort("'y' must be a 3-dimensional numeric array.")
