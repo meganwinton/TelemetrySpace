@@ -1,4 +1,5 @@
-
+# library(testthat)
+# library(TelemetrySpace)
 # ---- test each argument if it errors appropriately -----
 # ---- Check if nind errors -----
 test_that("test nind if it errors", {
@@ -364,8 +365,41 @@ test_that("test COA_standard model results to make sure its consisitent", {
   expect_equal(mean_p0, expected_mean_p0, tolerance = 0.05)
 
 })
+test_that("check to see if fit classes", {
+
+  expect_type(fit, "list")
+  expect_s4_class(fit$model, "stanfit")
+  expect_s3_class(fit$coas, "data.frame")
+  expect_s3_class(fit$all_estimates, "data.frame")
+  expect_type(fit$summary, "double")
+  expect_true(is.matrix(fit$summary))
+  expect_true(is.numeric(fit$time))
+
+})
 
 
 
+test_that("check to see if coa returns proper info", {
+
+  expect_true("coas" %in% names(fit))
+  expect_equal(nrow(fit$coas), model_param_ex$tsteps)
+  expect_equal(colnames(fit$coas), c(
+    "time", "x", "y", "x_lower",
+    "x_upper", "y_lower", "y_upper"
+  ))
+
+  for (col in colnames(fit$coas)) {
+    expect_type(fit$coas[[col]], "double")
+    expect_true(all(is.finite(fit$coas[[col]])))
+  }
+}
+)
+
+test_that("check to see model converged and has a good rhat", {
+
+rhat <- fit$summary[, "Rhat"]
+expect_true(all(rhat > 0.95 & rhat < 1.05))
+}
+)
 
 
