@@ -11,7 +11,7 @@ Authors@R: c(
   comment = c(ORCID = "0000-0002-4178-4900")))
 License: GPL (>=3)
 Depends:
-    R (>= 3.4.0),
+    R (>= 3.5),
     Rcpp (>= 0.12.17)
 Imports: 
     dplyr,
