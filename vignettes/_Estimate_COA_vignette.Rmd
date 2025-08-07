@@ -230,19 +230,19 @@ The first contains the Stan model object (accessible via `fit$Model`, which will
 The second element is a table of parameter estimates and associated quantiles from the posterior distribution. The table also includes the effective sample size and the Rhat statistic (which should be ~1).
 
 ```{r, echo=T, message = F}
-fit$Summary
+fit$summary
 ```
 
 The third returns the time required to run the model (in minutes). Note that Stan will automatically detect and use multiple cores. If the computer used to run this has multiple cores, the time returned will be longer than the actual run time (because it will sum the time for each core). To return the realized run time, divide `fit$Time` by the number of cores.
 
 ```{r, echo=T, message = F}
-fit$Time
+fit$time
 ```
 
 The fourth returns an array of COA estimates, where each matrix corresponds to one individual, the rows correspond to each time step, and the columns include the median posterior estimate of the east-west (x) and north-south (y) coordinates. The 95% credible interval (Bayesian version of a confidence interval) for each coordinate is also provided.
 
 ```{r, echo=T, message = F}
-fit$COAs
+fit$coas
 ```
 
 The last element (`fit$All_estimates`) contains the estimates from each non-warm-up iteration for all 4 chains. (If you're not familiar with Bayesian lingo and this just seems like statistical jargon, all you need to know is that this is what you'll use to plot the uncertainty cloud around COA estimates and/or the distribution of parameter estimates as presented in the paper.) This includes estimates of all latent parameters for each individual in each time step (aka this element contains tons of parameter estimates), so we will need to subset out parameters for plotting.
@@ -257,11 +257,11 @@ EN_fit <- list(NA)
 for (i in 1:nind){
   EN_fit[[i]] <- bind_cols(
     # East-West
-    fit$All_estimates |> 
+    fit$all_estimates |> 
       select(starts_with(paste("sx[", i, ",", sep=''))) |> 
       pivot_longer(everything(), values_to = "X"),
     # North-South
-    fit$All_estimates |> 
+    fit$all_estimates |> 
       select(starts_with(paste("sy[", i, ",", sep=''))) |> 
       pivot_longer(everything(), values_to = "Y") |> 
       select(Y)
@@ -273,7 +273,7 @@ for (i in 1:nind){
 ## Plot posterior estimates
 # Select individual for plotting
 post_fit <- EN_fit[[1]]
-coa_fit <- as.data.frame(fit$COAs[, , 1])
+coa_fit <- as.data.frame(fit$coas[, , 1])
 
 # Plot in ggplot
 plotCOAs <- ggplot(aes(x = X, y = Y), data = post_fit) +
@@ -314,7 +314,7 @@ fit_vary <- COA_TimeVarying(
 
 summary(fit_vary)
 
-fit_vary$Time
+fit_vary$time
 
 # As before, extract east-west and north-south coordinates of COAs from each iteration of each chain
 # Note that 'sx' and 'sy' are the variable names used to store the coordinates for each individual (rows) in each time step (columns).
@@ -324,11 +324,11 @@ EN_vary <- list(NA)
 for (i in 1:nind){
   EN_vary[[i]] <- bind_cols(
     # East-West
-    fit_vary$All_estimates |> 
+    fit_vary$all_estimates |> 
       select(starts_with(paste("sx[", i, ",", sep=''))) |> 
       pivot_longer(everything(), values_to = "X"),
     # North-South
-    fit_vary$All_estimates |> 
+    fit_vary$all_estimates |> 
       select(starts_with(paste("sy[", i, ",", sep=''))) |> 
       pivot_longer(everything(), values_to = "Y") |> 
       select(Y)
@@ -340,7 +340,7 @@ for (i in 1:nind){
 ## Plot posterior estimates
 # Select individual for plotting
 post_vary <- EN_vary[[1]]
-coa_vary <- as.data.frame(fit_vary$COAs[, , 1])
+coa_vary <- as.data.frame(fit_vary$coas[, , 1])
 
 # Plot in ggplot
 plotTVary <- ggplot(aes(x = X, y = Y), data = post_vary) +
@@ -390,7 +390,7 @@ fit_tag <- COA_TagInt(
 
 summary(fit_tag)
 
-fit_tag$Time # See the comment about run time when your computer has multiple cores above.
+fit_tag$time # See the comment about run time when your computer has multiple cores above.
 
 # As before, extract east-west and north-south coordinates of COAs from each iteration of each chain
 # Note that 'sx' and 'sy' are the variable names used to store the coordinates for each individual (rows) in each time step (columns).
@@ -400,11 +400,11 @@ EN_tag <- list(NA)
 for (i in 1:nind){
   EN_tag[[i]] <- bind_cols(
     # East-West
-    fit_tag$All_estimates |> 
+    fit_tag$all_estimates |> 
       select(starts_with(paste("sx[", i, ",", sep=''))) |> 
       pivot_longer(everything(), values_to = "X"),
     # North-South
-    fit_tag$All_estimates |> 
+    fit_tag$all_estimates |> 
       select(starts_with(paste("sy[", i, ",", sep=''))) |> 
       pivot_longer(everything(), values_to = "Y") |> 
       select(Y)
@@ -416,7 +416,7 @@ for (i in 1:nind){
 ## Plot posterior estimates
 # Select individual for plotting
 post_tag <- EN_tag[[1]]
-coa_tag <- as.data.frame(fit_tag$COAs[, , 1])
+coa_tag <- as.data.frame(fit_tag$coas[, , 1])
 
 # Plot in ggplot
 plotTagInt <- ggplot(aes(x = X, y = Y), data = post_tag) +
