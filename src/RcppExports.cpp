@@ -15,11 +15,13 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 RcppExport SEXP _rcpp_module_boot_stan_fit4COA_Standard_mod();
 RcppExport SEXP _rcpp_module_boot_stan_fit4COA_Tag_Integrated_mod();
 RcppExport SEXP _rcpp_module_boot_stan_fit4COA_TimeVarying_mod();
+RcppExport SEXP _rcpp_module_boot_stan_fit4coa_mod();
 
 static const R_CallMethodDef CallEntries[] = {
     {"_rcpp_module_boot_stan_fit4COA_Standard_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4COA_Standard_mod, 0},
     {"_rcpp_module_boot_stan_fit4COA_Tag_Integrated_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4COA_Tag_Integrated_mod, 0},
     {"_rcpp_module_boot_stan_fit4COA_TimeVarying_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4COA_TimeVarying_mod, 0},
+    {"_rcpp_module_boot_stan_fit4coa_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4coa_mod, 0},
     {NULL, NULL, 0}
 };
 
