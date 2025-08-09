@@ -27,7 +27,7 @@ namespace model_coa_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 47> locations_array__ =
+static constexpr std::array<const char*, 59> locations_array__ =
   {" (found before start of program)",
   " (in 'coa', line 16, column 2 to column 37)",
   " (in 'coa', line 17, column 2 to column 25)",
@@ -36,6 +36,7 @@ static constexpr std::array<const char*, 47> locations_array__ =
   " (in 'coa', line 24, column 2 to column 10)",
   " (in 'coa', line 25, column 2 to column 13)",
   " (in 'coa', line 26, column 2 to column 40)",
+  " (in 'coa', line 59, column 2 to column 40)",
   " (in 'coa', line 27, column 2 to column 25)",
   " (in 'coa', line 28, column 2 to column 33)",
   " (in 'coa', line 35, column 8 to line 38, column 10)",
@@ -45,6 +46,14 @@ static constexpr std::array<const char*, 47> locations_array__ =
   " (in 'coa', line 32, column 4 to line 40, column 5)",
   " (in 'coa', line 31, column 21 to line 41, column 3)",
   " (in 'coa', line 31, column 2 to line 41, column 3)",
+  " (in 'coa', line 63, column 8 to column 59)",
+  " (in 'coa', line 64, column 8 to column 50)",
+  " (in 'coa', line 62, column 25 to line 65, column 7)",
+  " (in 'coa', line 62, column 6 to line 65, column 7)",
+  " (in 'coa', line 61, column 23 to line 66, column 5)",
+  " (in 'coa', line 61, column 4 to line 66, column 5)",
+  " (in 'coa', line 60, column 22 to line 67, column 3)",
+  " (in 'coa', line 60, column 2 to line 67, column 3)",
   " (in 'coa', line 45, column 2 to column 26)",
   " (in 'coa', line 46, column 2 to column 26)",
   " (in 'coa', line 52, column 8 to column 84)",
@@ -74,7 +83,10 @@ static constexpr std::array<const char*, 47> locations_array__ =
   " (in 'coa', line 20, column 15 to column 21)",
   " (in 'coa', line 26, column 8 to column 13)",
   " (in 'coa', line 26, column 15 to column 20)",
-  " (in 'coa', line 26, column 22 to column 28)"};
+  " (in 'coa', line 26, column 22 to column 28)",
+  " (in 'coa', line 59, column 8 to column 13)",
+  " (in 'coa', line 59, column 15 to column 20)",
+  " (in 'coa', line 59, column 22 to column 28)"};
 #include <stan_meta_header.hpp>
 class model_coa final : public model_base_crtp<model_coa> {
 private:
@@ -108,45 +120,45 @@ public:
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-      current_statement__ = 26;
+      current_statement__ = 35;
       context__.validate_dims("data initialization", "n_ind", "int",
         std::vector<size_t>{});
       n_ind = std::numeric_limits<int>::min();
-      current_statement__ = 26;
+      current_statement__ = 35;
       n_ind = context__.vals_i("n_ind")[(1 - 1)];
-      current_statement__ = 26;
+      current_statement__ = 35;
       stan::math::check_greater_or_equal(function__, "n_ind", n_ind, 0);
-      current_statement__ = 27;
+      current_statement__ = 36;
       context__.validate_dims("data initialization", "n_rec", "int",
         std::vector<size_t>{});
       n_rec = std::numeric_limits<int>::min();
-      current_statement__ = 27;
+      current_statement__ = 36;
       n_rec = context__.vals_i("n_rec")[(1 - 1)];
-      current_statement__ = 27;
+      current_statement__ = 36;
       stan::math::check_greater_or_equal(function__, "n_rec", n_rec, 0);
-      current_statement__ = 28;
+      current_statement__ = 37;
       context__.validate_dims("data initialization", "n_time", "int",
         std::vector<size_t>{});
       n_time = std::numeric_limits<int>::min();
-      current_statement__ = 28;
+      current_statement__ = 37;
       n_time = context__.vals_i("n_time")[(1 - 1)];
-      current_statement__ = 28;
+      current_statement__ = 37;
       stan::math::check_greater_or_equal(function__, "n_time", n_time, 0);
-      current_statement__ = 29;
+      current_statement__ = 38;
       context__.validate_dims("data initialization", "n_trans", "int",
         std::vector<size_t>{});
       n_trans = std::numeric_limits<int>::min();
-      current_statement__ = 29;
+      current_statement__ = 38;
       n_trans = context__.vals_i("n_trans")[(1 - 1)];
-      current_statement__ = 29;
+      current_statement__ = 38;
       stan::math::check_greater_or_equal(function__, "n_trans", n_trans, 0);
-      current_statement__ = 30;
+      current_statement__ = 39;
       stan::math::validate_non_negative_index("det", "n_ind", n_ind);
-      current_statement__ = 31;
+      current_statement__ = 40;
       stan::math::validate_non_negative_index("det", "n_rec", n_rec);
-      current_statement__ = 32;
+      current_statement__ = 41;
       stan::math::validate_non_negative_index("det", "n_time", n_time);
-      current_statement__ = 33;
+      current_statement__ = 42;
       context__.validate_dims("data initialization", "det", "int",
         std::vector<size_t>{static_cast<size_t>(n_ind),
           static_cast<size_t>(n_rec), static_cast<size_t>(n_time)});
@@ -155,7 +167,7 @@ public:
                 std::vector<int>(n_time, std::numeric_limits<int>::min())));
       {
         std::vector<int> det_flat__;
-        current_statement__ = 33;
+        current_statement__ = 42;
         det_flat__ = context__.vals_i("det");
         pos__ = 1;
         for (int sym1__ = 1; sym1__ <= n_time; ++sym1__) {
@@ -170,54 +182,60 @@ public:
           }
         }
       }
-      current_statement__ = 33;
+      current_statement__ = 42;
       stan::math::check_greater_or_equal(function__, "det", det, 0);
-      current_statement__ = 34;
+      current_statement__ = 43;
       stan::math::validate_non_negative_index("rec_x", "n_rec", n_rec);
-      current_statement__ = 35;
+      current_statement__ = 44;
       context__.validate_dims("data initialization", "rec_x", "double",
         std::vector<size_t>{static_cast<size_t>(n_rec)});
       rec_x = std::vector<double>(n_rec,
                 std::numeric_limits<double>::quiet_NaN());
-      current_statement__ = 35;
+      current_statement__ = 44;
       rec_x = context__.vals_r("rec_x");
-      current_statement__ = 36;
+      current_statement__ = 45;
       stan::math::validate_non_negative_index("rec_y", "n_rec", n_rec);
-      current_statement__ = 37;
+      current_statement__ = 46;
       context__.validate_dims("data initialization", "rec_y", "double",
         std::vector<size_t>{static_cast<size_t>(n_rec)});
       rec_y = std::vector<double>(n_rec,
                 std::numeric_limits<double>::quiet_NaN());
-      current_statement__ = 37;
+      current_statement__ = 46;
       rec_y = context__.vals_r("rec_y");
-      current_statement__ = 38;
+      current_statement__ = 47;
       context__.validate_dims("data initialization", "lim_x", "double",
         std::vector<size_t>{static_cast<size_t>(2)});
       lim_x = std::vector<double>(2,
                 std::numeric_limits<double>::quiet_NaN());
-      current_statement__ = 38;
+      current_statement__ = 47;
       lim_x = context__.vals_r("lim_x");
-      current_statement__ = 39;
+      current_statement__ = 48;
       context__.validate_dims("data initialization", "lim_y", "double",
         std::vector<size_t>{static_cast<size_t>(2)});
       lim_y = std::vector<double>(2,
                 std::numeric_limits<double>::quiet_NaN());
-      current_statement__ = 39;
+      current_statement__ = 48;
       lim_y = context__.vals_r("lim_y");
-      current_statement__ = 40;
+      current_statement__ = 49;
       stan::math::validate_non_negative_index("x", "n_ind", n_ind);
-      current_statement__ = 41;
+      current_statement__ = 50;
       stan::math::validate_non_negative_index("x", "n_time", n_time);
-      current_statement__ = 42;
+      current_statement__ = 51;
       stan::math::validate_non_negative_index("y", "n_ind", n_ind);
-      current_statement__ = 43;
+      current_statement__ = 52;
       stan::math::validate_non_negative_index("y", "n_time", n_time);
-      current_statement__ = 44;
+      current_statement__ = 53;
       stan::math::validate_non_negative_index("dist", "n_ind", n_ind);
-      current_statement__ = 45;
+      current_statement__ = 54;
       stan::math::validate_non_negative_index("dist", "n_rec", n_rec);
-      current_statement__ = 46;
+      current_statement__ = 55;
       stan::math::validate_non_negative_index("dist", "n_time", n_time);
+      current_statement__ = 56;
+      stan::math::validate_non_negative_index("y_rep", "n_ind", n_ind);
+      current_statement__ = 57;
+      stan::math::validate_non_negative_index("y_rep", "n_rec", n_rec);
+      current_statement__ = 58;
+      stan::math::validate_non_negative_index("y_rep", "n_time", n_time);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -283,17 +301,17 @@ public:
         std::vector<std::vector<std::vector<local_scalar_t__>>>(n_ind,
           std::vector<std::vector<local_scalar_t__>>(n_rec,
             std::vector<local_scalar_t__>(n_time, DUMMY_VAR__)));
-      current_statement__ = 8;
-      p0 = stan::math::inv_logit(alpha0);
       current_statement__ = 9;
+      p0 = stan::math::inv_logit(alpha0);
+      current_statement__ = 10;
       sigma = stan::math::sqrt((1 / (2 * alpha1)));
-      current_statement__ = 16;
+      current_statement__ = 17;
       for (int t = 1; t <= n_time; ++t) {
-        current_statement__ = 14;
+        current_statement__ = 15;
         for (int i = 1; i <= n_ind; ++i) {
-          current_statement__ = 12;
+          current_statement__ = 13;
           for (int j = 1; j <= n_rec; ++j) {
-            current_statement__ = 10;
+            current_statement__ = 11;
             stan::model::assign(dist,
               stan::math::sqrt(
                 (stan::math::square(
@@ -312,17 +330,17 @@ public:
         }
       }
       {
-        current_statement__ = 17;
+        current_statement__ = 26;
         lp_accum__.add(stan::math::cauchy_lpdf<propto__>(alpha0, 0, 2.5));
-        current_statement__ = 18;
+        current_statement__ = 27;
         lp_accum__.add(stan::math::cauchy_lpdf<propto__>(alpha1, 0, 2.5));
-        current_statement__ = 25;
+        current_statement__ = 34;
         for (int t = 1; t <= n_time; ++t) {
-          current_statement__ = 23;
+          current_statement__ = 32;
           for (int i = 1; i <= n_ind; ++i) {
-            current_statement__ = 21;
+            current_statement__ = 30;
             for (int j = 1; j <= n_rec; ++j) {
-              current_statement__ = 19;
+              current_statement__ = 28;
               lp_accum__.add(stan::math::binomial_lpmf<propto__>(
                                stan::model::rvalue(det, "det",
                                  stan::model::index_uni(i),
@@ -397,17 +415,17 @@ public:
         std::vector<std::vector<std::vector<local_scalar_t__>>>(n_ind,
           std::vector<std::vector<local_scalar_t__>>(n_rec,
             std::vector<local_scalar_t__>(n_time, DUMMY_VAR__)));
-      current_statement__ = 8;
-      p0 = stan::math::inv_logit(alpha0);
       current_statement__ = 9;
+      p0 = stan::math::inv_logit(alpha0);
+      current_statement__ = 10;
       sigma = stan::math::sqrt((1 / (2 * alpha1)));
-      current_statement__ = 16;
+      current_statement__ = 17;
       for (int t = 1; t <= n_time; ++t) {
-        current_statement__ = 14;
+        current_statement__ = 15;
         for (int i = 1; i <= n_ind; ++i) {
-          current_statement__ = 12;
+          current_statement__ = 13;
           for (int j = 1; j <= n_rec; ++j) {
-            current_statement__ = 10;
+            current_statement__ = 11;
             stan::model::assign(dist,
               stan::math::sqrt(
                 (stan::math::square(
@@ -426,17 +444,17 @@ public:
         }
       }
       {
-        current_statement__ = 17;
+        current_statement__ = 26;
         lp_accum__.add(stan::math::cauchy_lpdf<propto__>(alpha0, 0, 2.5));
-        current_statement__ = 18;
+        current_statement__ = 27;
         lp_accum__.add(stan::math::cauchy_lpdf<propto__>(alpha1, 0, 2.5));
-        current_statement__ = 25;
+        current_statement__ = 34;
         for (int t = 1; t <= n_time; ++t) {
-          current_statement__ = 23;
+          current_statement__ = 32;
           for (int i = 1; i <= n_ind; ++i) {
-            current_statement__ = 21;
+            current_statement__ = 30;
             for (int j = 1; j <= n_rec; ++j) {
-              current_statement__ = 19;
+              current_statement__ = 28;
               lp_accum__.add(stan::math::binomial_lpmf<propto__>(
                                stan::model::rvalue(det, "det",
                                  stan::model::index_uni(i),
@@ -543,17 +561,17 @@ public:
             stan::math::primitive_value(emit_generated_quantities__)))) {
         return ;
       }
-      current_statement__ = 8;
-      p0 = stan::math::inv_logit(alpha0);
       current_statement__ = 9;
+      p0 = stan::math::inv_logit(alpha0);
+      current_statement__ = 10;
       sigma = stan::math::sqrt((1 / (2 * alpha1)));
-      current_statement__ = 16;
+      current_statement__ = 17;
       for (int t = 1; t <= n_time; ++t) {
-        current_statement__ = 14;
+        current_statement__ = 15;
         for (int i = 1; i <= n_ind; ++i) {
-          current_statement__ = 12;
+          current_statement__ = 13;
           for (int j = 1; j <= n_rec; ++j) {
-            current_statement__ = 10;
+            current_statement__ = 11;
             stan::model::assign(dist,
               stan::math::sqrt(
                 (stan::math::square(
@@ -585,6 +603,40 @@ public:
       }
       if (stan::math::logical_negation(emit_generated_quantities__)) {
         return ;
+      }
+      std::vector<std::vector<std::vector<int>>> y_rep =
+        std::vector<std::vector<std::vector<int>>>(n_ind,
+          std::vector<std::vector<int>>(n_rec,
+            std::vector<int>(n_time, std::numeric_limits<int>::min())));
+      current_statement__ = 25;
+      for (int t = 1; t <= n_time; ++t) {
+        current_statement__ = 23;
+        for (int i = 1; i <= n_ind; ++i) {
+          current_statement__ = 21;
+          for (int j = 1; j <= n_rec; ++j) {
+            double p = std::numeric_limits<double>::quiet_NaN();
+            current_statement__ = 18;
+            p = (p0 *
+              stan::math::exp((-(alpha1) *
+                stan::math::square(
+                  stan::model::rvalue(dist, "dist",
+                    stan::model::index_uni(i), stan::model::index_uni(j),
+                    stan::model::index_uni(t))))));
+            current_statement__ = 19;
+            stan::model::assign(y_rep,
+              stan::math::binomial_rng(n_trans, p, base_rng__),
+              "assigning variable y_rep", stan::model::index_uni(i),
+              stan::model::index_uni(j), stan::model::index_uni(t));
+          }
+        }
+      }
+      current_statement__ = 8;
+      for (int sym1__ = 1; sym1__ <= n_time; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= n_rec; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= n_ind; ++sym3__) {
+            out__.write(y_rep[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);
+          }
+        }
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -735,7 +787,11 @@ public:
       names__.reserve(names__.size() + temp.size());
       names__.insert(names__.end(), temp.begin(), temp.end());
     }
-    if (emit_generated_quantities__) {}
+    if (emit_generated_quantities__) {
+      std::vector<std::string> temp{"y_rep"};
+      names__.reserve(names__.size() + temp.size());
+      names__.insert(names__.end(), temp.begin(), temp.end());
+    }
   }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
@@ -755,7 +811,13 @@ public:
       dimss__.reserve(dimss__.size() + temp.size());
       dimss__.insert(dimss__.end(), temp.begin(), temp.end());
     }
-    if (emit_generated_quantities__) {}
+    if (emit_generated_quantities__) {
+      std::vector<std::vector<size_t>>
+        temp{std::vector<size_t>{static_cast<size_t>(n_ind),
+               static_cast<size_t>(n_rec), static_cast<size_t>(n_time)}};
+      dimss__.reserve(dimss__.size() + temp.size());
+      dimss__.insert(dimss__.end(), temp.begin(), temp.end());
+    }
   }
   inline void
   constrained_param_names(std::vector<std::string>& param_names__, bool
@@ -788,7 +850,17 @@ public:
         }
       }
     }
-    if (emit_generated_quantities__) {}
+    if (emit_generated_quantities__) {
+      for (int sym1__ = 1; sym1__ <= n_time; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= n_rec; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= n_ind; ++sym3__) {
+            param_names__.emplace_back(std::string() + "y_rep" + '.' +
+              std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
+              std::to_string(sym1__));
+          }
+        }
+      }
+    }
   }
   inline void
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
@@ -821,13 +893,23 @@ public:
         }
       }
     }
-    if (emit_generated_quantities__) {}
+    if (emit_generated_quantities__) {
+      for (int sym1__ = 1; sym1__ <= n_time; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= n_rec; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= n_ind; ++sym3__) {
+            param_names__.emplace_back(std::string() + "y_rep" + '.' +
+              std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
+              std::to_string(sym1__));
+          }
+        }
+      }
+    }
   }
   inline std::string get_constrained_sizedtypes() const {
-    return std::string("[{\"name\":\"alpha0\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha1\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"x\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(n_ind) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(n_time) + ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"parameters\"},{\"name\":\"y\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(n_ind) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(n_time) + ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"parameters\"},{\"name\":\"p0\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"dist\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(n_ind) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(n_rec) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(n_time) + ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"transformed_parameters\"}]");
+    return std::string("[{\"name\":\"alpha0\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha1\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"x\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(n_ind) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(n_time) + ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"parameters\"},{\"name\":\"y\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(n_ind) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(n_time) + ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"parameters\"},{\"name\":\"p0\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"dist\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(n_ind) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(n_rec) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(n_time) + ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"transformed_parameters\"},{\"name\":\"y_rep\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(n_ind) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(n_rec) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(n_time) + ",\"element_type\":{\"name\":\"int\"}}}},\"block\":\"generated_quantities\"}]");
   }
   inline std::string get_unconstrained_sizedtypes() const {
-    return std::string("[{\"name\":\"alpha0\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha1\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"x\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(n_ind) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(n_time) + ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"parameters\"},{\"name\":\"y\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(n_ind) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(n_time) + ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"parameters\"},{\"name\":\"p0\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"dist\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(n_ind) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(n_rec) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(n_time) + ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"transformed_parameters\"}]");
+    return std::string("[{\"name\":\"alpha0\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha1\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"x\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(n_ind) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(n_time) + ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"parameters\"},{\"name\":\"y\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(n_ind) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(n_time) + ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"parameters\"},{\"name\":\"p0\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"dist\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(n_ind) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(n_rec) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(n_time) + ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"transformed_parameters\"},{\"name\":\"y_rep\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(n_ind) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(n_rec) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(n_time) + ",\"element_type\":{\"name\":\"int\"}}}},\"block\":\"generated_quantities\"}]");
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -840,7 +922,8 @@ public:
       n_time));
     const size_t num_transformed = emit_transformed_parameters * (((1 + 1) +
       (n_ind * (n_rec * n_time))));
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_gen_quantities = emit_generated_quantities * ((n_ind *
+      (n_rec * n_time)));
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -859,7 +942,8 @@ public:
       n_time));
     const size_t num_transformed = emit_transformed_parameters * (((1 + 1) +
       (n_ind * (n_rec * n_time))));
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_gen_quantities = emit_generated_quantities * ((n_ind *
+      (n_rec * n_time)));
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
