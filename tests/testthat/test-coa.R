@@ -124,16 +124,16 @@ for (t in 1:max(tsteps)) {
 }
 
 ### Format data for model fitting
-fit <- COA_Standard(
-  nind = nind, # number of individuals
-  nrec = nrec, # number of receivers
-  ntime = tsteps, # number of time steps
-  ntrans = 30, # number of expected transmissions per tag per time interval
-  y = Y, # array of detections
-  recX = as.vector(rlocs$east), # E-W receiver coordinates
-  recY = as.vector(rlocs$north), # N-S receiver coordinates
-  xlim = xlim, # E-W boundary of spatial extent (receiver array + buffer)
-  ylim = ylim,
+fit <- coa(
+  n_ind = nind, # number of individuals
+  n_rec = nrec, # number of receivers
+  n_time = tsteps, # number of time steps
+  n_trans = 30, # number of expected transmissions per tag per time interval
+  det = Y, # array of detections
+  rec_x = as.vector(rlocs$east), # E-W receiver coordinates
+  rec_y = as.vector(rlocs$north), # N-S receiver coordinates
+  lim_x = xlim, # E-W boundary of spatial extent (receiver array + buffer)
+  lim_y = ylim,
   chains = 2,
   warmup = 1000,
   iter = 2000,
