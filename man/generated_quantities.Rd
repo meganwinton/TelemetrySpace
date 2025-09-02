@@ -11,7 +11,7 @@ generated_quantities(model, standata, ndraws = NULL)
 
 \item{standata}{Data fed to Stan model}
 
-\item{ndraws}{number of draws}
+\item{ndraws}{is the number of draws to take. Default to 10.}
 }
 \value{
 generated quantities from the model

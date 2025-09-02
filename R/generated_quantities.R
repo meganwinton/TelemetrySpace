@@ -4,7 +4,7 @@
 #'
 #' @param model Stan model object
 #' @param standata Data fed to Stan model
-#' @param ndraws number of draws
+#' @param ndraws  is the number of draws to take. Default to 10.
 #'
 #' @return generated quantities from the model
 #' @keywords internal
@@ -13,8 +13,11 @@
 generated_quantities <- function(model,
                                  standata,
                                  ndraws = NULL) {
-  check_stan_object(model)
 
+  # check stan object
+  check_stan_object(model)
+  # check to see if ntest is in standata this will allow for gq's to be made
+  # for test tag
   check_test_tag <- "ntest" %in% names(standata)
   # Set default number of draws
   if (is.null(ndraws)) {
