@@ -24,11 +24,12 @@ gq_args <- list(
   standata = standata,
   ndraws = ndraws_test
 )
+
 # ----- check if params error properly ------
 params_table <- list(
   list(
     param = "model",
-    bad = list("a", NA, c(1, 2)),
+    bad = list("j", NA, c(1, 2)),
     regex = "`model` must be a Stan object \\(from rstan or cmdstanr\\)\\."
   ),
   list(
