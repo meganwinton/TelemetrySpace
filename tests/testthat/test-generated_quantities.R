@@ -35,7 +35,7 @@ params_table <- list(
   list(
     param = "ndraws",
     bad = list("a", NA, c(1, 2)),
-    regex = "`ndraws`  must be a numeric vector that has a length of 1."
+    regex = "`ndraws` must be a numeric vector that has a length of 1."
   )
 )
 
