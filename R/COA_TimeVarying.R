@@ -31,6 +31,7 @@ COA_TimeVarying <- function(
   recY,
   xlim,
   ylim,
+  ndraw,
   ...
 ) {
 
@@ -69,11 +70,11 @@ COA_TimeVarying <- function(
   # How much time did fitting take (in minutes)?
   fit_time <- sum(print(rstan::get_elapsed_time(fit_model))) / 60
 
+  # calculate generated quantities
   fit_generated_quantities <- generated_quantities(model = fit_model,
                                                    standata = standata)
-
-  tran_fit_gq <- transform_gq(fit_generated_quantities,
-                              obs = y)
+  # transform gq into matrix
+  tran_fit_gq <- transform_gq(fit_generated_quantities)
   # Extract COA estimates
   coas <- array(NA, dim = c(ntime, 7, nind))
   dimnames(coas)[[2]] <- c(

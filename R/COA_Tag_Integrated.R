@@ -40,6 +40,7 @@ COA_TagInt <- function(
     ylim,
     testX,
     testY,
+    ndraws,
     ...
 ) {
 
@@ -86,6 +87,11 @@ COA_TagInt <- function(
 
   # How much time did fitting take (in minutes)?
   fit_time <- sum(print(rstan::get_elapsed_time(fit_model))) / 60
+  # # calculate generated quantities
+  fit_generated_quantities <- generated_quantities(model = fit_model,
+                                                   standata = standata)
+  # transform gq into matrix
+  tran_fit_gq <- transform_gq(fit_generated_quantities)
 
   # Extract COA estimates
   coas <- array(NA, dim = c(ntime, 7, nind))
@@ -141,7 +147,8 @@ COA_TagInt <- function(
     fit_time,
     coas,
     d_probs,
-    fit_estimates
+    fit_estimates,
+    tran_fit_gq
   )
   names(model_results) <- c(
     'model',
@@ -149,7 +156,8 @@ COA_TagInt <- function(
     'time',
     'coas',
     'detection_probs',
-    'all_estimates'
+    'all_estimates',
+    'generated_quantities'
   )
   return(model_results)
 }
