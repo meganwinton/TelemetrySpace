@@ -25,6 +25,7 @@ for (i in seq_along(all_models)) {
 }
 
 
+# test if the returned object matches the correct format
 
 test_that("check transformation of gq to matrix", {
 
@@ -35,6 +36,25 @@ test_that("check transformation of gq to matrix", {
   }
 }
 )
+
+test_that("check row and column names of gq in matrix", {
+
+  for (i in seq_along(yreps)) {
+    tran_gq <- transform_gq(yreps[[i]])
+    # check row names
+    expect_true(all(grepl("^(yrep|testrep)_[0-9]+$", rownames(tran_gq))))
+
+    # check column names
+    expect_true(all(grepl(
+      "^tag_[0-9]+_rec_[0-9]+_time_[0-9]+$",
+      colnames(tran_gq)
+    )))
+
+    # also check correct counts
+    expect_length(rownames(tran_gq), nrow(tran_gq))
+    expect_length(colnames(tran_gq), ncol(tran_gq))
+  }
+})
 
 
 
