@@ -15,7 +15,6 @@ generated_quantities <- function(model,
                                  ndraws = NULL) {
   check_stan_object(model)
 
-
   check_test_tag <- "ntest" %in% names(standata)
   # Set default number of draws
   if (is.null(ndraws)) {
@@ -91,7 +90,7 @@ generated_quantities <- function(model,
           p <- min(max(p, 1e-9), 1 - 1e-9)
           # then run int using a the iteration of transmission by probability
           # to get the number of detections
-          yrep[i, j, t] <- rbinom(1, ntrans, p)
+          yrep[i, j, t] <- stats::rbinom(1, ntrans, p)
         }
       }
     }
@@ -108,7 +107,7 @@ generated_quantities <- function(model,
             ptest <- p0[l, m] * exp(-a1 * td ^ 2)
             ptest <- min(max(ptest, 1e-9), 1 - 1e-9)
             # Simulate detection
-            yrep_test[s, m, l] <- rbinom(1, ntrans, ptest)
+            yrep_test[s, m, l] <- stats::rbinom(1, ntrans, ptest)
           }
         }
       }
