@@ -39,6 +39,31 @@ params_table <- list(
   )
 )
 
+
+# ---- see if it errors properly -----
+test_that("parameter validation works", {
+
+  for (pt in params_table) {
+    for (bad_val in pt$bad) {
+      tryCatch({
+        expect_error(
+          call_generated_quantities(setNames(list(bad_val), pt$param)),
+          regexp = pt$regex,
+          label = sprintf("param=%s, bad_val=%s", pt$param, deparse1(bad_val))
+        )
+      },
+      error = function(e) {
+        cat("\n Error for param:", pt$param,
+            " bad_val:", deparse1(bad_val), "\n")
+        stop(e)
+      })
+    }
+  }
+})
+
+
+# create empty list to dump all gc to check
+
 yreps <- list()
 # ----- loop over generated quantities -----
 for (i in seq_along(all_models)) {
@@ -53,7 +78,6 @@ bs_returned <- c(1, 1, 2)
 
 # length of yrep give the 5 draws
 length_yrep <- ndraws_test
-
 
 # -----  checks the structure of the structure of generated_quantites -------
 test_that("generated_quantities returns correct structure", {
@@ -106,25 +130,4 @@ test_that("generated_quantities returns correct integer ", {
   }
 }
 )
-
-# ---- see if it errors properly -----
-test_that("parameter validation works", {
-
-  for (pt in params_table) {
-    for (bad_val in pt$bad) {
-      tryCatch({
-        expect_error(
-          call_generated_quantities(setNames(list(bad_val), pt$param)),
-          regexp = pt$regex,
-          label = sprintf("param=%s, bad_val=%s", pt$param, deparse1(bad_val))
-        )
-      },
-      error = function(e) {
-        cat("\n Error for param:", pt$param,
-            " bad_val:", deparse(bad_val), "\n")
-        stop(e)
-      })
-    }
-  }
-})
 
