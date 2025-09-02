@@ -171,13 +171,9 @@ validate_standata <- function(standata, lengths) {
 #' @name transform_objects
 
 transform_gq <- function(input) {
+  # first grab the names of the input
+  post_type <- names(input)
 
-  # if (length(input) %in% 1) {
-    input <- unlist(input, recursive = FALSE)
-  # } else {
-  #   input <- unlist(input, recursive = TRUE) |>
-  #     unlist(recursive = FALSE)
-  # }
 
   # check arrays
   lapply(input, check_array)
