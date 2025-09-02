@@ -15,10 +15,10 @@
 #' @param ylim   North-south boundaries of spatial extent (receiver array + buffer)
 #' @param testX  Test tag coordinates in the east-west direction (should be projected and scaled for computational efficiency)
 #' @param testY  Test tag coordinates in the north-south direction (should be projected and scaled for computational efficiency)
+#' @param ndraws to be passed to `generated_quantities`. Changes the number of draws. Default is 10.
 #' @param ... Additional arguments passed to `sampling` from `rstan`.
 #' This can include setting `chains`, `iter`, `warmup`, and `control`. Please see
-#' `rstan::sampling` for more info.
-#'
+#' `rstan::sampling()` for more info.
 #'
 #'
 #' @return COA_TagInt_Bayes returns an object of class `stanfit` returned by `rstan::sampling`. See the 'rstan' package documentation for details.

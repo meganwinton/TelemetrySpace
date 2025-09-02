@@ -18,6 +18,7 @@ COA_TagInt(
   ylim,
   testX,
   testY,
+  ndraws,
   ...
 )
 }
@@ -48,9 +49,11 @@ COA_TagInt(
 
 \item{testY}{Test tag coordinates in the north-south direction (should be projected and scaled for computational efficiency)}
 
+\item{ndraws}{to be passed to \code{generated_quantities}. Changes the number of draws. Default is 10.}
+
 \item{...}{Additional arguments passed to \code{sampling} from \code{rstan}.
 This can include setting \code{chains}, \code{iter}, \code{warmup}, and \code{control}. Please see
-\code{rstan::sampling} for more info.}
+\code{rstan::sampling()} for more info.}
 }
 \value{
 COA_TagInt_Bayes returns an object of class \code{stanfit} returned by \code{rstan::sampling}. See the 'rstan' package documentation for details.
