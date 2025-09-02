@@ -18,8 +18,9 @@ ndraws_test <- 5
 call_generated_quantities  <- function(overrides) {
   do.call(generated_quantities, modifyList(gq_args, overrides))
 }
+# ----- gq_arguments to check ------
 gq_args <- list(
-  model = model_coa_standard,
+  model = model_coa_standard$model,
   standata = standata,
   ndraws = ndraws_test
 )
