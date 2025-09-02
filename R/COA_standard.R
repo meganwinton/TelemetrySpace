@@ -75,7 +75,8 @@ COA_Standard <- function(
 
   # calculate generated quantities
   fit_generated_quantities <- generated_quantities(model = fit_model,
-                                                   standata = standata)
+                                                   standata = standata,
+                                                   ndraws = ndraws)
   # transform gq into matrix
   tran_fit_gq <- transform_gq(fit_generated_quantities)
   # Extract COA estimates
