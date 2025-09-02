@@ -174,38 +174,38 @@ transform_gq <- function(input) {
   # first grab the names of the input
   post_type <- names(input)
 
+  # loop over each object in input and grab the names as
+  # well as the actual input.
+  output <- lapply(seq_along(input), function(i) {
+    group_name <- post_type[i]
+    open_input <- input[[i]]
 
-  # check arrays
-  lapply(input, check_array)
+    # check arrays to ensure that they are 3 demisions
+    lapply(open_input, check_array)
 
-  # default number of draws
-  ndraws <- length(input)
-  # number of observations
-  n_obs <- length(input[[1]])
+    # move into matrix
+    rep_mat <- do.call(rbind, lapply(open_input, as.vector))
 
-  # blank matrix to dump into
-  rep_mat <- matrix(NA, nrow = ndraws, ncol = n_obs)
+    # rownames with group name + index
+    rownames(rep_mat) <- paste0(group_name, "_", seq_along(open_input))
 
-  # dump output of generate quantities into a vector
-  rep_mat <- do.call(rbind, lapply(input, function(x) as.vector(x)))
+    # start grabbing col names
+    dim_x <- dim(open_input[[1]])
 
-  # add in rownames
-  rownames(rep_mat) <- paste0("yrep_", seq_along(input))
+    grid <- expand.grid(
+      tag  = seq_len(dim_x[1]),
+      rec  = seq_len(dim_x[2]),
+      time = seq_len(dim_x[3])
+    )
 
-  # start grabbing col names
-  dim_x <- dim(input[[1]])
+    # add in col names
+    colnames(rep_mat) <- apply(grid, 1, function(idx) {
+      paste0("tag_", idx[1], "_rec_", idx[2], "_time_", idx[3])
+    })
+    return(rep_mat)
 
-  grid <- expand.grid(
-    tag  = seq_len(dim_x[1]),
-    rec  = seq_len(dim_x[2]),
-    time = seq_len(dim_x[3])
-  )
-
-  # add in col names
-  colnames(rep_mat) <- apply(grid, 1, function(idx) {
-    paste0("tag_", idx[1], "_rec_", idx[2], "_time_", idx[3])
   })
-
-  return(rep_mat)
+  names(output) <- post_type
+  output
 }
 
