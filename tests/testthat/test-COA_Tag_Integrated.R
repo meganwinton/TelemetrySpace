@@ -140,6 +140,9 @@ test_that("check to see if model_coa_tag_int classes", {
   expect_s3_class(model_coa_tag_int$all_estimates, "data.frame")
   expect_type(model_coa_tag_int$summary, "double")
   expect_true(is.matrix(model_coa_tag_int$summary))
+  expect_type(model_coa_tag_int$generated_quantities, "list")
+  expect_true(is.matrix(model_coa_tag_int$generated_quantities$yrep))
+  expect_true(is.matrix(model_coa_tag_int$generated_quantities$testrep))
   expect_true(is.numeric(model_coa_tag_int$time))
 
 })

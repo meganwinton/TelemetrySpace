@@ -126,6 +126,8 @@ test_that("check to see if model_coa_time_vary classes", {
   expect_s3_class(model_coa_time_vary$all_estimates, "data.frame")
   expect_type(model_coa_time_vary$summary, "double")
   expect_true(is.matrix(model_coa_time_vary$summary))
+  expect_true(is.matrix(model_coa_time_vary$generated_quantities$yrep))
+  expect_type(model_coa_time_vary$generated_quantities, "list")
   expect_true(is.numeric(model_coa_time_vary$time))
 
 })
