@@ -70,6 +70,11 @@ params_table <- list(
     param = "ylim",
     bad = list("a", c(1, 2, 3)),
     regex = "`ylim` must be a numeric vector that has a length of 2."
+  ),
+  list(
+    param = "ndraws",
+    bad = list("a", c(1, 2, 3)),
+    regex = "`ndraws` must be a numeric vector that has a length of 1."
   )
 )
 
@@ -153,4 +158,12 @@ test_that("check to see model converged and has a good rhat", {
 }
 )
 
+
+# ----- check if gq retruns the correct length ------
+
+test_that("check to see if gq is the correct length", {
+  expected <- 11
+  expect_true(nrow(model_coa_standard$generated_quantities$yrep) %in% expected)
+}
+)
 

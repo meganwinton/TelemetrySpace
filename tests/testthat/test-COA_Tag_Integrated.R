@@ -171,3 +171,12 @@ test_that("check to see model converged and has a good rhat", {
   expect_true(all(rhat > 0.95 & rhat < 1.05))
 }
 )
+
+# ----- check if gq retruns the correct length ------
+
+test_that("check to see if gq is the correct length", {
+  expected <- 11
+  expect_true(nrow(model_coa_tag_int$generated_quantities$yrep) %in% expected)
+  expect_true(nrow(model_coa_tag_int$generated_quantities$testrep) %in% expected)
+}
+)

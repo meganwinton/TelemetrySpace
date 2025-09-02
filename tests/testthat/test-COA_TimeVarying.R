@@ -157,4 +157,10 @@ test_that("check to see model converged and has a good rhat", {
 }
 )
 
+# ----- check if gq retruns the correct length ------
 
+test_that("check to see if gq is the correct length", {
+  expected <- 11
+  expect_true(nrow(model_coa_time_vary$generated_quantities$yrep) %in% expected)
+}
+)
