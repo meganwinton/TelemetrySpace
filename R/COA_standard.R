@@ -33,7 +33,7 @@ COA_Standard <- function(
     recY,
     xlim,
     ylim,
-    ndraws,
+    ndraws = NULL,
     ...
 ) {
 

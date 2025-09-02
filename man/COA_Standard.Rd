@@ -4,7 +4,19 @@
 \alias{COA_Standard}
 \title{Fits a Bayesian Spatial Point Process model to estimate individual centers of activity from acoustic telemetry data using Stan}
 \usage{
-COA_Standard(nind, nrec, ntime, ntrans, y, recX, recY, xlim, ylim, ndraws, ...)
+COA_Standard(
+  nind,
+  nrec,
+  ntime,
+  ntrans,
+  y,
+  recX,
+  recY,
+  xlim,
+  ylim,
+  ndraws = NULL,
+  ...
+)
 }
 \arguments{
 \item{nind}{Number of tagged individuals}

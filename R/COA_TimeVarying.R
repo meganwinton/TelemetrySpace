@@ -32,7 +32,7 @@ COA_TimeVarying <- function(
   recY,
   xlim,
   ylim,
-  ndraw,
+  ndraws = NULL,
   ...
 ) {
 

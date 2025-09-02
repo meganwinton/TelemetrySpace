@@ -40,7 +40,7 @@ COA_TagInt <- function(
     ylim,
     testX,
     testY,
-    ndraws,
+    ndraws = NULL,
     ...
 ) {
 

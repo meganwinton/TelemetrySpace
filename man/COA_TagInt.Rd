@@ -18,7 +18,7 @@ COA_TagInt(
   ylim,
   testX,
   testY,
-  ndraws,
+  ndraws = NULL,
   ...
 )
 }
