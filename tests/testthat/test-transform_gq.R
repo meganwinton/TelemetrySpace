@@ -26,33 +26,49 @@ for (i in seq_along(all_models)) {
 
 
 # test if the returned object matches the correct format
+bs_returned <- c(1, 1, 2)
+bs_names <- c(rep("yrep", 3), "testrep")
 
 test_that("check transformation of gq to matrix", {
 
   for (i in seq_along(yreps)) {
     tran_gq <- transform_gq(yreps[[i]])
-    expect_type(tran_gq, "integer")
-    expect_true(is.matrix(tran_gq))
+
+    expect_type(tran_gq, "list")
+    expect_length(tran_gq, bs_returned[i])
+    # expect_true(all(names(tran_gq) == bs_names[i]))
+    expect_true(bs_names[i] %in% names(tran_gq))
+
+    for (n in seq_along(tran_gq)) {
+
+      post_draws <- tran_gq[[n]]
+      expect_type(post_draws, "integer")
+      expect_true(is.matrix(post_draws))
+    }
   }
-}
-)
+})
 
 test_that("check row and column names of gq in matrix", {
 
   for (i in seq_along(yreps)) {
     tran_gq <- transform_gq(yreps[[i]])
-    # check row names
-    expect_true(all(grepl("^(yrep|testrep)_[0-9]+$", rownames(tran_gq))))
+    for (n in seq_along(tran_gq)) {
 
-    # check column names
-    expect_true(all(grepl(
-      "^tag_[0-9]+_rec_[0-9]+_time_[0-9]+$",
-      colnames(tran_gq)
-    )))
+      post_draws <- tran_gq[[n]]
+      # check row names
+      expect_true(all(grepl("^(yrep|testrep)_[0-9]+$", rownames(post_draws))))
 
-    # also check correct counts
-    expect_length(rownames(tran_gq), nrow(tran_gq))
-    expect_length(colnames(tran_gq), ncol(tran_gq))
+      # check column names
+      expect_true(all(grepl(
+        "^tag_[0-9]+_rec_[0-9]+_time_[0-9]+$",
+        colnames(post_draws)
+      )
+      )
+      )
+      # also check correct counts
+      expect_length(rownames(post_draws), nrow(post_draws))
+      expect_length(colnames(post_draws), ncol(post_draws))
+    }
   }
 })
 
