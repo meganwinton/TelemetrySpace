@@ -48,9 +48,9 @@ generated_quantities <- function(model,
 
     if (length(dim(alpha0)) %in% 3) {
       # p0 has shape [ndraws, ntime, nrec]
-      p0 <- plogis(alpha0[draw, , ])
+      p0 <- stats::plogis(alpha0[draw, , ])
     } else {
-      p0 <- plogis(alpha0[draw])
+      p0 <- stats::plogis(alpha0[draw])
     }
     # create blank array with the name of eveyrhting
 
