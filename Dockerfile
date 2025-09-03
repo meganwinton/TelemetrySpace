@@ -1,8 +1,8 @@
 FROM rocker/r2u
 
 LABEL \
-    org.opencontainers.image.authors="Michael O'Brien <obrien@umces.edu>" \
-    org.opencontainers.image.version="1.1.0" \
+    org.opencontainers.image.authors="Michael O'Brien <mike@obrien.page>, Benjamin Hlina <benjamin.hlina@gmail.com>" \
+    org.opencontainers.image.version="1.2.0" \
     org.opencontainers.image.source="https://github.com/trackyverse/TelemetrySpace" \
     org.opencontainers.image.licenses="GPL-3.0"
 
@@ -10,7 +10,7 @@ RUN apt update && apt upgrade -y
 RUN Rscript -e 'install.packages("rstan", \
   repos = c("https://stan-dev.r-universe.dev", getOption("repos")))'
 RUN Rscript -e 'install.packages("TelemetrySpace", \
-  repos = c("https://ocean-tracking-network.r-universe.dev", getOption("repos")), \
+  repos = c("https://trackyverse.r-universe.dev", getOption("repos")), \
   dependencies = TRUE)'
 RUN Rscript -e "install.packages(c('ggpubr', 'httpgd'))"
 
