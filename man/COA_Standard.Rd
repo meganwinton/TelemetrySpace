@@ -4,7 +4,19 @@
 \alias{COA_Standard}
 \title{Fits a Bayesian Spatial Point Process model to estimate individual centers of activity from acoustic telemetry data using Stan}
 \usage{
-COA_Standard(nind, nrec, ntime, ntrans, y, recX, recY, xlim, ylim, ...)
+COA_Standard(
+  nind,
+  nrec,
+  ntime,
+  ntrans,
+  y,
+  recX,
+  recY,
+  xlim,
+  ylim,
+  ndraws = NULL,
+  ...
+)
 }
 \arguments{
 \item{nind}{Number of tagged individuals}
@@ -23,11 +35,13 @@ COA_Standard(nind, nrec, ntime, ntrans, y, recX, recY, xlim, ylim, ...)
 
 \item{xlim}{East-west boundaries of spatial extent (receiver array + buffer)}
 
-\item{ylim}{North-south boundaries of spatial extent (receiver array + buffer)}
+\item{ylim}{North-south boundaries of spatial extent (receiver array + buffer).}
+
+\item{ndraws}{to be passed to \code{generated_quantities}. Changes the number of draws. Default is 10.}
 
 \item{...}{Additional arguments passed to \code{sampling} from \code{rstan}.
 This can include setting \code{chains}, \code{iter}, \code{warmup}, and \code{control}. Please see
-\code{rstan::sampling} for more info.}
+\code{rstan::sampling()} for more info.}
 }
 \value{
 COA_Standard returns an object of class \code{stanfit} returned by \code{rstan::sampling}. See the \code{rstan} package documentation for details.

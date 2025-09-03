@@ -61,6 +61,31 @@ check_array_tag <- function(x, len, arg_name = NULL) {
   }
 }
 
+#' @param x is a `Stan` object
+#' @param arg_name the name of the argument to check.
+#'
+#' @keywords internal
+#' @name error_functions
+
+check_stan_object <- function(x, arg_name = NULL) {
+  if (is.null(arg_name)) {
+    arg_name <- rlang::as_label(rlang::enexpr(x))
+  }
+
+  # valid classes from rstan and cmdstanr
+  valid_classes <- c("stanfit",
+                     "stanmodel",
+                     "CmdStanMCMC",
+                     "CmdStanMLE",
+                     "CmdStanVB",
+                     "CmdStanModel")
+
+  if (!inherits(x, valid_classes)) {
+    cli::cli_abort(
+      "`{arg_name}` must be a Stan object (from {.pkg rstan} or {.pkg cmdstanr})."
+    )
+  }
+}
 
 #' Expected lengths of variables in `standata`
 #'
@@ -78,7 +103,7 @@ expected_lengths <- function(recX = NULL,
                              ntest_len = NULL) {
 
   if (!is.null(ntest_len)) {
-  check_num_vec_len(ntest_len, vec_length = 1, arg_name = "ntest")
+    check_num_vec_len(ntest_len, vec_length = 1, arg_name = "ntest")
   }
 
   lengths <- list(
@@ -135,4 +160,52 @@ validate_standata <- function(standata, lengths) {
   )
 }
 
+#' Transform classes and structure of the output of different data objects
+#'
+#' Transforms output of `generated_quantities()`,
+#' @param input list of three dimensional array
+#'
+#' @return a `matrices` of generated quantities.
+#'
+#' @keywords internal
+#' @name transform_objects
+
+transform_gq <- function(input) {
+  # first grab the names of the input
+  post_type <- names(input)
+
+  # loop over each object in input and grab the names as
+  # well as the actual input.
+  output <- lapply(seq_along(input), function(i) {
+    group_name <- post_type[i]
+    open_input <- input[[i]]
+
+    # check arrays to ensure that they are 3 demisions
+    lapply(open_input, check_array)
+
+    # move into matrix
+    rep_mat <- do.call(rbind, lapply(open_input, as.vector))
+
+    # rownames with group name + index
+    rownames(rep_mat) <- paste0(group_name, "_", seq_along(open_input))
+
+    # start grabbing col names
+    dim_x <- dim(open_input[[1]])
+
+    grid <- expand.grid(
+      tag  = seq_len(dim_x[1]),
+      rec  = seq_len(dim_x[2]),
+      time = seq_len(dim_x[3])
+    )
+
+    # add in col names
+    colnames(rep_mat) <- apply(grid, 1, function(idx) {
+      paste0("tag_", idx[1], "_rec_", idx[2], "_time_", idx[3])
+    })
+    return(rep_mat)
+
+  })
+  names(output) <- post_type
+  output
+}
 

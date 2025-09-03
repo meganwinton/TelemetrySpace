@@ -11,10 +11,11 @@
 #' @param recX   Receiver coordinates in the east-west direction (should be projected and scaled for computational efficiency)
 #' @param recY   Receiver coordinates in the north-south direction (should be projected and scaled for computational efficiency)
 #' @param xlim   East-west boundaries of spatial extent (receiver array + buffer)
-#' @param ylim   North-south boundaries of spatial extent (receiver array + buffer)
+#' @param ylim   North-south boundaries of spatial extent (receiver array + buffer).
+#' @param ndraws to be passed to `generated_quantities`. Changes the number of draws. Default is 10.
 #' @param ... Additional arguments passed to `sampling` from `rstan`.
 #' This can include setting `chains`, `iter`, `warmup`, and `control`. Please see
-#' `rstan::sampling` for more info.
+#' `rstan::sampling()` for more info.
 #'
 #' @return COA_Standard returns an object of class `stanfit` returned by `rstan::sampling`. See the `rstan` package documentation for details.
 #' @return This function returns a list containing the following components: 1) a summary of the detection function parameters; 2) the time required for model fitting; 3) the estimated COAs for each individual in each time step and 95 percent credible interval; and 4) a dataframe containing values for each parameter and latent parameter from chain iterations. These can be used to plot posterior distributions and the credible interval around each estimated COA.
@@ -32,6 +33,7 @@ COA_Standard <- function(
     recY,
     xlim,
     ylim,
+    ndraws = NULL,
     ...
 ) {
 
@@ -71,6 +73,12 @@ COA_Standard <- function(
   # How much time did fitting take?
   fit_time <- sum(print(rstan::get_elapsed_time(fit_model))) / 60
 
+  # calculate generated quantities
+  fit_generated_quantities <- generated_quantities(model = fit_model,
+                                                   standata = standata,
+                                                   ndraws = ndraws)
+  # transform gq into matrix
+  tran_fit_gq <- transform_gq(fit_generated_quantities)
   # Extract COA estimates
   coas <- array(NA, dim = c(ntime, 7, nind))
   dimnames(coas)[[2]] <- c(
@@ -105,7 +113,19 @@ COA_Standard <- function(
 
   coas <- as.data.frame(coas[,, 1])
   # Report results
-  model_results <- list(fit_model, fit_summary, fit_time, coas, fit_estimates)
-  names(model_results) <- c('model', 'summary', 'time', 'coas', 'all_estimates')
+  model_results <- list(fit_model,
+                        fit_summary,
+                        fit_time,
+                        coas,
+                        fit_estimates,
+                        tran_fit_gq
+                        )
+  names(model_results) <- c('model',
+                            'summary',
+                            'time',
+                            'coas',
+                            'all_estimates',
+                            'generated_quantities'
+                            )
   return(model_results)
 }

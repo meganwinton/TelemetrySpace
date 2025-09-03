@@ -15,10 +15,10 @@
 #' @param ylim   North-south boundaries of spatial extent (receiver array + buffer)
 #' @param testX  Test tag coordinates in the east-west direction (should be projected and scaled for computational efficiency)
 #' @param testY  Test tag coordinates in the north-south direction (should be projected and scaled for computational efficiency)
+#' @param ndraws to be passed to `generated_quantities`. Changes the number of draws. Default is 10.
 #' @param ... Additional arguments passed to `sampling` from `rstan`.
 #' This can include setting `chains`, `iter`, `warmup`, and `control`. Please see
-#' `rstan::sampling` for more info.
-#'
+#' `rstan::sampling()` for more info.
 #'
 #'
 #' @return COA_TagInt_Bayes returns an object of class `stanfit` returned by `rstan::sampling`. See the 'rstan' package documentation for details.
@@ -40,6 +40,7 @@ COA_TagInt <- function(
     ylim,
     testX,
     testY,
+    ndraws = NULL,
     ...
 ) {
 
@@ -86,6 +87,12 @@ COA_TagInt <- function(
 
   # How much time did fitting take (in minutes)?
   fit_time <- sum(print(rstan::get_elapsed_time(fit_model))) / 60
+  # # calculate generated quantities
+  fit_generated_quantities <- generated_quantities(model = fit_model,
+                                                   standata = standata,
+                                                   ndraws = ndraws)
+  # transform gq into matrix
+  tran_fit_gq <- transform_gq(fit_generated_quantities)
 
   # Extract COA estimates
   coas <- array(NA, dim = c(ntime, 7, nind))
@@ -141,7 +148,8 @@ COA_TagInt <- function(
     fit_time,
     coas,
     d_probs,
-    fit_estimates
+    fit_estimates,
+    tran_fit_gq
   )
   names(model_results) <- c(
     'model',
@@ -149,7 +157,8 @@ COA_TagInt <- function(
     'time',
     'coas',
     'detection_probs',
-    'all_estimates'
+    'all_estimates',
+    'generated_quantities'
   )
   return(model_results)
 }

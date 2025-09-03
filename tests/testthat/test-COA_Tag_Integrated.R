@@ -1,7 +1,4 @@
-# library(testthat)
-# library(TelemetrySpace)
-
-nsentinal <- 1
+# ----- Model checked from setup-test-env is object model_coa_tag_int-----
 
 # ---- test each argument if it errors appropriately -----
 coa_args <- list(
@@ -123,46 +120,30 @@ test_that("parameter validation works", {
 
 
 # ---- run model and check of it works ----
-fit <- COA_TagInt(
-  nind = model_param_ex$nind, # number of individuals
-  nrec = model_param_ex$nrec, # number of receivers
-  ntime = model_param_ex$tsteps, # number of time steps
-  ntrans = model_param_ex$ntrans, # number of expected transmissions per tag per time interval
-  y = Y, # array of detections
-  recX = rlocs$east, # E-W receiver coordinates
-  recY = rlocs$north, # N-S receiver coordinates
-  xlim = example_extent$xlim, # E-W boundary of spatial extent (receiver array + buffer)
-  ylim = example_extent$ylim,
-  ntest = nsentinal,
-  test = testY,
-  testX = array(testloc$east, dim = c(nsentinal)),
-  testY = array(testloc$north, dim = c(nsentinal)),# N-S boundary of spatial extent (receiver array + buffer)
-  chains = 2,
-  warmup = 4000,
-  iter = 8000,
-  control = list(adapt_delta = 0.95)
-)
 
-# rstan::traceplot(fit$model, pars = c("alpha0", "alpha1",
+# rstan::traceplot(model_coa_tag_int$model, pars = c("alpha0", "alpha1",
 #                                      "sigma", "lp__"))
 
 test_that("test COA_TagInt model results to make sure its consisitent", {
-  mean_p0 <- fit$summary[1]
+  mean_p0 <- model_coa_tag_int$summary[1]
 
   expected_mean_p0 <- 0.486
   expect_equal(mean_p0, expected_mean_p0, tolerance = 0.05)
 })
 
 
-test_that("check to see if fit classes", {
+test_that("check to see if model_coa_tag_int classes", {
 
-  expect_type(fit, "list")
-  expect_s4_class(fit$model, "stanfit")
-  expect_s3_class(fit$coas, "data.frame")
-  expect_s3_class(fit$all_estimates, "data.frame")
-  expect_type(fit$summary, "double")
-  expect_true(is.matrix(fit$summary))
-  expect_true(is.numeric(fit$time))
+  expect_type(model_coa_tag_int, "list")
+  expect_s4_class(model_coa_tag_int$model, "stanfit")
+  expect_s3_class(model_coa_tag_int$coas, "data.frame")
+  expect_s3_class(model_coa_tag_int$all_estimates, "data.frame")
+  expect_type(model_coa_tag_int$summary, "double")
+  expect_true(is.matrix(model_coa_tag_int$summary))
+  expect_type(model_coa_tag_int$generated_quantities, "list")
+  expect_true(is.matrix(model_coa_tag_int$generated_quantities$yrep))
+  expect_true(is.matrix(model_coa_tag_int$generated_quantities$testrep))
+  expect_true(is.numeric(model_coa_tag_int$time))
 
 })
 
@@ -170,26 +151,32 @@ test_that("check to see if fit classes", {
 
 test_that("check to see if coa returns proper info", {
 
-  expect_true("coas" %in% names(fit))
-  expect_equal(nrow(fit$coas), model_param_ex$tsteps)
-  expect_equal(colnames(fit$coas), c(
+  expect_true("coas" %in% names(model_coa_tag_int))
+  expect_equal(nrow(model_coa_tag_int$coas), model_param_ex$tsteps)
+  expect_equal(colnames(model_coa_tag_int$coas), c(
     "time", "x", "y", "x_lower",
     "x_upper", "y_lower", "y_upper"
   ))
 
-  for (col in colnames(fit$coas)) {
-    expect_type(fit$coas[[col]], "double")
-    expect_true(all(is.finite(fit$coas[[col]])))
+  for (col in colnames(model_coa_tag_int$coas)) {
+    expect_type(model_coa_tag_int$coas[[col]], "double")
+    expect_true(all(is.finite(model_coa_tag_int$coas[[col]])))
   }
 }
 )
 
 test_that("check to see model converged and has a good rhat", {
 
-  rhat <- fit$summary[, "Rhat"]
+  rhat <- model_coa_tag_int$summary[, "Rhat"]
   expect_true(all(rhat > 0.95 & rhat < 1.05))
 }
 )
 
+# ----- check if gq retruns the correct length ------
 
-
+test_that("check to see if gq is the correct length", {
+  expected <- 11
+  expect_true(nrow(model_coa_tag_int$generated_quantities$yrep) %in% expected)
+  expect_true(nrow(model_coa_tag_int$generated_quantities$testrep) %in% expected)
+}
+)
