@@ -35,7 +35,6 @@ COA_TimeVarying <- function(
   ndraws = NULL,
   ...
 ) {
-
   # First move everything into a list
   standata <- list(
     nind = nind,
@@ -53,7 +52,7 @@ COA_TimeVarying <- function(
 
   validate_standata(standata, exp_len)
 
-    # set rstan options
+  # set rstan options
   rstan::rstan_options(auto_write = TRUE)
   # set coores - this probably should be an argument
   options(mc.cores = parallel::detectCores())
@@ -72,9 +71,11 @@ COA_TimeVarying <- function(
   fit_time <- sum(print(rstan::get_elapsed_time(fit_model))) / 60
 
   # calculate generated quantities
-  fit_generated_quantities <- generated_quantities(model = fit_model,
-                                                   standata = standata,
-                                                   ndraws = ndraws)
+  fit_generated_quantities <- generated_quantities(
+    model = fit_model,
+    standata = standata,
+    ndraws = ndraws
+  )
   # transform gq into matrix
   tran_fit_gq <- transform_gq(fit_generated_quantities)
   # Extract COA estimates

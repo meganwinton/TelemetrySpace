@@ -10,10 +10,7 @@
 #' @keywords internal
 #' @name generated_quantities
 
-generated_quantities <- function(model,
-                                 standata,
-                                 ndraws = NULL) {
-
+generated_quantities <- function(model, standata, ndraws = NULL) {
   # check stan object
   check_stan_object(model)
   # check to see if ntest is in standata this will allow for gq's to be made
@@ -56,23 +53,26 @@ generated_quantities <- function(model,
     }
     # create blank array with the name of eveyrhting
 
-    yrep <- array(NA, c(nind, nrec, ntime),
-                  dimnames = list(
-                    tag = seq_len(nind),
-                    rec = seq_len(nrec),
-                    time = seq_len(ntime)
-                  )
+    yrep <- array(
+      NA,
+      c(nind, nrec, ntime),
+      dimnames = list(
+        tag = seq_len(nind),
+        rec = seq_len(nrec),
+        time = seq_len(ntime)
+      )
     )
 
     if (check_test_tag) {
-      yrep_test <- array(NA, c(ntest, nrec, ntime),
-                         dimnames = list(
-                           tag = seq_len(ntest),
-                           rec = seq_len(nrec),
-                           time = seq_len(ntime)
-                         )
+      yrep_test <- array(
+        NA,
+        c(ntest, nrec, ntime),
+        dimnames = list(
+          tag = seq_len(ntest),
+          rec = seq_len(nrec),
+          time = seq_len(ntime)
+        )
       )
-
     }
     # ----- generate quantities ------
     # First for number of detections for each tagged individual
@@ -80,15 +80,17 @@ generated_quantities <- function(model,
       for (i in 1:nind) {
         for (j in 1:nrec) {
           # create distances
-          d <- sqrt((sx[draw, i, t] - recX[j]) ^ 2 +
-                      (sy[draw, i, t] - recY[j]) ^ 2)
+          d <- sqrt(
+            (sx[draw, i, t] - recX[j])^2 +
+              (sy[draw, i, t] - recY[j])^2
+          )
           # make this work for when p0 is dimensions
           if (is.matrix(p0)) {
             base <- p0[t, j]
-          } else{
+          } else {
             base <- p0
           }
-          p <- base * exp(-a1 * d ^ 2)
+          p <- base * exp(-a1 * d^2)
           # make sure the pobablity is above 0
           p <- min(max(p, 1e-9), 1 - 1e-9)
           # then run int using a the iteration of transmission by probability
@@ -105,9 +107,9 @@ generated_quantities <- function(model,
         for (m in 1:nrec) {
           for (s in 1:ntest) {
             # Euclidean distance between test tag s and receiver m
-            td <- sqrt((testX[s] - recX[m]) ^ 2 + (testY[s] - recY[m]) ^ 2)
+            td <- sqrt((testX[s] - recX[m])^2 + (testY[s] - recY[m])^2)
             # Probability
-            ptest <- p0[l, m] * exp(-a1 * td ^ 2)
+            ptest <- p0[l, m] * exp(-a1 * td^2)
             ptest <- min(max(ptest, 1e-9), 1 - 1e-9)
             # Simulate detection
             yrep_test[s, m, l] <- stats::rbinom(1, ntrans, ptest)
@@ -118,8 +120,7 @@ generated_quantities <- function(model,
     }
   }
   if (check_test_tag) {
-    return(list(yrep = yrep_list,
-                testrep = yrep_test_list))
+    return(list(yrep = yrep_list, testrep = yrep_test_list))
   } else {
     return(list(yrep = yrep_list))
   }

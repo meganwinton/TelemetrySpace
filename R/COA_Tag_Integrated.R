@@ -27,23 +27,22 @@
 #' @seealso [rstan::sampling()]
 #' @export
 COA_TagInt <- function(
-    nind,
-    nrec,
-    ntime,
-    ntest,
-    ntrans,
-    y,
-    test,
-    recX,
-    recY,
-    xlim,
-    ylim,
-    testX,
-    testY,
-    ndraws = NULL,
-    ...
+  nind,
+  nrec,
+  ntime,
+  ntest,
+  ntrans,
+  y,
+  test,
+  recX,
+  recY,
+  xlim,
+  ylim,
+  testX,
+  testY,
+  ndraws = NULL,
+  ...
 ) {
-
   # First move everything into a list
   standata <- list(
     nind = nind,
@@ -62,8 +61,7 @@ COA_TagInt <- function(
   )
 
   # validate this list prior to sending it to the model
-  exp_len <- expected_lengths(recX = recX, recY = recY,
-                              ntest_len = ntest)
+  exp_len <- expected_lengths(recX = recX, recY = recY, ntest_len = ntest)
 
   validate_standata(standata, exp_len)
   # set rstan options
@@ -88,9 +86,11 @@ COA_TagInt <- function(
   # How much time did fitting take (in minutes)?
   fit_time <- sum(print(rstan::get_elapsed_time(fit_model))) / 60
   # # calculate generated quantities
-  fit_generated_quantities <- generated_quantities(model = fit_model,
-                                                   standata = standata,
-                                                   ndraws = ndraws)
+  fit_generated_quantities <- generated_quantities(
+    model = fit_model,
+    standata = standata,
+    ndraws = ndraws
+  )
   # transform gq into matrix
   tran_fit_gq <- transform_gq(fit_generated_quantities)
 

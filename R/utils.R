@@ -8,15 +8,15 @@
 #' @keywords internal
 #' @name error_functions
 
-
 check_num_vec_len <- function(x, vec_length = NULL, arg_name = NULL) {
-
   if (is.null(arg_name)) {
     arg_name <- rlang::as_label(rlang::enexpr(x))
   }
 
   if (!is.numeric(x) || !is.vector(x) || length(x) != vec_length) {
-    cli::cli_abort("`{arg_name}` must be a numeric vector that has a length of {vec_length}.")
+    cli::cli_abort(
+      "`{arg_name}` must be a numeric vector that has a length of {vec_length}."
+    )
   }
 }
 
@@ -27,7 +27,6 @@ check_num_vec_len <- function(x, vec_length = NULL, arg_name = NULL) {
 #' @name error_functions
 
 check_array <- function(x, arg_name = NULL) {
-
   if (is.null(arg_name)) {
     arg_name <- rlang::as_label(rlang::enexpr(x))
   }
@@ -35,7 +34,6 @@ check_array <- function(x, arg_name = NULL) {
   if (!is.array(x) || !is.numeric(x) || length(dim(x)) != 3) {
     cli::cli_abort("`{arg_name}` must be a 3-dimensional numeric array.")
   }
-
 }
 
 
@@ -48,11 +46,9 @@ check_array <- function(x, arg_name = NULL) {
 #' @name error_functions
 #'
 check_array_tag <- function(x, len, arg_name = NULL) {
-
   if (is.null(arg_name)) {
     arg_name <- rlang::as_label(rlang::enexpr(x))
   }
-
 
   if (!is.array(x) || !is.numeric(x) || length(x) != len) {
     cli::cli_abort(
@@ -73,12 +69,14 @@ check_stan_object <- function(x, arg_name = NULL) {
   }
 
   # valid classes from rstan and cmdstanr
-  valid_classes <- c("stanfit",
-                     "stanmodel",
-                     "CmdStanMCMC",
-                     "CmdStanMLE",
-                     "CmdStanVB",
-                     "CmdStanModel")
+  valid_classes <- c(
+    "stanfit",
+    "stanmodel",
+    "CmdStanMCMC",
+    "CmdStanMLE",
+    "CmdStanVB",
+    "CmdStanModel"
+  )
 
   if (!inherits(x, valid_classes)) {
     cli::cli_abort(
@@ -98,10 +96,7 @@ check_stan_object <- function(x, arg_name = NULL) {
 #' @keywords internal
 #' @name expected_lengths
 
-expected_lengths <- function(recX = NULL,
-                             recY = NULL,
-                             ntest_len = NULL) {
-
+expected_lengths <- function(recX = NULL, recY = NULL, ntest_len = NULL) {
   if (!is.null(ntest_len)) {
     check_num_vec_len(ntest_len, vec_length = 1, arg_name = "ntest")
   }
@@ -132,9 +127,7 @@ expected_lengths <- function(recX = NULL,
 #' @name vaidate_standata
 
 validate_standata <- function(standata, lengths) {
-
-  array_vars <- intersect(c("y", "test", "testX",
-                            "testY"), names(standata))
+  array_vars <- intersect(c("y", "test", "testX", "testY"), names(standata))
 
   for (var in array_vars) {
     # check station locations
@@ -147,16 +140,16 @@ validate_standata <- function(standata, lengths) {
   }
 
   # check vectors
-  mapply(FUN = function(len, name) {
-
-    if (!(name %in% array_vars) && !is.null(len) && !is.null(standata[[name]])) {
-
-      check_num_vec_len(standata[[name]],
-                        vec_length = len,
-                        arg_name = name)
-    }
-  },
-  lengths, names(lengths)
+  mapply(
+    FUN = function(len, name) {
+      if (
+        !(name %in% array_vars) && !is.null(len) && !is.null(standata[[name]])
+      ) {
+        check_num_vec_len(standata[[name]], vec_length = len, arg_name = name)
+      }
+    },
+    lengths,
+    names(lengths)
   )
 }
 
@@ -193,8 +186,8 @@ transform_gq <- function(input) {
     dim_x <- dim(open_input[[1]])
 
     grid <- expand.grid(
-      tag  = seq_len(dim_x[1]),
-      rec  = seq_len(dim_x[2]),
+      tag = seq_len(dim_x[1]),
+      rec = seq_len(dim_x[2]),
       time = seq_len(dim_x[3])
     )
 
@@ -203,9 +196,7 @@ transform_gq <- function(input) {
       paste0("tag_", idx[1], "_rec_", idx[2], "_time_", idx[3])
     })
     return(rep_mat)
-
   })
   names(output) <- post_type
   output
 }
-

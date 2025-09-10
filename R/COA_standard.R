@@ -24,19 +24,18 @@
 #'
 #' @export
 COA_Standard <- function(
-    nind,
-    nrec,
-    ntime,
-    ntrans,
-    y,
-    recX,
-    recY,
-    xlim,
-    ylim,
-    ndraws = NULL,
-    ...
+  nind,
+  nrec,
+  ntime,
+  ntrans,
+  y,
+  recX,
+  recY,
+  xlim,
+  ylim,
+  ndraws = NULL,
+  ...
 ) {
-
   # First move everything into a list
   standata <- list(
     nind = nind,
@@ -74,9 +73,11 @@ COA_Standard <- function(
   fit_time <- sum(print(rstan::get_elapsed_time(fit_model))) / 60
 
   # calculate generated quantities
-  fit_generated_quantities <- generated_quantities(model = fit_model,
-                                                   standata = standata,
-                                                   ndraws = ndraws)
+  fit_generated_quantities <- generated_quantities(
+    model = fit_model,
+    standata = standata,
+    ndraws = ndraws
+  )
   # transform gq into matrix
   tran_fit_gq <- transform_gq(fit_generated_quantities)
   # Extract COA estimates
@@ -113,19 +114,21 @@ COA_Standard <- function(
 
   coas <- as.data.frame(coas[,, 1])
   # Report results
-  model_results <- list(fit_model,
-                        fit_summary,
-                        fit_time,
-                        coas,
-                        fit_estimates,
-                        tran_fit_gq
-                        )
-  names(model_results) <- c('model',
-                            'summary',
-                            'time',
-                            'coas',
-                            'all_estimates',
-                            'generated_quantities'
-                            )
+  model_results <- list(
+    fit_model,
+    fit_summary,
+    fit_time,
+    coas,
+    fit_estimates,
+    tran_fit_gq
+  )
+  names(model_results) <- c(
+    'model',
+    'summary',
+    'time',
+    'coas',
+    'all_estimates',
+    'generated_quantities'
+  )
   return(model_results)
 }

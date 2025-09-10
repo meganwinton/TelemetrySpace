@@ -19,9 +19,11 @@ yreps <- list()
 # ----- loop over generated quantities -----
 for (i in seq_along(all_models)) {
   # Call your function
-  yreps[[i]] <- generated_quantities(model = all_models[[i]]$model,
-                                     standata = all_data[[i]],
-                                     ndraws = ndraws_test)
+  yreps[[i]] <- generated_quantities(
+    model = all_models[[i]]$model,
+    standata = all_data[[i]],
+    ndraws = ndraws_test
+  )
 }
 
 
@@ -30,7 +32,6 @@ bs_returned <- c(1, 1, 2)
 bs_names <- c(rep("yrep", 3), "testrep")
 
 test_that("check transformation of gq to matrix", {
-
   for (i in seq_along(yreps)) {
     tran_gq <- transform_gq(yreps[[i]])
 
@@ -40,7 +41,6 @@ test_that("check transformation of gq to matrix", {
     expect_true(bs_names[i] %in% names(tran_gq))
 
     for (n in seq_along(tran_gq)) {
-
       post_draws <- tran_gq[[n]]
       expect_type(post_draws, "integer")
       expect_true(is.matrix(post_draws))
@@ -49,11 +49,9 @@ test_that("check transformation of gq to matrix", {
 })
 
 test_that("check row and column names of gq in matrix", {
-
   for (i in seq_along(yreps)) {
     tran_gq <- transform_gq(yreps[[i]])
     for (n in seq_along(tran_gq)) {
-
       post_draws <- tran_gq[[n]]
       # check row names
       expect_true(all(grepl("^(yrep|testrep)_[0-9]+$", rownames(post_draws))))
@@ -62,17 +60,13 @@ test_that("check row and column names of gq in matrix", {
       expect_true(all(grepl(
         "^tag_[0-9]+_rec_[0-9]+_time_[0-9]+$",
         colnames(post_draws)
-      )
-      )
-      )
+      )))
       # also check correct counts
       expect_length(rownames(post_draws), nrow(post_draws))
       expect_length(colnames(post_draws), ncol(post_draws))
     }
   }
 })
-
-
 
 #   for (i in 1:n_draws) {
 #     y_rep_mat[i, ] <- as.vector(draws$yrep[i, , , ])
@@ -83,4 +77,3 @@ test_that("check row and column names of gq in matrix", {
 #     expect_true(all(y_rep_mat[i, ] >= 0 &  y_rep_mat[i, ] <= 25))
 #   }
 # }
-

@@ -24,14 +24,15 @@ standata_1 <- list(
   ntest = nsentinal,
   test = testY,
   testX = array(testloc$east, dim = c(nsentinal)),
-  testY = array(testloc$north, dim = c(nsentinal))# N-S b
+  testY = array(testloc$north, dim = c(nsentinal)) # N-S b
 )
 
 # ----- run each model ------
 # ----- standard coa ------
 model_coa_standard <- do.call(
   COA_Standard,
-  c(standata,
+  c(
+    standata,
     list(
       chains = 2,
       warmup = 1000,
@@ -45,7 +46,8 @@ model_coa_standard <- do.call(
 # ----- time integrated -----
 model_coa_time_vary <- do.call(
   COA_TimeVarying,
-  c(standata,
+  c(
+    standata,
     list(
       chains = 2,
       warmup = 3000,
@@ -60,7 +62,8 @@ model_coa_time_vary <- do.call(
 # ----- tag integraged -----
 model_coa_tag_int <- do.call(
   COA_TagInt,
-  c(standata_1,
+  c(
+    standata_1,
     list(
       chains = 2,
       warmup = 4000,
@@ -71,5 +74,3 @@ model_coa_tag_int <- do.call(
     )
   )
 )
-
-

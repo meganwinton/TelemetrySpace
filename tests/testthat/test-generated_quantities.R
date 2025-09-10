@@ -15,7 +15,7 @@ ndraws_test <- 5
 
 
 # ----- create function to loop over for errors -----
-call_generated_quantities  <- function(overrides) {
+call_generated_quantities <- function(overrides) {
   do.call(generated_quantities, modifyList(gq_args, overrides))
 }
 # ----- gq_arguments to check ------
@@ -42,21 +42,27 @@ params_table <- list(
 
 # ---- see if it errors properly -----
 test_that("parameter validation works", {
-
   for (pt in params_table) {
     for (bad_val in pt$bad) {
-      tryCatch({
-        expect_error(
-          call_generated_quantities(setNames(list(bad_val), pt$param)),
-          regexp = pt$regex,
-          label = sprintf("param=%s, bad_val=%s", pt$param, deparse1(bad_val))
-        )
-      },
-      error = function(e) {
-        cat("\n Error for param:", pt$param,
-            " bad_val:", deparse1(bad_val), "\n")
-        stop(e)
-      })
+      tryCatch(
+        {
+          expect_error(
+            call_generated_quantities(setNames(list(bad_val), pt$param)),
+            regexp = pt$regex,
+            label = sprintf("param=%s, bad_val=%s", pt$param, deparse1(bad_val))
+          )
+        },
+        error = function(e) {
+          cat(
+            "\n Error for param:",
+            pt$param,
+            " bad_val:",
+            deparse1(bad_val),
+            "\n"
+          )
+          stop(e)
+        }
+      )
     }
   }
 })
@@ -68,9 +74,11 @@ yreps <- list()
 # ----- loop over generated quantities -----
 for (i in seq_along(all_models)) {
   # Call your function
-  yreps[[i]] <- generated_quantities(model = all_models[[i]]$model,
-                                     standata = all_data[[i]],
-                                     ndraws = ndraws_test)
+  yreps[[i]] <- generated_quantities(
+    model = all_models[[i]]$model,
+    standata = all_data[[i]],
+    ndraws = ndraws_test
+  )
 }
 
 # length of  each object returned bs = basic_structure
@@ -81,23 +89,19 @@ length_yrep <- ndraws_test
 
 # -----  checks the structure of the structure of generated_quantites -------
 test_that("generated_quantities returns correct structure", {
-
-  for(s in seq_along(yreps)) {
-
+  for (s in seq_along(yreps)) {
     bs <- yreps[[s]]
 
     expect_type(bs, "list")
     expect_length(bs, bs_returned[s])
 
     for (n in seq_along(bs)) {
-
       post_draws <- bs[[n]]
 
       expect_type(post_draws, "list")
       expect_length(post_draws, length_yrep)
 
       for (h in seq_along(post_draws)) {
-
         one_draw <- post_draws[[h]]
 
         expect_true(is.array(one_draw))
@@ -111,15 +115,12 @@ test_that("generated_quantities returns correct structure", {
       }
     }
   }
-}
-)
+})
 
 
 # do not test actual values as these will change
 test_that("generated_quantities returns correct integer ", {
-
-  for(s in seq_along(yreps)) {
-
+  for (s in seq_along(yreps)) {
     bs <- yreps[[s]]
 
     for (n in seq_along(bs)) {
@@ -128,6 +129,4 @@ test_that("generated_quantities returns correct integer ", {
       expect_type(one_draw, "integer")
     }
   }
-}
-)
-
+})
